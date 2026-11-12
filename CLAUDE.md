@@ -7,7 +7,11 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
 
 ## État (mis à jour le 12/11/2026)
 - Code complet sur `main` : 7 agents, exécution maker, signaux funding / liquidations / positionnement Coinversa,
-  canal de supervision (branche `control`), backtest historique (workflow `backtest`).
+  canal de supervision (branche `control`), backtest historique (workflow `backtest`),
+  interface web temps réel (`ui/index.html`, `core/web.py`, `UI_PASSWORD`) et mode `python main.py --demo`.
+- AWS : utilisateur IAM `hl-swarm-backtest` (lecture seule archive Hyperliquid) créé ; compte AWS en Free plan
+  (6 mois). Archive S3 disponible jusqu'au 11/11/2026 ; Coinversa depuis le 01/09/2026.
+- Capital disponible du propriétaire : ~50 $ ; horizon de décision : 5 mois. Production prévue sur Render.
 - **Rien n'est déployé.** Aucun test contre les vraies API n'a encore tourné.
 - Étape en cours : le propriétaire ajoute les secrets GitHub `COINVERSA_API_KEY`, `AWS_ACCESS_KEY_ID`,
   `AWS_SECRET_ACCESS_KEY`. Ensuite : `python scripts/request_backtest.py --from 2026-09-01 --to 2026-10-31`,
@@ -31,4 +35,5 @@ python scripts/backtest.py --from A --to B             # backtest local (après 
 python scripts/request_backtest.py --from A --to B     # backtest distant (GitHub Actions)
 python scripts/supervise.py ping --reason "..."        # commande de supervision (branche control)
 python main.py --go-live                               # rapport go/no-go
+python main.py --demo                                  # démo + interface http://localhost:8080 (mdp: demo)
 ```
