@@ -1,0 +1,15 @@
+[project]
+name = "hl-swarm"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B"]
+ignore = ["E501", "E731", "B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

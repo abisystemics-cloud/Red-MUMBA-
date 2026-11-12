@@ -1,0 +1,142 @@
+# =============================================================================
+# hl-swarm — configuration centrale
+# -----------------------------------------------------------------------------
+# - Les secrets ne sont JAMAIS ici : ils viennent des variables d'environnement
+#   (voir .env.example).
+# - La section `strategy` est rechargée à chaud (sans couper les WebSockets).
+#   L'agent Backtesting (#7) est le seul à la réécrire, dans les bornes de
+#   `research.bounds`. Toute autre modification exige un redémarrage.
+# =============================================================================
+
+version: 1
+
+runtime:
+  # testnet | mainnet
+  network: testnet
+  # true = ordres simulés (paper trading) même si une clé est fournie
+  dry_run: true
+  log_level: INFO
+  health_port: 8080
+  # Le passage en réel exige network=mainnet, dry_run=false ET la variable
+  # d'environnement LIVE_TRADING_CONFIRM=I_UNDERSTAND_THE_RISKS
+  config_poll_seconds: 2.0
+
+markets:
+  # Perps Hyperliquid tradés + symboles de référence sur CEX
+  - coin: BTC
+    binance: btcusdt
+    bybit: BTCUSDT
+  - coin: ETH
+    binance: ethusdt
+    bybit: ETHUSDT
+
+data:
+  hyperliquid:
+    ws_url_mainnet: wss://api.hyperliquid.xyz/ws
+    ws_url_testnet: wss://api.hyperliquid-testnet.xyz/ws
+    api_url_mainnet: https://api.hyperliquid.xyz
+    api_url_testnet: https://api.hyperliquid-testnet.xyz
+    # Le flux public l2Book est plafonné à 20 niveaux/côté (push >= 0,5 s).
+    # Pour 100 niveaux, renseigner un fournisseur compatible (ex. Dwellir)
+    # via HL_BOOK_WS_URL ; nLevels n'est envoyé que dans ce cas.
+    book_levels: 100
+    n_sig_figs: null
+  binance_ws: wss://fstream.binance.com/stream
+  bybit_ws: wss://stream.bybit.com/v5/public/linear
+  liquidations:
+    # coinglass | firecrawl | disabled
+    provider: coinglass
+    poll_seconds: 60
+    coinglass_base_url: https://open-api-v4.coinglass.com
+    coinglass_heatmap_path: /api/futures/liquidation/heatmap/model1
+    # utilisé si provider=firecrawl (page publique, extraction JSON)
+    firecrawl_url: ""
+  record_market_data: true
+  recordings_dir: data/recordings
+  max_staleness_ms: 2500      # au-delà, la donnée est considérée morte
+
+macro:
+  enabled: true
+  poll_seconds: 300
+  # Fenêtres d'exclusion autour d'annonces planifiées (UTC, ISO 8601)
+  blackout_minutes_before: 10
+  blackout_minutes_after: 20
+  scheduled_events: []
+  #  - {name: "FOMC", at: "2026-12-09T19:00:00Z"}
+  #  - {name: "US CPI", at: "2026-12-10T13:30:00Z"}
+  # Déclencheurs de marché (kill switch sans LLM)
+  btc_1m_move_halt_pct: 2.5
+  cex_divergence_halt_bps: 80
+  # Le LLM de recherche (Perplexity Sonar) ne peut qu'ESCALADER le risque,
+  # jamais ouvrir un trade.
+  llm_model: sonar
+  llm_halt_threshold: 0.8      # score de risque [0..1] → HALT
+  llm_caution_threshold: 0.5   # → CAUTION (taille réduite de moitié)
+
+strategy:                       # ← section rechargée à chaud
+  obi_depth: 10
+  obi_decay: 0.15
+  cvd_window_s: 60
+  vpvr_window_s: 900
+  vpvr_bucket_bps: 5
+  zscore_window: 300
+  spoof_size_mult: 8.0
+  spoof_max_life_s: 3.0
+  weights:
+    obi: 0.35
+    cvd: 0.30
+    premium: 0.25
+    poc: 0.10
+  entry_threshold: 1.6
+  exit_threshold: 0.4
+  persistence_ticks: 3
+  max_spread_bps: 4.0
+  max_hold_s: 600
+  cooldown_s: 30
+
+risk:
+  kelly_fraction: 0.25          # fraction de Kelly (Kelly plein = 1.0)
+  max_risk_per_trade_pct: 0.5   # % de l'equity risqué au stop
+  max_position_notional_usd: 5000
+  max_leverage: 3
+  stop_vol_mult: 2.5            # stop = k × volatilité réalisée
+  take_profit_r: 2.0            # TP en multiples du risque
+  min_stop_bps: 8
+  max_stop_bps: 150
+  daily_loss_limit_pct: 3.0     # → HALT jusqu'au lendemain UTC
+  max_consecutive_losses: 5
+  slippage_bps: 3               # tolérance des ordres IOC
+  prior_win_rate: 0.52
+  prior_payoff: 1.2
+  flatten_on_halt: true
+  paper_equity_usd: 10000
+
+telemetry:
+  posthog_host: https://eu.i.posthog.com
+  flush_interval_s: 1.0
+  batch_size: 500
+  distinct_id: hl-swarm-prod
+  local_log_dir: data/telemetry
+
+research:
+  enabled: true
+  check_interval_s: 3600
+  lookback_hours: 24
+  min_trades_for_eval: 20
+  degrade_sharpe_below: 0.5
+  degrade_winrate_below: 0.45
+  max_drawdown_pct: 10.0        # contrainte dure du backtest
+  n_trials: 60
+  oos_fraction: 0.3             # walk-forward : part hors échantillon
+  max_param_change_pct: 30      # changement max par mise à jour
+  auto_deploy: true             # false = propose seulement (fichier .proposed)
+  bounds:
+    entry_threshold: [1.0, 3.0]
+    exit_threshold: [0.1, 1.0]
+    persistence_ticks: [1, 8]
+    obi_depth: [3, 20]
+    cvd_window_s: [15, 300]
+    weights.obi: [0.0, 0.7]
+    weights.cvd: [0.0, 0.7]
+    weights.premium: [0.0, 0.7]
+    weights.poc: [0.0, 0.4]

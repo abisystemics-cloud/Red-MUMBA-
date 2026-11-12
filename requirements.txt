@@ -1,0 +1,10 @@
+# Runtime
+hyperliquid-python-sdk>=0.18,<1.0   # SDK officiel (signature des ordres L1)
+eth-account>=0.10,<1.0              # wallet API (agent wallet)
+websockets>=13.0,<16.0              # flux temps réel
+aiohttp>=3.9,<4.0                   # PostHog, Perplexity, Coinglass, Firecrawl
+numpy>=1.26
+pydantic>=2.6,<3.0
+PyYAML>=6.0
+langgraph>=0.2                      # graphe de l'agent R&D (repli intégré si absent)
+uvloop>=0.19; sys_platform != "win32"

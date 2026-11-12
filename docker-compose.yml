@@ -1,0 +1,51 @@
+# Deux conteneurs, une image :
+#   live     — Pôle 1 (trading temps réel), jamais bloqué par le calcul R&D
+#   research — Pôle 2 (backtests), CPU borné
+# Ils partagent ./config (config.yaml rechargé à chaud) et ./data
+# (enregistrements de marché, télémétrie, kill switch).
+#
+# Important : monter le DOSSIER ./config, pas le fichier seul — la réécriture
+# atomique (os.replace) crée un nouvel inode qu'un montage de fichier ne verrait pas.
+
+x-common: &common
+  image: ${IMAGE:-ghcr.io/OWNER/hl-swarm:latest}
+  build: .
+  env_file: .env
+  restart: unless-stopped
+  stop_grace_period: 40s          # le temps de fermer les positions proprement
+  volumes:
+    - ./config:/app/config
+    - ./data:/app/data
+  logging:
+    driver: json-file
+    options: { max-size: "50m", max-file: "5" }
+  ulimits:
+    nofile: { soft: 65536, hard: 65536 }
+
+services:
+  live:
+    <<: *common
+    container_name: hl-swarm-live
+    environment:
+      ROLE: live
+      PORT: "8080"
+    ports:
+      - "127.0.0.1:8080:8080"     # /health et /status, non exposés publiquement
+    deploy:
+      resources:
+        limits: { cpus: "2.0", memory: 2g }
+
+  research:
+    <<: *common
+    container_name: hl-swarm-research
+    environment:
+      ROLE: research
+      PORT: "8081"
+    ports:
+      - "127.0.0.1:8081:8081"
+    depends_on:
+      live:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits: { cpus: "1.5", memory: 4g }

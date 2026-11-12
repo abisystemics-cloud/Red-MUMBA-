@@ -1,0 +1,36 @@
+# Blueprint Render. Sur Render un disque ne s'attache qu'à UN service : les deux
+# pôles tournent donc dans le même conteneur (ROLE=all) ; le calcul R&D est isolé
+# dans un process séparé (ProcessPoolExecutor) pour ne pas bloquer le trading.
+services:
+  - type: web
+    name: hl-swarm
+    runtime: docker
+    plan: standard
+    region: singapore           # le plus proche de Tokyo parmi les régions Render
+    autoDeploy: false           # déploiement piloté par GitHub Actions (deploy hook)
+    healthCheckPath: /health
+    envVars:
+      - key: ROLE
+        value: all
+      - key: CONFIG_PATH
+        value: /app/data/config/config.yaml
+      - key: HL_ACCOUNT_ADDRESS
+        sync: false
+      - key: HL_API_WALLET_PRIVATE_KEY
+        sync: false
+      - key: LIVE_TRADING_CONFIRM
+        sync: false
+      - key: COINGLASS_API_KEY
+        sync: false
+      - key: PERPLEXITY_API_KEY
+        sync: false
+      - key: POSTHOG_API_KEY
+        sync: false
+      - key: POSTHOG_PERSONAL_API_KEY
+        sync: false
+      - key: POSTHOG_PROJECT_ID
+        sync: false
+    disk:
+      name: hl-data
+      mountPath: /app/data
+      sizeGB: 20
