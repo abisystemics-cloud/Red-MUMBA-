@@ -1,0 +1,53 @@
+  … 1,000,000 events
+  … 2,000,000 events
+  … 3,000,000 events
+  … 4,000,000 events
+  … 5,000,000 events
+  … 6,000,000 events
+  … 7,000,000 events
+  … 8,000,000 events
+  … 9,000,000 events
+  … 10,000,000 events
+  … 11,000,000 events
+# Backtest 2026-09-01 → 2026-11-11 (BTC, ETH, mode maker)
+
+**Verdict : NO-GO**
+
+| Indicateur | Valeur |
+|---|---|
+| trades | 1 |
+| return_pct | 0.069 |
+| max_dd_pct | 0.225 |
+| sharpe | 0.532 |
+| win_rate | 1.0 |
+| profit_factor | None |
+| maker_fill_rate | 0.167 |
+| fees_usd | 2.04 |
+| funding_usd | -0.1 |
+
+## Critères
+
+| Critère | Valeur | Cible | OK |
+|---|---|---|---|
+| trades | 1 | >= 200 | non |
+| profit_factor | inf | >= 1.2 | oui |
+| max_drawdown_pct | 0.0 | <= 5.0 | oui |
+| positive_weeks | 1/11 | >= 7/11 | non |
+
+## Mois par mois
+
+| Mois | Trades | PnL (USD) | Gagnants |
+|---|---|---|---|
+| 2026-10 | 1 | 6.86 | 1 |
+
+## Signaux présents dans les données
+
+- order_book : oui
+- trades_cvd_poc : NON (non testé)
+- cex_premium : oui
+- funding : oui
+- positioning : oui
+- liquidations : NON (non testé)
+
+Événements rejoués : {'ctx': 103726, 'ext': 9588845, 'whale': 3764, 'book': 2259965} — durée 292.2 s
+

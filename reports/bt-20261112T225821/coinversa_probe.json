@@ -1,0 +1,13 @@
+{
+  "base_url": "https://api.coinversa.ai/api/public/v1",
+  "plan": {
+    "status": 404,
+    "body": null
+  },
+  "cohort_sample": {
+    "ts": 1794523500000,
+    "signal": -0.21448598298171784
+  },
+  "cohort_history_path": "/pulse/cohort-bias/history",
+  "heatmap_path": "/live/liquidation-heatmap/{coin}"
+}

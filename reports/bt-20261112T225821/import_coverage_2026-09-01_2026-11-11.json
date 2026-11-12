@@ -1,0 +1,1393 @@
+{
+  "from": "2026-09-01",
+  "to": "2026-11-11",
+  "coins": [
+    "BTC",
+    "ETH"
+  ],
+  "days": {
+    "2026-09-01": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 69664
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68142
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-02": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 68080
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68757
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-03": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 71309
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 70503
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-04": {
+      "book_hours": {
+        "BTC": 23,
+        "ETH": 23
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 68601
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 67384
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-05": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 58243
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 56768
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-06": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 60754
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 65392
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-07": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 64064
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 66685
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-08": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 65812
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 67187
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-09": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67394
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 69497
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-10": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66636
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68737
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-11": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67093
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 71864
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-12": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 54340
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 62171
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-13": {
+      "book_hours": {
+        "BTC": 23,
+        "ETH": 23
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 59371
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 64819
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-14": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 69486
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 71419
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-15": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 312,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 70670
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 72957
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-16": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1010,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66435
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68546
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-17": {
+      "book_hours": {
+        "BTC": 23,
+        "ETH": 23
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 64409
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68850
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-18": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1192,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 70327
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 73479
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-19": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 64207
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 66913
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-20": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 64445
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 67202
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-21": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 74019
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 75467
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-22": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 392,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 70327
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 69819
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-23": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1094,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 70097
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 69775
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-24": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 606,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 68215
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68657
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-25": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1310,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 65461
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 66186
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-26": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 826,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 55694
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 56603
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-27": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 352,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 60279
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 61322
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-28": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1056,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 69299
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 72127
+        }
+      },
+      "whale": 48
+    },
+    "2026-09-29": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 566,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66286
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 70146
+        }
+      },
+      "whale": 50
+    },
+    "2026-09-30": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1276,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 65986
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68517
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-01": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 784,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67756
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 69003
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-02": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 290,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 71259
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 71584
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-03": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 57576
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 58185
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-04": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 508,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 60347
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 60619
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-05": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1198,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 69048
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68756
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-06": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 700,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66022
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 65959
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-07": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1392,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 69294
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 70547
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-08": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 894,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 72167
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 70791
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-09": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 398,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67260
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 66145
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-10": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1110,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 57402
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 58270
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-11": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 610,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 59653
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 63571
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-12": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1306,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 68329
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 69455
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-13": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 806,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 70130
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 69493
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-14": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 308,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67434
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68302
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-15": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1002,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 70136
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 72130
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-16": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 506,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67149
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 70546
+        }
+      },
+      "whale": 40
+    },
+    "2026-10-17": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1214,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 62637
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 62208
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-18": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 732,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66083
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 65636
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-19": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1440,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66555
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 67036
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-20": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 956,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67147
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 67135
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-21": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 470,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67336
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 66870
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-22": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1184,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 71359
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68121
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-23": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 712,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67176
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 65143
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-24": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1436,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 65684
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 63240
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-25": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 968,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 62207
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 63257
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-26": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 490,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 69150
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68280
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-27": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1188,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66566
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 64336
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-28": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 700,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 68413
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 65498
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-29": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1406,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 72336
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 71187
+        }
+      },
+      "whale": 50
+    },
+    "2026-10-30": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 890,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 74083
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 72181
+        }
+      },
+      "whale": 48
+    },
+    "2026-10-31": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 378,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 61684
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 61139
+        }
+      },
+      "whale": 50
+    },
+    "2026-11-01": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1074,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 61940
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 61310
+        }
+      },
+      "whale": 48
+    },
+    "2026-11-02": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 570,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 68800
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68425
+        }
+      },
+      "whale": 50
+    },
+    "2026-11-03": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67337
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 65504
+        }
+      },
+      "whale": 48
+    },
+    "2026-11-04": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 2880,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 73361
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 72659
+        }
+      },
+      "whale": 50
+    },
+    "2026-11-05": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1410,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 70276
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 70763
+        }
+      },
+      "whale": 48
+    },
+    "2026-11-06": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 860,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67989
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 67541
+        }
+      },
+      "whale": 50
+    },
+    "2026-11-07": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 332,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 56576
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 55285
+        }
+      },
+      "whale": 48
+    },
+    "2026-11-08": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 992,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 57307
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 56731
+        }
+      },
+      "whale": 50
+    },
+    "2026-11-09": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 464,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 69302
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 70980
+        }
+      },
+      "whale": 48
+    },
+    "2026-11-10": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 1150,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 67778
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 68268
+        }
+      },
+      "whale": 156
+    },
+    "2026-11-11": {
+      "book_hours": {
+        "BTC": 24,
+        "ETH": 24
+      },
+      "ctx": 666,
+      "trades": 0,
+      "binance": {
+        "BTC": {
+          "source": "aggTrades",
+          "rows": 66799
+        },
+        "ETH": {
+          "source": "aggTrades",
+          "rows": 66923
+        }
+      },
+      "whale": 192
+    }
+  },
+  "s3_gb_downloaded": 1.189,
+  "days_with_missing_book_hours": {
+    "2026-09-04": {
+      "BTC": 23,
+      "ETH": 23
+    },
+    "2026-09-13": {
+      "BTC": 23,
+      "ETH": 23
+    },
+    "2026-09-17": {
+      "BTC": 23,
+      "ETH": 23
+    }
+  }
+}

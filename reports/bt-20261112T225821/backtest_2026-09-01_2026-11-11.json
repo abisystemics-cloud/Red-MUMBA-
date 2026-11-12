@@ -1,0 +1,126 @@
+{
+  "period": {
+    "from": "2026-09-01",
+    "to": "2026-11-11",
+    "coins": [
+      "BTC",
+      "ETH"
+    ],
+    "execution_mode": "maker"
+  },
+  "runtime_s": 292.2,
+  "events": {
+    "ctx": 103726,
+    "ext": 9588845,
+    "whale": 3764,
+    "book": 2259965
+  },
+  "signals_available": {
+    "order_book": true,
+    "trades_cvd_poc": false,
+    "cex_premium": true,
+    "funding": true,
+    "positioning": true,
+    "liquidations": false
+  },
+  "summary": {
+    "trades": 1,
+    "return_pct": 0.069,
+    "max_dd_pct": 0.225,
+    "sharpe": 0.532,
+    "win_rate": 1.0,
+    "profit_factor": null,
+    "maker_fill_rate": 0.167
+  },
+  "fees_usd": 2.04,
+  "funding_usd": -0.1,
+  "exit_reasons": {
+    "signal_taker": 1
+  },
+  "monthly": {
+    "2026-10": {
+      "trades": 1,
+      "pnl": 6.86,
+      "wins": 1
+    }
+  },
+  "weekly_pnl": [
+    6.86,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "go_no_go": {
+    "verdict": "NO-GO",
+    "criteria": {
+      "trades": {
+        "value": 1,
+        "target": ">= 200",
+        "pass": false
+      },
+      "profit_factor": {
+        "value": "inf",
+        "target": ">= 1.2",
+        "pass": true
+      },
+      "max_drawdown_pct": {
+        "value": 0.0,
+        "target": "<= 5.0",
+        "pass": true
+      },
+      "positive_weeks": {
+        "value": "1/11",
+        "target": ">= 7/11",
+        "pass": false
+      }
+    }
+  },
+  "strategy": {
+    "obi_depth": 10,
+    "obi_decay": 0.15,
+    "cvd_window_s": 300,
+    "vpvr_window_s": 3600,
+    "vpvr_bucket_bps": 10.0,
+    "zscore_window": 1800,
+    "spoof_size_mult": 8.0,
+    "spoof_max_life_s": 3.0,
+    "liq_max_dist_bps": 300.0,
+    "weights": {
+      "obi": 0.15,
+      "cvd": 0.15,
+      "premium": 0.1,
+      "poc": 0.1,
+      "funding": 0.2,
+      "liq": 0.1,
+      "whale": 0.2
+    },
+    "entry_threshold": 1.4,
+    "exit_threshold": 0.3,
+    "persistence_ticks": 6,
+    "max_spread_bps": 4.0,
+    "max_hold_s": 3600,
+    "cooldown_s": 120
+  },
+  "trades": [
+    {
+      "coin": "ETH",
+      "side": "long",
+      "entry_ts": 1793320641328,
+      "exit_ts": 1793322011737,
+      "entry_px": 2211.5,
+      "exit_px": 2217.2346300000004,
+      "qty": 1.5343,
+      "pnl": 6.857323795154762,
+      "reason": "signal_taker",
+      "fees": 2.03982205926405,
+      "funding": -0.09850304541823092
+    }
+  ]
+}
