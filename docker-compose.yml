@@ -8,7 +8,7 @@
 # atomique (os.replace) crée un nouvel inode qu'un montage de fichier ne verrait pas.
 
 x-common: &common
-  image: ${IMAGE:-ghcr.io/OWNER/hl-swarm:latest}
+  image: ${IMAGE:-ghcr.io/abisystemics-cloud/hl-swarm:latest}
   build: .
   env_file: .env
   restart: unless-stopped
