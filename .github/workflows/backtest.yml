@@ -47,6 +47,8 @@ jobs:
             echo "mode=$(jq -r '.mode // "maker"' request.json)" >> "$GITHUB_OUTPUT"
             echo "trades=$(jq -r '.with_trades // false' request.json)" >> "$GITHUB_OUTPUT"
             echo "id=$(jq -r .id request.json)" >> "$GITHUB_OUTPUT"
+            echo "task=$(jq -r '.task // "backtest"' request.json)" >> "$GITHUB_OUTPUT"
+            echo "split=$(jq -r '.split // ""' request.json)" >> "$GITHUB_OUTPUT"
           else
             echo "from=${{ inputs.from }}" >> "$GITHUB_OUTPUT"
             echo "to=${{ inputs.to }}" >> "$GITHUB_OUTPUT"
@@ -89,10 +91,15 @@ jobs:
         run: |
           set +e
           mkdir -p data/reports
-          python scripts/backtest.py --from ${{ steps.p.outputs.from }} --to ${{ steps.p.outputs.to }} \
-            --coins ${{ steps.p.outputs.coins }} --mode ${{ steps.p.outputs.mode }} | tee data/reports/console.txt
+          if [ "${{ steps.p.outputs.task }}" = "sweep" ]; then
+            python scripts/sweep.py --from ${{ steps.p.outputs.from }} --split ${{ steps.p.outputs.split }} \
+              --to ${{ steps.p.outputs.to }} --coins ${{ steps.p.outputs.coins }} | tee data/reports/console.txt
+          else
+            python scripts/backtest.py --from ${{ steps.p.outputs.from }} --to ${{ steps.p.outputs.to }} \
+              --coins ${{ steps.p.outputs.coins }} --mode ${{ steps.p.outputs.mode }} | tee data/reports/console.txt
+          fi
           echo "rc=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
-          cat data/reports/backtest_*.md >> "$GITHUB_STEP_SUMMARY"
+          cat data/reports/*.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
 
       - uses: actions/upload-artifact@v4
         with:
