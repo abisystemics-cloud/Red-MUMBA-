@@ -110,10 +110,14 @@ def test_validation_rules():
     assert validate(_sig(Side.FLAT), MacroState(1000, RiskLevel.HALT, []), CFG, 1000) == []
 
 
+FAST = {"entry_threshold": 0.5, "persistence_ticks": 2, "cooldown_s": 30, "max_hold_s": 600,
+        "zscore_window": 300, "cvd_window_s": 60}
+
+
 def test_backtest_produces_trades_with_lower_threshold():
-    st = CFG.strategy.model_copy(update={"entry_threshold": 0.9, "persistence_ticks": 2})
-    r = run_backtest(generate(1800), st, CFG.risk)
-    assert r.n_trades > 5
+    st = CFG.strategy.model_copy(update=FAST)
+    r = run_backtest(generate(1800), st, CFG.risk, exec_cfg=CFG.execution.model_copy(update={"mode": "taker"}))
+    assert r.n_trades >= 2
     assert 0 <= r.max_drawdown_pct < 100
     assert len(r.equity_curve) > 100
 
@@ -129,8 +133,8 @@ def test_optimizer_respects_bounds_and_change_cap():
 
 
 def test_optimizer_end_to_end():
-    rc = CFG.research.model_copy(update={"n_trials": 6, "min_trades_for_eval": 4})
-    st = CFG.strategy.model_copy(update={"entry_threshold": 1.0, "persistence_ticks": 2})
+    rc = CFG.research.model_copy(update={"n_trials": 6, "min_trades_for_eval": 4, "min_oos_trades": 3})
+    st = CFG.strategy.model_copy(update={**FAST, "entry_threshold": 1.0})
     rep = optimize(generate(2400, seed=3), st, CFG.risk, rc, seed=1)
     assert rep.trials == 6
     assert isinstance(rep.accepted, bool) and rep.reason

@@ -58,7 +58,8 @@ def kelly_fraction(p: float, b: float) -> float:
     return max(0.0, p - (1 - p) / b)
 
 
-def stop_distance_bps(vol_bps_per_sqrt_s: float, cfg, horizon_s: float = 60.0) -> float:
+def stop_distance_bps(vol_bps_per_sqrt_s: float, cfg, horizon_s: float | None = None) -> float:
+    horizon_s = horizon_s if horizon_s is not None else getattr(cfg, "stop_horizon_s", 60.0)
     raw = cfg.stop_vol_mult * vol_bps_per_sqrt_s * math.sqrt(horizon_s)
     if not math.isfinite(raw):
         raw = cfg.max_stop_bps

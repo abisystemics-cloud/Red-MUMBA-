@@ -3,6 +3,8 @@
     python main.py --role all        # tout dans un process (dev)
     python main.py --role live       # Pôle 1 : trading temps réel
     python main.py --role research   # Pôle 2 : R&D (conteneur séparé en prod)
+    python main.py --backtest        # un cycle R&D forcé, puis sortie
+    python main.py --go-live         # rapport go/no-go (code retour 0 = GO, 3 = NO-GO)
 
 Chaque agent tourne sous un superviseur qui le redémarre (backoff exponentiel)
 s'il plante ; au-delà de `MAX_RESTARTS` en 10 minutes, le process s'arrête
@@ -169,7 +171,16 @@ def main() -> None:
     p.add_argument("--config", default=os.getenv("CONFIG_PATH", "config.yaml"))
     p.add_argument("--role", choices=("all", "live", "research"), default=os.getenv("ROLE", "all"))
     p.add_argument("--backtest", action="store_true", help="run one forced research cycle and exit")
+    p.add_argument("--go-live", action="store_true", help="print the go/no-go report and exit")
     args = p.parse_args()
+    if args.go_live:
+        setup_logging("WARNING")
+        store = ConfigStore(args.config)
+        agent = BacktestingAgent(EventBus(), store, use_process_pool=False)
+        rep = asyncio.run(agent.go_live_report())
+        from ml_engine.go_live import format_report
+        print(format_report(rep))
+        sys.exit(0 if rep["go"] else 3)
     if args.backtest:
         setup_logging("INFO")
         store = ConfigStore(args.config)

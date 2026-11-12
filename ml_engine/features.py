@@ -13,8 +13,9 @@ Features :
          exécutés.
 - Premium cross-exchange : écart HL vs médiane Binance/Bybit (en bps) + z-score
          (le z-score retire la base structurelle liée au funding).
-- Volatilité réalisée EWMA, variation d'OI, funding, distance au cluster de
-  liquidations le plus proche.
+- Volatilité réalisée EWMA, variation d'OI.
+- Positionnement : z-score du funding (foule trop longue/courte), distance au
+  cluster de liquidations dominant, biais net des "whales" suivies.
 """
 from __future__ import annotations
 
@@ -26,7 +27,7 @@ from typing import Optional
 import numpy as np
 
 from core.events import (AssetCtx, BookSnapshot, ExternalQuote, FeatureVector,
-                         LiquidationMap, Trade)
+                         LiquidationMap, Trade, WhaleBias)
 
 
 class RollingZ:
@@ -143,6 +144,8 @@ class FeatureEngine:
         self._ctx_hist: deque[tuple[int, float]] = deque()
         self._last_ctx: Optional[AssetCtx] = None
         self._liq: Optional[LiquidationMap] = None
+        self._whale: Optional[WhaleBias] = None
+        self._funding_z = 0.0
         self._prev_mid: Optional[tuple[int, float]] = None
         self._var_per_s = 0.0
         self.last_book_ts = 0
@@ -154,6 +157,7 @@ class FeatureEngine:
             self.z_obi = RollingZ(cfg.zscore_window)
             self.z_cvd = RollingZ(cfg.zscore_window)
             self.z_prem = RollingZ(cfg.zscore_window)
+            self.z_funding = RollingZ(500)
         prev = getattr(self, "spoof", None)
         self.spoof = SpoofDetector(cfg.spoof_size_mult, cfg.spoof_max_life_s, near_levels=cfg.obi_depth)
         if prev is not None:
@@ -182,6 +186,8 @@ class FeatureEngine:
         self._ext[q.venue] = q
 
     def on_ctx(self, c: AssetCtx) -> None:
+        if self._last_ctx is None or c.funding != self._last_ctx.funding:
+            self._funding_z = self.z_funding.update(c.funding)
         self._last_ctx = c
         self._ctx_hist.append((c.ts, c.open_interest))
         while self._ctx_hist and self._ctx_hist[0][0] < c.ts - 300_000:
@@ -189,6 +195,9 @@ class FeatureEngine:
 
     def on_liq(self, m: LiquidationMap) -> None:
         self._liq = m
+
+    def on_whale(self, w: WhaleBias) -> None:
+        self._whale = w
 
     # ----------------------------------------------------------- calcul
     def poc(self) -> float:
@@ -253,4 +262,6 @@ class FeatureEngine:
             funding=self._last_ctx.funding if self._last_ctx else 0.0,
             book_age_ms=int(now - book.exch_ts), ext_age_ms=ext_age,
             liq_magnet_bps=liq_bps, source_recv_ns=book.recv_ns,
+            funding_z=self._funding_z,
+            whale_bias=self._whale.bias if self._whale and now - self._whale.ts < 15 * 60_000 else 0.0,
         )

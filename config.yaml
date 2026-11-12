@@ -51,6 +51,11 @@ data:
     coinglass_heatmap_path: /api/futures/liquidation/heatmap/model1
     # utilisé si provider=firecrawl (page publique, extraction JSON)
     firecrawl_url: ""
+  # Positionnement des "whales" : adresses publiques Hyperliquid à suivre
+  # (positions lues via l'endpoint public /info clearinghouseState).
+  whales:
+    addresses: []
+    poll_seconds: 60
   record_market_data: true
   recordings_dir: data/recordings
   max_staleness_ms: 2500      # au-delà, la donnée est considérée morte
@@ -74,35 +79,42 @@ macro:
   llm_caution_threshold: 0.5   # → CAUTION (taille réduite de moitié)
 
 strategy:                       # ← section rechargée à chaud
+  # Horizon : minutes à ~1 h. La microstructure sert de filtre d'entrée ;
+  # l'avantage recherché vient du positionnement (funding, liquidations, whales).
   obi_depth: 10
   obi_decay: 0.15
-  cvd_window_s: 60
-  vpvr_window_s: 900
-  vpvr_bucket_bps: 5
-  zscore_window: 300
+  cvd_window_s: 300
+  vpvr_window_s: 3600
+  vpvr_bucket_bps: 10
+  zscore_window: 1800
   spoof_size_mult: 8.0
   spoof_max_life_s: 3.0
+  liq_max_dist_bps: 300
   weights:
-    obi: 0.35
-    cvd: 0.30
-    premium: 0.25
+    obi: 0.15
+    cvd: 0.15
+    premium: 0.10
     poc: 0.10
-  entry_threshold: 1.6
-  exit_threshold: 0.4
-  persistence_ticks: 3
+    funding: 0.20         # contrarien : funding extrême = foule trop positionnée
+    liq: 0.10             # aimant vers le cluster de liquidations proche
+    whale: 0.20           # biais net des adresses suivies
+  entry_threshold: 1.4
+  exit_threshold: 0.3
+  persistence_ticks: 6
   max_spread_bps: 4.0
-  max_hold_s: 600
-  cooldown_s: 30
+  max_hold_s: 3600
+  cooldown_s: 120
 
 risk:
   kelly_fraction: 0.25          # fraction de Kelly (Kelly plein = 1.0)
   max_risk_per_trade_pct: 0.5   # % de l'equity risqué au stop
   max_position_notional_usd: 5000
   max_leverage: 3
-  stop_vol_mult: 2.5            # stop = k × volatilité réalisée
+  stop_vol_mult: 2.5            # stop = k × σ réalisée × √stop_horizon_s
+  stop_horizon_s: 600
   take_profit_r: 2.0            # TP en multiples du risque
   min_stop_bps: 8
-  max_stop_bps: 150
+  max_stop_bps: 300
   daily_loss_limit_pct: 3.0     # → HALT jusqu'au lendemain UTC
   max_consecutive_losses: 5
   slippage_bps: 3               # tolérance des ordres IOC
@@ -110,6 +122,17 @@ risk:
   prior_payoff: 1.2
   flatten_on_halt: true
   paper_equity_usd: 10000
+
+execution:
+  # maker = ordres post-only (ALO) posés au meilleur prix : frais bien plus bas,
+  # exécution non garantie. taker = IOC immédiat (ancien comportement).
+  mode: maker
+  maker_timeout_s: 20           # entrée : délai max avant abandon
+  requote_bps: 3                # replace l'ordre si le marché s'éloigne de plus de X bps
+  max_requotes: 3
+  exit_maker_timeout_s: 8       # sortie : tentative maker puis repli taker
+  maker_fee_bps: 1.5            # à vérifier sur la grille de frais Hyperliquid
+  taker_fee_bps: 4.5
 
 telemetry:
   posthog_host: https://eu.i.posthog.com
@@ -126,10 +149,14 @@ research:
   degrade_sharpe_below: 0.5
   degrade_winrate_below: 0.45
   max_drawdown_pct: 10.0        # contrainte dure du backtest
-  n_trials: 60
-  oos_fraction: 0.3             # walk-forward : part hors échantillon
+  n_trials: 30
+  oos_fraction: 0.3             # walk-forward : part hors échantillon finale
+  folds: 3                      # l'in-sample est découpé en N périodes ; un candidat
+                                # est noté sur sa PIRE période (robustesse)
+  min_oos_trades: 30
+  min_sharpe_improvement: 0.3   # marge exigée, augmentée selon le nombre d'essais
   max_param_change_pct: 30      # changement max par mise à jour
-  auto_deploy: true             # false = propose seulement (fichier .proposed)
+  auto_deploy: false            # les premiers mois : l'agent propose, un humain valide
   bounds:
     entry_threshold: [1.0, 3.0]
     exit_threshold: [0.1, 1.0]
@@ -140,3 +167,21 @@ research:
     weights.cvd: [0.0, 0.7]
     weights.premium: [0.0, 0.7]
     weights.poc: [0.0, 0.4]
+    weights.funding: [0.0, 0.6]
+    weights.liq: [0.0, 0.4]
+    weights.whale: [0.0, 0.6]
+
+# Critères de passage en réel, fixés AVANT de voir les résultats.
+go_live:
+  min_trades: 200
+  min_profit_factor: 1.2
+  max_drawdown_pct: 5.0
+  min_positive_weeks: 3
+  weeks: 4
+  report_interval_h: 168        # rapport hebdomadaire
+
+alerts:
+  # Telegram : TELEGRAM_BOT_TOKEN et TELEGRAM_CHAT_ID dans l'environnement
+  enabled: true
+  min_interval_s: 300           # anti-spam : même alerte au plus toutes les 5 min
+  feed_down_after_s: 30

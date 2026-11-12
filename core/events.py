@@ -23,6 +23,7 @@ class Topic(str, Enum):
     ASSET_CTX = "asset_ctx"       # AssetCtx
     EXT_QUOTE = "ext_quote"       # ExternalQuote (Binance / Bybit)
     LIQ_MAP = "liq_map"           # LiquidationMap
+    WHALES = "whales"             # WhaleBias
     FEATURES = "features"         # FeatureVector
     SIGNAL = "signal"             # Signal (brut, agent Quant)
     VALIDATED = "validated"       # Signal validé
@@ -106,6 +107,15 @@ class LiquidationMap:
 
 
 @dataclass(slots=True)
+class WhaleBias:
+    coin: str
+    ts: int
+    bias: float                   # [-1, 1] : notionnel net long/short des adresses suivies
+    n_wallets: int
+    gross_usd: float
+
+
+@dataclass(slots=True)
 class FeatureVector:
     coin: str
     ts: int
@@ -128,6 +138,8 @@ class FeatureVector:
     ext_age_ms: int
     liq_magnet_bps: float = float("nan")
     source_recv_ns: int = 0
+    funding_z: float = 0.0        # z-score du funding (positif = longs qui paient cher)
+    whale_bias: float = 0.0
 
 
 class Side(str, Enum):

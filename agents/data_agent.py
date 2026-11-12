@@ -8,6 +8,11 @@ Flux :
   une API agrégée de type CoinGecko a des minutes de retard).
 - Carte des liquidations : API Coinglass (clé requise) ou, à défaut, extraction
   Firecrawl d'une page publique, à basse fréquence (≥ 60 s).
+- Positionnement des "whales" : positions publiques des adresses listées dans
+  `data.whales.addresses`, lues via l'endpoint public Hyperliquid /info
+  (clearinghouseState), agrégées en un biais net long/short par marché.
+- Watchdog des flux : un flux muet depuis `alerts.feed_down_after_s` déclenche
+  un événement `feed_down` (alerte).
 
 Toutes les sources sont normalisées en événements (core.events) publiés sur le
 bus et, si activé, enregistrées pour le backtest.
@@ -22,7 +27,7 @@ import numpy as np
 
 from agents.base import BaseAgent
 from core.events import (AssetCtx, BookSnapshot, ExternalQuote, LiquidationMap,
-                         Topic, Trade, now_ms)
+                         Topic, Trade, WhaleBias, now_ms)
 from core.ws_client import ResilientWebSocket
 from ml_engine.recorder import MarketRecorder
 
@@ -155,7 +160,10 @@ class HyperliquidDataAgent(BaseAgent):
                 try:
                     clusters = await (self._coinglass(m) if lc.provider == "coinglass" else self._firecrawl(m))
                     if clusters:
-                        self.bus.publish(Topic.LIQ_MAP, LiquidationMap(m.coin, now_ms(), clusters, lc.provider))
+                        lm = LiquidationMap(m.coin, now_ms(), clusters, lc.provider)
+                        self.bus.publish(Topic.LIQ_MAP, lm)
+                        if self.recorder:
+                            self.recorder.liq(lm)
                 except Exception as exc:  # noqa: BLE001
                     if not warned:
                         self.log.warning("liquidation source %s unavailable: %s", lc.provider, exc)
@@ -203,6 +211,76 @@ class HyperliquidDataAgent(BaseAgent):
         cl = ((body.get("data") or {}).get("json") or {}).get("clusters") or []
         return [(float(c["price"]), float(c["usd"])) for c in cl if "price" in c and "usd" in c]
 
+    # ------------------------------------------------------------ whales
+    @staticmethod
+    def aggregate_whales(states: list[dict], coins: list[str], ts: int) -> list[WhaleBias]:
+        net = {c: 0.0 for c in coins}
+        gross = {c: 0.0 for c in coins}
+        n = {c: 0 for c in coins}
+        for st in states:
+            for ap in st.get("assetPositions", []):
+                p = ap.get("position", {})
+                c = p.get("coin")
+                if c not in net:
+                    continue
+                szi = float(p.get("szi") or 0)
+                val = abs(float(p.get("positionValue") or 0))
+                if szi == 0 or val == 0:
+                    continue
+                net[c] += val if szi > 0 else -val
+                gross[c] += val
+                n[c] += 1
+        return [WhaleBias(c, ts, net[c] / gross[c] if gross[c] else 0.0, n[c], gross[c]) for c in coins]
+
+    async def _poll_whales(self, stop: asyncio.Event) -> None:
+        wc = self.cfg.data.whales
+        if not wc.addresses or self._http is None:
+            return
+        url = self.cfg.hl_api_url() + "/info"
+        while not stop.is_set():
+            states = []
+            for addr in wc.addresses:
+                try:
+                    async with self._http.post(url, json={"type": "clearinghouseState", "user": addr},
+                                               timeout=10) as r:
+                        r.raise_for_status()
+                        states.append(await r.json())
+                except Exception as exc:  # noqa: BLE001
+                    self.log.debug("whale %s unavailable: %s", addr, exc)
+                await asyncio.sleep(0.2)  # reste sous les limites de requêtes de l'API publique
+            for wb in self.aggregate_whales(states, self.coins, now_ms()):
+                self.bus.publish(Topic.WHALES, wb)
+                if self.recorder:
+                    self.recorder.whale(wb)
+            try:
+                await asyncio.wait_for(stop.wait(), timeout=wc.poll_seconds)
+            except asyncio.TimeoutError:
+                pass
+
+    async def _watchdog(self, stop: asyncio.Event) -> None:
+        down: dict[str, bool] = {}
+        try:
+            await asyncio.wait_for(stop.wait(), timeout=self.cfg.alerts.feed_down_after_s)
+            return
+        except asyncio.TimeoutError:
+            pass
+        while not stop.is_set():
+            limit = self.cfg.alerts.feed_down_after_s
+            for ws in (self.hl_ws, self.bin_ws, self.byb_ws):
+                if ws is None:
+                    continue
+                is_down = (not ws.connected.is_set()) or ws.seconds_since_last_message > limit
+                if is_down and not down.get(ws.name):
+                    self.bus.publish(Topic.TELEMETRY, {"event": "feed_down", "feed": ws.name,
+                                                       "last_error": ws.last_error})
+                elif not is_down and down.get(ws.name):
+                    self.bus.publish(Topic.TELEMETRY, {"event": "feed_up", "feed": ws.name})
+                down[ws.name] = is_down
+            try:
+                await asyncio.wait_for(stop.wait(), timeout=5)
+            except asyncio.TimeoutError:
+                pass
+
     # ------------------------------------------------------------- run
     async def run(self, stop: asyncio.Event) -> None:
         tasks = [asyncio.create_task(self.hl_ws.run(stop), name="ws-hyperliquid")]
@@ -211,6 +289,8 @@ class HyperliquidDataAgent(BaseAgent):
         if self.byb_ws:
             tasks.append(asyncio.create_task(self.byb_ws.run(stop), name="ws-bybit"))
         tasks.append(asyncio.create_task(self._poll_liquidations(stop), name="liquidations"))
+        tasks.append(asyncio.create_task(self._poll_whales(stop), name="whales"))
+        tasks.append(asyncio.create_task(self._watchdog(stop), name="feed-watchdog"))
         try:
             await asyncio.gather(*tasks)
         finally:

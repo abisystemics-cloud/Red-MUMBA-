@@ -21,6 +21,14 @@ from ml_engine.risk import round_px
 log = logging.getLogger("broker")
 
 TAKER_FEE = 0.00045
+MAKER_FEE = 0.00015
+
+
+@dataclass
+class OrderStatus:
+    status: str          # open | filled | canceled | rejected | unknown
+    filled_sz: float
+    avg_px: float
 
 
 @dataclass
@@ -45,6 +53,9 @@ class Broker:
     async def ioc(self, coin: str, is_buy: bool, sz: float, limit_px: float, reduce_only: bool) -> Fill: raise NotImplementedError
     async def trigger(self, coin: str, is_buy: bool, sz: float, trigger_px: float, tpsl: str) -> Fill: raise NotImplementedError
     async def cancel_all(self, coin: str) -> None: ...
+    async def post_only(self, coin: str, is_buy: bool, sz: float, px: float, reduce_only: bool) -> Fill: raise NotImplementedError
+    async def order_status(self, coin: str, oid: int) -> OrderStatus: raise NotImplementedError
+    async def cancel(self, coin: str, oid: int) -> None: ...
     async def closed_pnl_since(self, coin: str, since_ms: int) -> Optional[float]: return None
     def on_book(self, book: BookSnapshot) -> list[tuple[str, str, float]]: return []
 
@@ -55,7 +66,10 @@ class PaperBroker(Broker):
 
     dry_run = True
 
-    def __init__(self, equity: float):
+    def __init__(self, equity: float, maker_fee: float = MAKER_FEE, taker_fee: float = TAKER_FEE):
+        self.maker_fee, self.taker_fee = maker_fee, taker_fee
+        self.resting: dict[int, dict] = {}
+        self._oid = 0
         self.cash = equity
         self.books: dict[str, BookSnapshot] = {}
         self.pos: dict[str, list[float]] = {}          # coin -> [signed_sz, entry_px]
@@ -73,7 +87,7 @@ class PaperBroker(Broker):
         sz, px = self.pos.get(coin, [0.0, 0.0])
         return sz, px
 
-    def _apply(self, coin: str, signed: float, px: float) -> float:
+    def _apply(self, coin: str, signed: float, px: float, fee_rate: float | None = None) -> float:
         sz, entry = self.pos.get(coin, [0.0, 0.0])
         realized = 0.0
         if sz and math.copysign(1, sz) != math.copysign(1, signed):
@@ -85,7 +99,7 @@ class PaperBroker(Broker):
             new = sz + signed
             entry = (abs(sz) * entry + abs(signed) * px) / abs(new) if new else 0.0
             self.pos[coin] = [new, entry]
-        fee = abs(signed) * px * TAKER_FEE
+        fee = abs(signed) * px * (self.taker_fee if fee_rate is None else fee_rate)
         self.cash += realized - fee
         if abs(self.pos[coin][0]) < 1e-12:
             self.pos.pop(coin, None)
@@ -107,6 +121,45 @@ class PaperBroker(Broker):
         fee = self._apply(coin, sz if is_buy else -sz, px)
         return Fill(True, sz, px, fee, (time.perf_counter() - t0) * 1000)
 
+    async def post_only(self, coin, is_buy, sz, px, reduce_only) -> Fill:
+        b = self.books.get(coin)
+        if b is None:
+            return Fill(False, error="no book")
+        if (is_buy and px >= b.best_ask) or (not is_buy and px <= b.best_bid):
+            return Fill(False, error="post-only would cross")
+        self._oid += 1
+        self.resting[self._oid] = {"coin": coin, "is_buy": is_buy, "sz": sz, "px": px,
+                                   "reduce_only": reduce_only, "status": "open", "filled": 0.0}
+        return Fill(True, oid=self._oid)
+
+    async def order_status(self, coin, oid) -> OrderStatus:
+        o = self.resting.get(oid)
+        if o is None:
+            return OrderStatus("unknown", 0.0, 0.0)
+        return OrderStatus(o["status"], o["filled"], o["px"])
+
+    async def cancel(self, coin, oid) -> None:
+        o = self.resting.get(oid)
+        if o and o["status"] == "open":
+            o["status"] = "canceled"
+
+    def _match_resting(self, book: BookSnapshot) -> None:
+        """Hypothèse prudente sur la file d'attente : un ordre maker n'est exécuté
+        que si le prix TRAVERSE son niveau (ask ≤ notre bid, ou bid ≥ notre ask)."""
+        for o in self.resting.values():
+            if o["status"] != "open" or o["coin"] != book.coin:
+                continue
+            hit = book.best_ask <= o["px"] if o["is_buy"] else book.best_bid >= o["px"]
+            if not hit:
+                continue
+            sz = o["sz"]
+            if o["reduce_only"]:
+                cur = self.pos.get(book.coin, [0.0, 0.0])[0]
+                sz = min(sz, abs(cur))
+            if sz > 0:
+                self._apply(book.coin, sz if o["is_buy"] else -sz, o["px"], self.maker_fee)
+            o["filled"], o["status"] = sz, "filled"
+
     async def trigger(self, coin, is_buy, sz, trigger_px, tpsl) -> Fill:
         self.triggers.setdefault(coin, []).append(
             {"is_buy": is_buy, "sz": sz, "px": trigger_px, "tpsl": tpsl})
@@ -114,9 +167,13 @@ class PaperBroker(Broker):
 
     async def cancel_all(self, coin) -> None:
         self.triggers.pop(coin, None)
+        for o in self.resting.values():
+            if o["coin"] == coin and o["status"] == "open":
+                o["status"] = "canceled"
 
     def on_book(self, book: BookSnapshot) -> list[tuple[str, str, float]]:
         self.books[book.coin] = book
+        self._match_resting(book)
         hit = []
         for t in list(self.triggers.get(book.coin, [])):
             m = book.mid
@@ -204,6 +261,28 @@ class HyperliquidBroker(Broker):
         order_type = {"trigger": {"triggerPx": px, "isMarket": True, "tpsl": tpsl}}
         resp = await asyncio.to_thread(self.exchange.order, coin, is_buy, sz, px, order_type, True)
         return self._parse(resp, t0)
+
+    async def post_only(self, coin, is_buy, sz, px, reduce_only) -> Fill:
+        px = round_px(px, self.sz_decimals(coin))
+        t0 = time.perf_counter()
+        resp = await asyncio.to_thread(self.exchange.order, coin, is_buy, sz, px,
+                                       {"limit": {"tif": "Alo"}}, reduce_only)
+        f = self._parse(resp, t0)
+        if f.ok and f.filled_sz:  # ne devrait pas arriver avec ALO
+            f.fee = f.filled_sz * f.avg_px * MAKER_FEE
+        return f
+
+    async def order_status(self, coin, oid) -> OrderStatus:
+        r = await asyncio.to_thread(self.info.query_order_by_oid, self.account, oid)
+        o = (r or {}).get("order") or {}
+        st = o.get("status", "unknown")
+        od = o.get("order") or {}
+        orig, left = float(od.get("origSz") or 0), float(od.get("sz") or 0)
+        status = {"open": "open", "filled": "filled"}.get(st, "canceled" if "cancel" in st else st)
+        return OrderStatus(status, max(0.0, orig - left), float(od.get("limitPx") or 0))
+
+    async def cancel(self, coin, oid) -> None:
+        await asyncio.to_thread(self.exchange.cancel, coin, oid)
 
     async def cancel_all(self, coin) -> None:
         orders = await asyncio.to_thread(self.info.frontend_open_orders, self.account)

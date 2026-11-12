@@ -16,12 +16,19 @@ n'est pas installé) :
 
 Le calcul lourd tourne dans un ProcessPoolExecutor pour ne jamais bloquer
 la boucle asyncio du trading quand tout tourne dans un seul conteneur.
+
+Par défaut (`auto_deploy: false`) l'agent PROPOSE : il écrit
+`config.proposed.yaml` et envoie une alerte ; un humain valide en copiant la
+section dans config.yaml. Il produit aussi un rapport go/no-go périodique
+(`go_live`) dans `data/reports/`.
 """
 from __future__ import annotations
 
 import asyncio
+import json
 import math
 import os
+import time
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Any, Callable, Optional, TypedDict
@@ -30,8 +37,10 @@ import yaml
 
 from agents.base import BaseAgent
 from agents.telemetry_agent import read_local_telemetry
-from core.config import RiskCfg, ResearchCfg, StrategyCfg, atomic_update_strategy
+from core.config import ExecutionCfg, RiskCfg, ResearchCfg, StrategyCfg, atomic_update_strategy
 from core.events import Topic, now_ms
+from ml_engine.go_live import evaluate as go_live_evaluate
+from ml_engine.go_live import format_report
 from ml_engine.recorder import load_events
 
 
@@ -105,10 +114,12 @@ def _build_graph(nodes: dict[str, Callable], routers: dict[str, Callable]):
 
 
 # ------------------------------------------------ calcul (process séparé)
-def _optimize_job(records: list, strategy: dict, risk: dict, research: dict, seed: int) -> dict:
+def _optimize_job(records: list, strategy: dict, risk: dict, research: dict, seed: int,
+                  execution: dict | None = None) -> dict:
     from ml_engine.optimizer import optimize
     rep = optimize(records, StrategyCfg.model_validate(strategy), RiskCfg.model_validate(risk),
-                   ResearchCfg.model_validate(research), seed=seed)
+                   ResearchCfg.model_validate(research), seed=seed,
+                   exec_cfg=ExecutionCfg.model_validate(execution) if execution else None)
     return {"accepted": rep.accepted, "reason": rep.reason, "current_oos": rep.current_oos,
             "best_oos": rep.best_oos, "best_params": rep.best_params, "trials": rep.trials}
 
@@ -164,19 +175,22 @@ class BacktestingAgent(BaseAgent):
             r.raise_for_status()
             return (await r.json()).get("results", [])
 
-    async def collect_performance(self, s: ResearchState) -> dict:
-        rc = self.cfg.research
-        rows, source = None, "posthog"
+    async def closed_trades(self, hours: int) -> tuple[list[list[Any]], str]:
+        """[[timestamp, pnl, r_multiple], …] depuis PostHog, sinon la télémétrie locale."""
         try:
-            rows = await self._posthog_trades(rc.lookback_hours)
+            rows = await self._posthog_trades(hours)
+            if rows is not None:
+                return rows, "posthog"
         except Exception as exc:  # noqa: BLE001
             self.log.warning("PostHog query failed (%s) → local telemetry", exc)
-        if rows is None:
-            source = "local"
-            since = now_ms() - rc.lookback_hours * 3_600_000
-            recs = [r for r in read_local_telemetry(self.cfg.telemetry.local_log_dir, since)
-                    if r["event"] == "hlswarm_trade_closed"]
-            rows = [[r["timestamp"], r["properties"].get("pnl"), r["properties"].get("r_multiple")] for r in recs]
+        since = now_ms() - hours * 3_600_000
+        recs = [r for r in read_local_telemetry(self.cfg.telemetry.local_log_dir, since)
+                if r["event"] == "hlswarm_trade_closed"
+                and r["properties"].get("network", self.cfg.runtime.network) == self.cfg.runtime.network]
+        return [[r["timestamp"], r["properties"].get("pnl"), r["properties"].get("r_multiple")] for r in recs], "local"
+
+    async def collect_performance(self, s: ResearchState) -> dict:
+        rows, source = await self.closed_trades(self.cfg.research.lookback_hours)
         pnls = [float(r[1] or 0) for r in rows]
         rs = [float(r[2] or 0) for r in rows]
         perf = performance_from_trades(pnls, rs)
@@ -218,7 +232,7 @@ class BacktestingAgent(BaseAgent):
 
     async def optimize(self, s: ResearchState) -> dict:
         args = (s["records"], self.cfg.strategy.model_dump(), self.cfg.risk.model_dump(),
-                self.cfg.research.model_dump(), now_ms() % 2 ** 31)
+                self.cfg.research.model_dump(), now_ms() % 2 ** 31, self.cfg.execution.model_dump())
         if self._pool:
             rep = await asyncio.get_running_loop().run_in_executor(self._pool, _optimize_job, *args)
         else:
@@ -236,9 +250,27 @@ class BacktestingAgent(BaseAgent):
             self.log.warning("NEW STRATEGY DEPLOYED (backup %s): %s", backup, rep["best_oos"])
             return {"deployed": True, "done": "deployed"}
         prop = path.with_suffix(".proposed.yaml")
-        prop.write_text(yaml.safe_dump({"strategy": rep["best_params"], "oos": rep["best_oos"]},
+        prop.write_text(yaml.safe_dump({"strategy": rep["best_params"], "oos": rep["best_oos"],
+                                        "current_oos": rep["current_oos"]},
                                        sort_keys=False), encoding="utf-8")
-        return {"deployed": False, "done": f"proposal written to {prop.name}"}
+        return {"deployed": False, "done": f"proposal written to {prop.name} (validation humaine requise)"}
+
+    # -------------------------------------------------------- go / no-go
+    async def go_live_report(self) -> dict:
+        gl = self.cfg.go_live
+        rows, source = await self.closed_trades(int(gl.weeks * 7 * 24))
+        rep = go_live_evaluate([(r[0], r[1]) for r in rows], self.cfg.risk.paper_equity_usd, gl)
+        rep["source"] = source
+        rep["network"] = self.cfg.runtime.network
+        out = Path(self.cfg.data.recordings_dir).parent / "reports"
+        out.mkdir(parents=True, exist_ok=True)
+        (out / f"go_live_{time.strftime('%Y%m%d', time.gmtime())}.json").write_text(
+            json.dumps(rep, indent=2, default=str), encoding="utf-8")
+        text = format_report(rep)
+        self.bus.publish(Topic.TELEMETRY, {"event": "go_live_report", "verdict": rep["verdict"],
+                                           "criteria": rep["criteria"], "text": text})
+        self.log.info(text)
+        return rep
 
     # ------------------------------------------------------------ run
     async def run_once(self, force: bool = False) -> dict:
@@ -258,12 +290,20 @@ class BacktestingAgent(BaseAgent):
             await stop.wait()
             return
         await asyncio.sleep(5)
+        last_report = 0.0
         while not stop.is_set():
             try:
                 await self.run_once(force=os.getenv("RESEARCH_FORCE") == "1")
             except Exception:  # noqa: BLE001
                 self.errors += 1
                 self.log.exception("research run failed")
+            if time.monotonic() - last_report >= self.cfg.go_live.report_interval_h * 3600 or not last_report:
+                try:
+                    await self.go_live_report()
+                    last_report = time.monotonic()
+                except Exception:  # noqa: BLE001
+                    self.errors += 1
+                    self.log.exception("go-live report failed")
             self.beat()
             try:
                 await asyncio.wait_for(stop.wait(), timeout=self.cfg.research.check_interval_s)

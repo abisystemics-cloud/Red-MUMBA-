@@ -167,6 +167,8 @@ class MacroEdgeAgent(BaseAgent):
                 changed = st.level != self.state.level
                 if changed:
                     self.log.warning("RISK LEVEL %s -> %s %s", self.state.level.value, st.level.value, st.reasons)
+                    self.bus.publish(Topic.TELEMETRY, {"event": "risk_level", "level": st.level.value,
+                                                       "previous": self.state.level.value, "reasons": st.reasons})
                 if changed or time.monotonic() - last_pub > 5:
                     self.bus.publish(Topic.RISK_STATE, st)
                     last_pub = time.monotonic()

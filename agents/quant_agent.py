@@ -21,7 +21,7 @@ from ml_engine.strategy import SignalModel
 
 TENSOR_FIELDS = ("mid", "spread_bps", "obi", "obi_z", "cvd", "cvd_slope_z", "poc_dist_bps",
                  "premium_bps", "premium_z", "spoof_bid", "spoof_ask", "realized_vol_bps",
-                 "oi_change_pct", "funding")
+                 "oi_change_pct", "funding", "funding_z", "whale_bias")
 
 
 def to_tensor(f: FeatureVector) -> np.ndarray:
@@ -39,7 +39,7 @@ class QuantAgent(BaseAgent):
         self.models = {c: SignalModel(st) for c in self.engines}
         self.subs = {t: bus.subscribe(t, self.name, maxsize=ms) for t, ms in (
             (Topic.BOOK, 64), (Topic.TRADE, 4096), (Topic.ASSET_CTX, 256),
-            (Topic.EXT_QUOTE, 4096), (Topic.LIQ_MAP, 16))}
+            (Topic.EXT_QUOTE, 4096), (Topic.LIQ_MAP, 16), (Topic.WHALES, 16))}
         self.latency_us: list[float] = []
 
     async def on_config_change(self, old, new) -> None:
@@ -61,7 +61,8 @@ class QuantAgent(BaseAgent):
                 e = self.engines.get(msg.coin)
                 if e is None:
                     continue
-                {Topic.ASSET_CTX: e.on_ctx, Topic.EXT_QUOTE: e.on_ext, Topic.LIQ_MAP: e.on_liq}[topic](msg)
+                {Topic.ASSET_CTX: e.on_ctx, Topic.EXT_QUOTE: e.on_ext, Topic.LIQ_MAP: e.on_liq,
+                 Topic.WHALES: e.on_whale}[topic](msg)
 
     async def _consume_books(self) -> None:
         sub = self.subs[Topic.BOOK]
@@ -83,7 +84,7 @@ class QuantAgent(BaseAgent):
     async def run(self, stop: asyncio.Event) -> None:
         tasks = [asyncio.create_task(self._consume_books())]
         tasks += [asyncio.create_task(self._consume_side(t))
-                  for t in (Topic.TRADE, Topic.ASSET_CTX, Topic.EXT_QUOTE, Topic.LIQ_MAP)]
+                  for t in (Topic.TRADE, Topic.ASSET_CTX, Topic.EXT_QUOTE, Topic.LIQ_MAP, Topic.WHALES)]
         await stop.wait()
         for t in tasks:
             t.cancel()

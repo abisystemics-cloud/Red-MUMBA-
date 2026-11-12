@@ -61,11 +61,17 @@ class Liquidations(BaseModel):
     firecrawl_url: str = ""
 
 
+class WhalesCfg(BaseModel):
+    addresses: list[str] = Field(default_factory=list)
+    poll_seconds: int = 60
+
+
 class DataCfg(BaseModel):
     hyperliquid: HLData
     binance_ws: str
     bybit_ws: str
     liquidations: Liquidations = Liquidations()
+    whales: WhalesCfg = WhalesCfg()
     record_market_data: bool = True
     recordings_dir: str = "data/recordings"
     max_staleness_ms: int = 2500
@@ -90,28 +96,32 @@ class MacroCfg(BaseModel):
 
 
 class Weights(BaseModel):
-    obi: float = 0.35
-    cvd: float = 0.30
-    premium: float = 0.25
+    obi: float = 0.15
+    cvd: float = 0.15
+    premium: float = 0.10
     poc: float = 0.10
+    funding: float = 0.20
+    liq: float = 0.10
+    whale: float = 0.20
 
 
 class StrategyCfg(BaseModel):
     obi_depth: int = 10
     obi_decay: float = 0.15
-    cvd_window_s: int = 60
-    vpvr_window_s: int = 900
-    vpvr_bucket_bps: float = 5
-    zscore_window: int = 300
+    cvd_window_s: int = 300
+    vpvr_window_s: int = 3600
+    vpvr_bucket_bps: float = 10
+    zscore_window: int = 1800
     spoof_size_mult: float = 8.0
     spoof_max_life_s: float = 3.0
+    liq_max_dist_bps: float = 300
     weights: Weights = Weights()
-    entry_threshold: float = 1.6
-    exit_threshold: float = 0.4
-    persistence_ticks: int = 3
+    entry_threshold: float = 1.4
+    exit_threshold: float = 0.3
+    persistence_ticks: int = 6
     max_spread_bps: float = 4.0
-    max_hold_s: int = 600
-    cooldown_s: int = 30
+    max_hold_s: int = 3600
+    cooldown_s: int = 120
 
 
 class RiskCfg(BaseModel):
@@ -120,9 +130,10 @@ class RiskCfg(BaseModel):
     max_position_notional_usd: float = 5000
     max_leverage: float = 3
     stop_vol_mult: float = 2.5
+    stop_horizon_s: float = 600
     take_profit_r: float = 2.0
     min_stop_bps: float = 8
-    max_stop_bps: float = 150
+    max_stop_bps: float = 300
     daily_loss_limit_pct: float = 3.0
     max_consecutive_losses: int = 5
     slippage_bps: float = 3
@@ -137,6 +148,38 @@ class RiskCfg(BaseModel):
         if not 0 < v <= 1:
             raise ValueError("kelly_fraction must be in (0, 1]")
         return v
+
+
+class ExecutionCfg(BaseModel):
+    mode: str = "maker"
+    maker_timeout_s: float = 20
+    requote_bps: float = 3
+    max_requotes: int = 3
+    exit_maker_timeout_s: float = 8
+    maker_fee_bps: float = 1.5
+    taker_fee_bps: float = 4.5
+
+    @field_validator("mode")
+    @classmethod
+    def _mode(cls, v: str) -> str:
+        if v not in ("maker", "taker"):
+            raise ValueError("execution.mode must be maker|taker")
+        return v
+
+
+class GoLiveCfg(BaseModel):
+    min_trades: int = 200
+    min_profit_factor: float = 1.2
+    max_drawdown_pct: float = 5.0
+    min_positive_weeks: int = 3
+    weeks: int = 4
+    report_interval_h: float = 168
+
+
+class AlertsCfg(BaseModel):
+    enabled: bool = True
+    min_interval_s: float = 300
+    feed_down_after_s: float = 30
 
 
 class TelemetryCfg(BaseModel):
@@ -155,10 +198,13 @@ class ResearchCfg(BaseModel):
     degrade_sharpe_below: float = 0.5
     degrade_winrate_below: float = 0.45
     max_drawdown_pct: float = 10.0
-    n_trials: int = 60
+    n_trials: int = 30
     oos_fraction: float = 0.3
+    folds: int = 3
+    min_oos_trades: int = 30
+    min_sharpe_improvement: float = 0.3
     max_param_change_pct: float = 30
-    auto_deploy: bool = True
+    auto_deploy: bool = False
     bounds: dict[str, list[float]] = Field(default_factory=dict)
 
 
@@ -170,8 +216,11 @@ class AppConfig(BaseModel):
     macro: MacroCfg = MacroCfg()
     strategy: StrategyCfg = StrategyCfg()
     risk: RiskCfg = RiskCfg()
+    execution: ExecutionCfg = ExecutionCfg()
     telemetry: TelemetryCfg = TelemetryCfg()
     research: ResearchCfg = ResearchCfg()
+    go_live: GoLiveCfg = GoLiveCfg()
+    alerts: AlertsCfg = AlertsCfg()
 
     # --- helpers ------------------------------------------------------------
     @property

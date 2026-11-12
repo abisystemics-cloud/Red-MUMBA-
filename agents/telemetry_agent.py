@@ -7,6 +7,9 @@ equity, signaux validés/rejetés) et les envoie :
 - dans des fichiers JSONL locaux journaliers (source de vérité de secours,
   lue par l'agent R&D si PostHog est indisponible).
 
+Les événements critiques (flux coupé, HALT, disjoncteur, stop refusé,
+proposition de l'agent R&D, rapport go/no-go) déclenchent une alerte Telegram.
+
 Les dashboards PostHog sont créés par `scripts/posthog_dashboard.py`.
 """
 from __future__ import annotations
@@ -19,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from agents.base import BaseAgent
+from core.alerts import Alerter, alert_for
 from core.events import Topic
 
 EVENT_PREFIX = "hlswarm_"
@@ -39,6 +43,8 @@ class TelemetryAgent(BaseAgent):
         self._day = None
         self._fh = None
         self.api_key = os.getenv("POSTHOG_API_KEY")
+        self.alerter = Alerter(self.cfg.alerts, http_session)
+        self._alert_tasks: set[asyncio.Task] = set()
 
     def _local(self, rec: dict) -> None:
         day = rec["timestamp"][:10]
@@ -90,6 +96,11 @@ class TelemetryAgent(BaseAgent):
                     rec = self._wrap(ev)
                     self._local(rec)
                     self._buf.append(rec)
+                    al = alert_for({**rec["properties"], "event": ev.get("event")})
+                    if al:  # envoi en tâche de fond : jamais bloquant
+                        t = asyncio.create_task(self.alerter.send(*al))
+                        self._alert_tasks.add(t)
+                        t.add_done_callback(self._alert_tasks.discard)
                 except asyncio.TimeoutError:
                     pass
                 if time.monotonic() - last >= interval or len(self._buf) >= self.cfg.telemetry.batch_size:
@@ -107,7 +118,8 @@ class TelemetryAgent(BaseAgent):
     def health(self) -> dict:
         h = super().health()
         h.update(sent=self.sent, failed_batches=self.failed_batches, buffered=len(self._buf),
-                 posthog=bool(self.api_key))
+                 posthog=bool(self.api_key), alerts_sent=self.alerter.sent,
+                 telegram=bool(self.alerter.token and self.alerter.chat))
         return h
 
 

@@ -30,6 +30,10 @@ services:
         sync: false
       - key: POSTHOG_PROJECT_ID
         sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
     disk:
       name: hl-data
       mountPath: /app/data

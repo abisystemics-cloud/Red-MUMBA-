@@ -17,7 +17,16 @@ def composite_score(f: FeatureVector, cfg) -> float:
     prem = -f.premium_z
     # Retour vers le POC (aimant de liquidité), borné.
     poc = -max(-3.0, min(3.0, f.poc_dist_bps / 20.0)) if math.isfinite(f.poc_dist_bps) else 0.0
-    return w.obi * obi + w.cvd * f.cvd_slope_z + w.premium * prem + w.poc * poc
+    # Funding extrême = foule trop positionnée d'un côté → biais contrarien.
+    funding = -max(-3.0, min(3.0, f.funding_z))
+    # Cluster de liquidations proche = aimant (les stops déclenchés poussent le prix).
+    liq = 0.0
+    if math.isfinite(f.liq_magnet_bps) and abs(f.liq_magnet_bps) <= cfg.liq_max_dist_bps:
+        liq = max(-3.0, min(3.0, f.liq_magnet_bps / 50.0))
+    # Biais net des adresses suivies, ramené à l'échelle d'un z-score.
+    whale = 3.0 * max(-1.0, min(1.0, f.whale_bias))
+    return (w.obi * obi + w.cvd * f.cvd_slope_z + w.premium * prem + w.poc * poc
+            + w.funding * funding + w.liq * liq + w.whale * whale)
 
 
 class SignalModel:

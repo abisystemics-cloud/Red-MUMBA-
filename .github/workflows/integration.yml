@@ -1,0 +1,25 @@
+name: integration-testnet
+
+# Lancement manuel (onglet Actions → integration-testnet → Run workflow).
+# Teste le code contre le VRAI testnet Hyperliquid : flux WebSocket, endpoint
+# des whales et, si les secrets testnet sont présents, pose/annulation d'un
+# ordre post-only qui ne peut pas s'exécuter.
+on:
+  workflow_dispatch:
+
+jobs:
+  testnet:
+    runs-on: ubuntu-latest
+    env:
+      HL_INTEGRATION: "1"
+      HL_ACCOUNT_ADDRESS: ${{ secrets.HL_TESTNET_ACCOUNT_ADDRESS }}
+      HL_API_WALLET_PRIVATE_KEY: ${{ secrets.HL_TESTNET_API_WALLET_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - run: pip install -r requirements-dev.txt
+      - run: pytest tests/integration -v

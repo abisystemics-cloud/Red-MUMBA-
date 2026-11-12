@@ -3,10 +3,13 @@
 Pour chaque signal validé :
 1. `decide()` (politique partagée avec le backtest) → ENTER / EXIT / HOLD.
 2. Entrée : taille = Kelly fractionnel borné × stop dynamique fondé sur la
-   variance (ml_engine.risk), ordre IOC limité à `slippage_bps`, puis pose
-   immédiate d'un stop-loss et d'un take-profit *reduce-only* côté exchange
-   (le stop vit sur Hyperliquid : il protège même si ce process meurt).
-3. Sortie : annulation des triggers puis IOC reduce-only.
+   variance (ml_engine.risk). En mode `maker` (défaut) : ordre post-only (ALO)
+   au meilleur prix, replacé si le marché s'éloigne, abandonné après
+   `maker_timeout_s` ; en mode `taker` : IOC limité à `slippage_bps`.
+   Puis pose immédiate d'un stop-loss et d'un take-profit *reduce-only* côté
+   exchange (le stop vit sur Hyperliquid : il protège même si ce process meurt).
+3. Sortie : tentative maker courte (les stops restent en place pendant ce
+   temps), puis annulation des triggers et IOC reduce-only pour le reliquat.
 
 Garde-fous : HALT macro → aucune entrée (+ flatten si configuré) ; disjoncteur
 perte journalière / pertes consécutives ; un verrou par marché ; réconciliation
@@ -15,6 +18,7 @@ périodique avec la position réelle sur l'exchange.
 from __future__ import annotations
 
 import asyncio
+import time
 import uuid
 from dataclasses import dataclass
 from typing import Optional
@@ -58,6 +62,8 @@ class ExecutionAgent(BaseAgent):
         self.risk_sub = bus.subscribe(Topic.RISK_STATE, self.name, maxsize=64)
         self.book_sub = bus.subscribe(Topic.BOOK, self.name, maxsize=64)
         self.realized_pnl = 0.0
+        self._stop = asyncio.Event()
+        self._breaker_reported = False
 
     # --------------------------------------------------------------- utils
     @property
@@ -91,10 +97,14 @@ class ExecutionAgent(BaseAgent):
         if d.qty <= 0:
             self.log.info("%s entry skipped: %s", coin, d.reason or "size rounds to 0")
             return
-        limit = ref * (1 + r.slippage_bps / 1e4) if long_ else ref * (1 - r.slippage_bps / 1e4)
         side = Side.LONG if long_ else Side.SHORT
-        fill = await self.broker.ioc(coin, long_, d.qty, limit, reduce_only=False)
-        self._order_event(coin, side, d.qty, limit, "entry", fill)
+        if self.cfg.execution.mode == "maker":
+            fill = await self._work_maker(coin, long_, d.qty, self.cfg.execution.maker_timeout_s, False)
+            self._order_event(coin, side, d.qty, ref, "entry_maker", fill)
+        else:
+            limit = ref * (1 + r.slippage_bps / 1e4) if long_ else ref * (1 - r.slippage_bps / 1e4)
+            fill = await self.broker.ioc(coin, long_, d.qty, limit, reduce_only=False)
+            self._order_event(coin, side, d.qty, limit, "entry", fill)
         if not (fill.ok and fill.filled_sz > 0):
             return
         sign = 1 if long_ else -1
@@ -113,6 +123,9 @@ class ExecutionAgent(BaseAgent):
             return
         self.open[coin] = OpenTrade(side, fill.filled_sz, fill.avg_px, now_ms(), d.risk_usd, stop_px, tp_px, fill.fee)
         self.views[coin].side, self.views[coin].entry_ts = side, now_ms()
+        if self._stop.is_set():  # arrêt demandé pendant que l'ordre travaillait
+            await self._exit(coin, "shutdown")
+            return
         slip = (fill.avg_px / ref - 1) * 1e4 * sign
         self.bus.publish(Topic.FILL, FillEvent(coin, now_ms(), side, fill.filled_sz, fill.avg_px, fill.fee,
                                                ref, slip, 0.0, "entry", self.broker.dry_run))
@@ -123,29 +136,105 @@ class ExecutionAgent(BaseAgent):
                    signal_score=round(sig.score, 3), decision_latency_ms=round(fill.latency_ms, 3),
                    dry_run=self.broker.dry_run)
 
+    async def _work_maker(self, coin: str, is_buy: bool, sz: float, timeout_s: float,
+                          reduce_only: bool) -> Fill:
+        """Travaille un ordre post-only au meilleur prix de son côté : replacé si
+        le marché s'éloigne de plus de `requote_bps`, annulé à l'échéance.
+        Retourne la quantité réellement exécutée (éventuellement partielle)."""
+        ec = self.cfg.execution
+        szd = self.broker.sz_decimals(coin)
+        filled = notional = 0.0
+        requotes = 0
+        t0 = time.perf_counter()
+        deadline = time.monotonic() + timeout_s
+        last_err = ""
+        while (filled < sz - 1e-12 and time.monotonic() < deadline and requotes <= ec.max_requotes
+               and not self._stop.is_set()):
+            book = self.books.get(coin)
+            if book is None:
+                break
+            px = book.best_bid if is_buy else book.best_ask
+            f = await self.broker.post_only(coin, is_buy, round(sz - filled, szd), px, reduce_only)
+            if not f.ok or f.oid is None:
+                last_err = f.error or "post-only rejected"
+                requotes += 1
+                await asyncio.sleep(0.2)
+                continue
+            while time.monotonic() < deadline and not self._stop.is_set():
+                await asyncio.sleep(0.25)
+                st = await self.broker.order_status(coin, f.oid)
+                if st.status != "open":
+                    break
+                b = self.books.get(coin)
+                best = (b.best_bid if is_buy else b.best_ask) if b else px
+                away = (best - px) / px * 1e4 if is_buy else (px - best) / px * 1e4
+                if away > ec.requote_bps and requotes < ec.max_requotes:
+                    break
+            await self.broker.cancel(coin, f.oid)
+            st = await self.broker.order_status(coin, f.oid)
+            if st.filled_sz > 0:
+                filled += st.filled_sz
+                notional += st.filled_sz * (st.avg_px or px)
+            if st.status != "filled":
+                requotes += 1
+        avg = notional / filled if filled else 0.0
+        fee = notional * ec.maker_fee_bps / 1e4
+        return Fill(filled > 0, round(filled, szd), avg, fee, (time.perf_counter() - t0) * 1000,
+                    error="" if filled else (last_err or "maker order not filled before timeout"))
+
     async def _exit(self, coin: str, reason: str) -> None:
         t = self.open.get(coin)
-        book = self.books.get(coin)
         if t is None:
             return
-        await self.broker.cancel_all(coin)
         long_ = t.side == Side.LONG
-        ref = (book.best_bid if long_ else book.best_ask) if book else t.entry_px
-        slip = self.cfg.risk.slippage_bps * 3 / 1e4  # sortie : on accepte plus de slippage
-        limit = ref * (1 - slip) if long_ else ref * (1 + slip)
-        fill = await self.broker.ioc(coin, not long_, t.qty, limit, reduce_only=True)
-        self._order_event(coin, t.side, t.qty, limit, "exit", fill)
-        if not (fill.ok and fill.filled_sz > 0):
-            self.log.error("%s exit failed (%s) — will retry on next tick", coin, fill.error)
+        qty_done = notional = fees = 0.0
+        ref_book = self.books.get(coin)
+        ref = (ref_book.best_bid if long_ else ref_book.best_ask) if ref_book else t.entry_px
+        urgent = reason in ("macro_halt", "circuit_breaker", "shutdown", "stop_rejected")
+        if self.cfg.execution.mode == "maker" and not urgent:
+            mf = await self._work_maker(coin, not long_, t.qty, self.cfg.execution.exit_maker_timeout_s, True)
+            self._order_event(coin, t.side, t.qty, ref, "exit_maker", mf)
+            qty_done, notional, fees = mf.filled_sz, mf.filled_sz * mf.avg_px, mf.fee
+            if coin not in self.open:  # stop/TP déclenché pendant la tentative
+                await self.broker.cancel_all(coin)
+                return
+        await self.broker.cancel_all(coin)
+        remaining = round(t.qty - qty_done, self.broker.sz_decimals(coin))
+        if remaining > 0:
+            pos_sz, _ = await self.broker.position(coin)
+            remaining = min(remaining, abs(pos_sz))
+        if remaining > 0:
+            book = self.books.get(coin)
+            px_ref = (book.best_bid if long_ else book.best_ask) if book else t.entry_px
+            slip = self.cfg.risk.slippage_bps * 3 / 1e4  # sortie : on accepte plus de slippage
+            limit = px_ref * (1 - slip) if long_ else px_ref * (1 + slip)
+            fill = await self.broker.ioc(coin, not long_, remaining, limit, reduce_only=True)
+            self._order_event(coin, t.side, remaining, limit, "exit", fill)
+            if not (fill.ok and fill.filled_sz > 0):
+                if qty_done <= 0:
+                    self.log.error("%s exit failed (%s) — will retry on next tick", coin, fill.error)
+                    return
+            else:
+                qty_done += fill.filled_sz
+                notional += fill.filled_sz * fill.avg_px
+                fees += fill.fee
+        if qty_done <= 0:
+            # position déjà fermée côté exchange (stop/TP touché pendant la tentative)
+            b = self.books.get(coin)
+            self._close_bookkeeping(coin, (await self.broker.closed_pnl_since(coin, t.entry_ts)) or 0.0,
+                                    b.mid if b else t.entry_px, "exchange_trigger")
             return
+        avg = notional / qty_done
         sign = 1 if long_ else -1
-        pnl = sign * (fill.avg_px - t.entry_px) * fill.filled_sz - fill.fee - t.fees
-        slip_bps = (ref / fill.avg_px - 1) * 1e4 * sign if fill.avg_px else 0.0
-        self._close_bookkeeping(coin, pnl, fill.avg_px, reason, slip_bps, ref)
+        pnl = sign * (avg - t.entry_px) * qty_done - fees - t.fees
+        slip_bps = (ref / avg - 1) * 1e4 * sign if avg else 0.0
+        self._close_bookkeeping(coin, pnl, avg, reason, slip_bps, ref)
 
     def _close_bookkeeping(self, coin: str, pnl: float, px: float, reason: str,
                            slip_bps: float = 0.0, ref: float = 0.0) -> None:
-        t = self.open.pop(coin)
+        t = self.open.pop(coin, None)
+        if t is None:  # déjà clôturé (ex. stop touché pendant une sortie maker)
+            return
         self.realized_pnl += pnl
         self.stats.add(pnl / t.risk_usd if t.risk_usd else 0.0)
         self.breaker.on_trade_closed(pnl)
@@ -180,7 +269,7 @@ class ExecutionAgent(BaseAgent):
             if act == Action.EXIT and coin in self.open:
                 await self._exit(coin, "signal")
             elif act in (Action.ENTER_LONG, Action.ENTER_SHORT) and coin not in self.open:
-                if self.level == RiskLevel.HALT:
+                if self.level == RiskLevel.HALT or self._stop.is_set():
                     return
                 await self._enter(sig, act == Action.ENTER_LONG)
 
@@ -211,6 +300,11 @@ class ExecutionAgent(BaseAgent):
             try:
                 self.equity = await self.broker.equity()
                 self.breaker.on_equity(self.equity, now_ms())
+                if self.breaker.tripped and not self._breaker_reported:
+                    self._breaker_reported = True
+                    self._tele(event="breaker", reason=self.breaker.tripped_reason)
+                elif not self.breaker.tripped:
+                    self._breaker_reported = False
                 if self.breaker.tripped and self.open:
                     self.log.error("circuit breaker: %s → flatten", self.breaker.tripped_reason)
                     await self.flatten_all("circuit_breaker")
@@ -236,6 +330,7 @@ class ExecutionAgent(BaseAgent):
                 pass
 
     async def run(self, stop: asyncio.Event) -> None:
+        self._stop = stop
         await self.broker.start()
         self.equity = await self.broker.equity()
         tasks = [asyncio.create_task(c) for c in (self._books(), self._risk(), self._reconcile(stop))]

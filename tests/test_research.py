@@ -19,8 +19,9 @@ def _setup(tmp_path: Path, auto_deploy=True, bad_perf=True):
     raw = yaml.safe_load((ROOT / "config.yaml").read_text())
     raw["data"]["recordings_dir"] = str(tmp_path / "rec")
     raw["telemetry"]["local_log_dir"] = str(tmp_path / "tele")
-    raw["research"].update(n_trials=4, min_trades_for_eval=10, auto_deploy=auto_deploy)
-    raw["strategy"].update(entry_threshold=1.0, persistence_ticks=2)
+    raw["research"].update(n_trials=4, min_trades_for_eval=10, auto_deploy=auto_deploy, min_oos_trades=3)
+    raw["strategy"].update(entry_threshold=1.0, persistence_ticks=2, cooldown_s=30, max_hold_s=600,
+                           zscore_window=300, cvd_window_s=60)
     cfg = tmp_path / "config.yaml"
     cfg.write_text(yaml.safe_dump(raw))
     # marché enregistré (horodaté "maintenant")

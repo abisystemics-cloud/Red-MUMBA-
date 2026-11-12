@@ -42,6 +42,13 @@ INSIGHTS = {
         SELECT timestamp, properties.coin AS coin, properties.reason AS reason,
                toFloat(properties.r_multiple) AS r
         FROM events WHERE event = 'hlswarm_trade_closed' ORDER BY timestamp DESC LIMIT 500""",
+    "Rapports go/no-go": """
+        SELECT timestamp, properties.verdict AS verdict, properties.text AS detail
+        FROM events WHERE event = 'hlswarm_go_live_report' ORDER BY timestamp DESC LIMIT 20""",
+    "Incidents (flux coupés, HALT, disjoncteur)": """
+        SELECT timestamp, event, properties.feed AS feed, properties.level AS level, properties.reason AS reason
+        FROM events WHERE event IN ('hlswarm_feed_down', 'hlswarm_risk_level', 'hlswarm_breaker')
+        ORDER BY timestamp DESC LIMIT 200""",
     "Cycles R&D (backtests)": """
         SELECT timestamp, properties.done AS outcome, properties.reason AS reason
         FROM events WHERE event = 'hlswarm_research_run' ORDER BY timestamp DESC LIMIT 100""",

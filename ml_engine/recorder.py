@@ -10,7 +10,7 @@ from typing import Iterator
 
 import numpy as np
 
-from core.events import AssetCtx, BookSnapshot, ExternalQuote, Trade
+from core.events import AssetCtx, BookSnapshot, ExternalQuote, LiquidationMap, Trade, WhaleBias
 
 
 class MarketRecorder:
@@ -55,6 +55,12 @@ class MarketRecorder:
         self.write({"t": "ctx", "coin": c.coin, "ts": c.ts, "oi": c.open_interest,
                     "f": c.funding, "m": c.mark_px, "o": c.oracle_px})
 
+    def whale(self, w: WhaleBias) -> None:
+        self.write({"t": "whale", "coin": w.coin, "ts": w.ts, "bias": w.bias, "n": w.n_wallets, "g": w.gross_usd})
+
+    def liq(self, m: LiquidationMap) -> None:
+        self.write({"t": "liq", "coin": m.coin, "ts": m.ts, "c": m.clusters, "src": m.source})
+
     def close(self) -> None:
         self._closed = True
         if self._fh:
@@ -95,4 +101,8 @@ def to_event(rec: dict):
         return ExternalQuote(rec["v"], rec["coin"], rec["ts"], rec["bid"], rec["ask"])
     if t == "ctx":
         return AssetCtx(rec["coin"], rec["ts"], rec["oi"], rec["f"], rec["m"], rec["o"])
+    if t == "whale":
+        return WhaleBias(rec["coin"], rec["ts"], rec["bias"], rec["n"], rec["g"])
+    if t == "liq":
+        return LiquidationMap(rec["coin"], rec["ts"], [tuple(c) for c in rec["c"]], rec["src"])
     return None

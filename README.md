@@ -32,6 +32,8 @@ flowchart LR
 
 **Choix de conception :**
 
+- **L'avantage visé est le positionnement, pas la vitesse.** Le bot ne cherche pas à battre les market makers à la milliseconde. Il vise des mouvements de quelques minutes à une heure, et s'appuie sur ce qui est public sur Hyperliquid : funding extrême, clusters de liquidations, positions des gros portefeuilles. La microstructure (OBI, CVD) sert de filtre d'entrée.
+- **Exécution maker par défaut.** Les ordres sont « post-only » : le bot pose son prix dans le carnet au lieu de prendre celui des autres. Les frais d'un aller-retour passent d'environ 9 bps à environ 3 bps (`execution.mode`).
 - **Aucun LLM dans le chemin critique.** Du carnet au signal, tout est du numpy déterministe : environ 0,4 ms au p50 dans les tests. Le LLM (Perplexity Sonar) ne sert qu'au radar d'actualité de l'agent Macro. Il tourne en tâche de fond et ne peut **qu'augmenter** le niveau de risque.
 - **Une seule implémentation de la stratégie.** `ml_engine/` (features, signal, politique d'entrée/sortie, sizing) est exécuté tel quel par le live **et** par le backtest. Un backtest qui utiliserait un autre code ne dirait rien du live.
 - **Bus d'événements en mémoire** avec files bornées et politique « drop-oldest » : un agent lent ne bloque jamais les autres.
@@ -60,7 +62,7 @@ agents/      les 7 agents + brokers (Hyperliquid L1 / Paper)
 core/        bus, événements, WebSocket résilient, config + hot-reload
 ml_engine/   features, signal, risque, enregistreur, backtester, optimiseur
 scripts/     création du dashboard PostHog
-tests/       22 tests : unitaires, simulation bout-en-bout, R&D
+tests/       34 tests hors réseau + tests d'intégration testnet
 main.py      orchestrateur (supervision, /health, arrêt propre)
 config.yaml  configuration (section strategy rechargée à chaud)
 ```
@@ -81,25 +83,30 @@ Backtest ponctuel sur les données enregistrées : `python main.py --backtest`.
 
 ## Les 7 agents
 
-1. **Data.** Il s'abonne à `l2Book`, `trades` et `activeAssetCtx` (OI, funding, mark/oracle) pour chaque marché. Il streame aussi les meilleurs prix Binance et Bybit, et récupère la carte des liquidations. Tout est enregistré dans `data/recordings/` pour le backtest. *Limite :* le flux public Hyperliquid fournit **20 niveaux par côté, poussés au plus toutes les 0,5 s**. Pour 100 niveaux, renseignez `HL_BOOK_WS_URL` vers un fournisseur compatible (par ex. Dwellir) ; le paramètre `nLevels` est alors envoyé.
-2. **Quant & Stat.** Il calcule un `FeatureVector` par snapshot, exposable en tenseur avec `to_tensor()`, puis un score composite :
+1. **Data.** Il s'abonne à `l2Book`, `trades` et `activeAssetCtx` (OI, funding, mark/oracle) pour chaque marché. Il streame aussi les meilleurs prix Binance et Bybit, et récupère la carte des liquidations. Il lit enfin les positions publiques des adresses listées dans `data.whales.addresses` (endpoint `/info` `clearinghouseState`) et en tire un biais net long/short. Un watchdog émet `feed_down` si un flux se tait plus de 30 s. Tout est enregistré dans `data/recordings/` pour le backtest. *Limite :* le flux public Hyperliquid fournit **20 niveaux par côté, poussés au plus toutes les 0,5 s**. Pour 100 niveaux, renseignez `HL_BOOK_WS_URL` vers un fournisseur compatible (par ex. Dwellir) ; le paramètre `nLevels` est alors envoyé.
+2. **Quant & Stat.** Il calcule un `FeatureVector` par snapshot, exposable en tenseur avec `to_tensor()`, puis un score composite à 7 termes (poids dans `strategy.weights`) :
    - OBI pondéré, atténué si le côté qui le porte semble spoofé ;
    - pente du CVD ;
    - −z(premium HL vs CEX), pour capter le retard de prix ;
-   - retour vers le POC.
+   - retour vers le POC ;
+   - **funding** : −z(funding), un biais contrarien quand la foule paie trop cher pour rester positionnée ;
+   - **liquidations** : attraction vers le cluster dominant s'il est à moins de 300 bps ;
+   - **whales** : biais net des adresses suivies.
 
    Un signal n'est émis que si le score persiste sur N ticks.
 3. **Macro Edge.** Son niveau de risque est le maximum de plusieurs détecteurs : fichier `data/KILL`, fenêtres FOMC/CPI, choc BTC > 2,5 % en 60 s, divergence Binance/Bybit, radar d'actualité par LLM.
 4. **Validation.** Il rejette un signal si la macro est en HALT ou son état est inconnu, si les données sont périmées, si le spread est trop large, si le carnet est spoofé du côté du signal, si on courrait après le prix ou si le funding est contraire. Les sorties ne sont jamais bloquées.
 5. **Execution & Risk.**
    - Taille : Kelly fractionnel, plafonné à 0,5 % de l'equity risqué au stop, levier ≤ 3, notionnel ≤ 5 000 USD.
-   - Ordres : entrée en IOC limitée par `slippage_bps`, puis SL et TP côté exchange.
+   - Ordres en mode `maker` (défaut) : un ordre post-only est posé au meilleur prix, replacé si le marché s'éloigne de plus de 3 bps (3 fois au maximum), puis abandonné après 20 s. La sortie tente d'abord le maker pendant 8 s, puis passe en IOC pour le reliquat. Les sorties d'urgence (HALT, disjoncteur, arrêt) partent directement en IOC. SL et TP restent posés côté exchange.
    - Protections : disjoncteur à −3 %/jour ou 5 pertes consécutives, flatten en cas de HALT, réconciliation toutes les 5 s.
-6. **Telemetry.** Il envoie à PostHog chaque ordre (latence), chaque fill (slippage, Kelly, risque) et chaque trade clôturé (PnL, R-multiple), plus l'equity. Les envois partent par lots toutes les secondes, avec une copie JSONL locale.
-7. **Backtesting & Adaptive Learning.** Il suit un graphe LangGraph : performance (PostHog via HogQL, ou JSONL) → dégradation ? → profilage des données → optimisation walk-forward dans un process séparé → déploiement.
-   - Un candidat n'est accepté que s'il **bat la config actuelle hors échantillon**, s'il est **rentable** hors échantillon et si son **max drawdown est inférieur à 10 %**.
+6. **Telemetry.** Il envoie à PostHog chaque ordre (latence), chaque fill (slippage, Kelly, risque) et chaque trade clôturé (PnL, R-multiple), plus l'equity. Les envois partent par lots toutes les secondes, avec une copie JSONL locale. Il envoie aussi des **alertes Telegram**, au plus une toutes les 5 min par type : flux coupé, HALT/CAUTION, disjoncteur, stop refusé, proposition de l'agent R&D, rapport go/no-go.
+7. **Backtesting & Adaptive Learning.** Il suit un graphe LangGraph : performance (PostHog via HogQL, ou JSONL) → dégradation ? → profilage des données → optimisation walk-forward dans un process séparé → proposition ou déploiement.
+   - Le backtest simule les ordres maker de façon pessimiste : un ordre n'est exécuté que si le prix traverse son niveau. Il compte aussi le funding payé ou reçu.
+   - Un candidat est noté sur sa **pire** période parmi 3 périodes in-sample. Il n'est retenu que s'il est **rentable hors échantillon**, garde un **max drawdown < 10 %**, compte au moins 30 trades hors échantillon et améliore le Sharpe d'une **marge qui augmente avec le nombre d'essais**.
    - Chaque paramètre reste dans `research.bounds` et ne bouge pas de plus de 30 % par cycle.
-   - La réécriture de `config.yaml` est atomique et l'ancienne version est archivée dans `config_history/`. `auto_deploy: false` permet de ne faire que des propositions.
+   - Par défaut, `auto_deploy: false` : l'agent écrit `config.proposed.yaml` et t'alerte. Tu valides en recopiant la section `strategy` dans `config.yaml`. Avec `auto_deploy: true`, la réécriture est atomique et l'ancienne version est archivée dans `config_history/`.
+   - Toutes les semaines, il produit le **rapport go/no-go** (voir plus bas).
 
 ## Sécurité
 
@@ -116,14 +123,38 @@ Le workflow `.github/workflows/ci-cd.yml` enchaîne : tests et lint → build et
 - **AWS EC2.** Placez `docker-compose.yml`, `.env` et `config/` dans `~/hl-swarm` sur l'instance. Ajoutez les secrets `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY` et `GHCR_PULL_TOKEN`. Le conteneur research redémarre d'abord, puis live, et le déploiement échoue si `/health` ne répond pas. Pour la latence, une région proche de l'infrastructure API d'Hyperliquid (généralement indiquée à Tokyo, `ap-northeast-1`) est conseillée ; mesurez-la avant de choisir.
 - **Render.** Créez le service depuis `render.yaml`, puis ajoutez le secret `RENDER_DEPLOY_HOOK_URL`. Les deux pôles partagent alors un conteneur (`ROLE=all`), car un disque Render ne s'attache qu'à un seul service.
 
+## Passage en réel : critères go/no-go
+
+Ces critères sont fixés **avant** de voir les résultats (section `go_live`). Le rapport est écrit chaque semaine dans `data/reports/`, envoyé en alerte, et consultable à tout moment :
+
+```bash
+python main.py --go-live      # code retour 0 = GO, 3 = NO-GO
+```
+
+| Critère | Seuil par défaut |
+|---|---|
+| Nombre de trades | ≥ 200 |
+| Profit factor (gains / pertes), frais inclus | ≥ 1,2 |
+| Max drawdown | ≤ 5 % |
+| Semaines positives | ≥ 3 sur les 4 dernières |
+
+Un NO-GO signifie qu'il faut retravailler la stratégie, pas qu'il faut « tenter quand même ».
+
+## Tests
+
+- `pytest -q` lance les tests unitaires, la simulation bout-en-bout et les tests R&D. Ils ne demandent aucun réseau.
+- `HL_INTEGRATION=1 pytest tests/integration -v` teste le code contre le **vrai testnet** : flux WebSocket, endpoint des whales et, avec des clés testnet, pose puis annulation d'un ordre post-only qui ne peut pas s'exécuter. Sur GitHub, le workflow manuel **integration-testnet** fait la même chose, avec les secrets `HL_TESTNET_ACCOUNT_ADDRESS` et `HL_TESTNET_API_WALLET_PRIVATE_KEY`.
+
 ## Dashboard PostHog
 
 ```bash
 POSTHOG_PERSONAL_API_KEY=phx_... POSTHOG_PROJECT_ID=... python scripts/posthog_dashboard.py
 ```
 
-## Ce qu'il reste à faire avant du capital réel
+## Feuille de route avant du capital réel
 
-1. Faire tourner une à deux semaines sur le testnet ou en paper pour accumuler des enregistrements réels.
-2. Lancer `python main.py --backtest` et lire les résultats hors échantillon, frais inclus : 4,5 bps taker par côté, et un aller-retour coûte environ 9 bps plus le slippage. Sur les données synthétiques des tests, la stratégie par défaut **ne couvre pas ses frais**.
-3. Rester conscient que Python + WebSocket public n'est pas du HFT colocalisé : l'avantage visé se situe à l'échelle de la centaine de millisecondes ou de la seconde, pas de la microseconde.
+1. Lancer le workflow **integration-testnet** pour vérifier le code contre les vraies API.
+2. Remplir `data.whales.addresses` avec des adresses à suivre (par exemple des traders rentables repérés sur le leaderboard Hyperliquid).
+3. Faire tourner 2 à 4 semaines en paper trading sur le testnet, avec les alertes Telegram actives.
+4. Lire `python main.py --go-live` et les propositions de l'agent R&D. Passer en réel uniquement sur un **GO**, avec un capital que tu peux perdre entièrement.
+5. Garder en tête que Python + WebSocket public n'est pas du HFT colocalisé : l'avantage visé se situe à l'échelle de la minute, pas de la microseconde.
