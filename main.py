@@ -6,11 +6,13 @@
     python main.py --optimize        # un cycle R&D forcé (optimisation), puis sortie
     python scripts/backtest.py --from 2026-09-01 --to 2026-10-31   # backtest sur historique
     python main.py --go-live         # rapport go/no-go (code retour 0 = GO, 3 = NO-GO)
+    python main.py --demo            # marché synthétique + interface sur http://localhost:8080 (mot de passe : demo)
 
 Chaque agent tourne sous un superviseur qui le redémarre (backoff exponentiel)
 s'il plante ; au-delà de `MAX_RESTARTS` en 10 minutes, le process s'arrête
 proprement et Docker le relance (état propre). Un serveur HTTP minimal expose
-/health (sondes Docker / Render / AWS) et /status.
+/health (sondes Docker / Render / AWS), /status et l'interface web temps réel
+(core/web.py, ui/index.html), protégée par UI_PASSWORD.
 """
 from __future__ import annotations
 
@@ -28,9 +30,11 @@ from agents import (BacktestingAgent, ExecutionAgent, HyperliquidDataAgent, Macr
 from agents.base import BaseAgent
 from agents.brokers import HyperliquidBroker, PaperBroker
 from agents.control_agent import ControlAgent, compact_status
+from agents.ui_state import UIStateAgent
 from core.bus import EventBus
 from core.config import ConfigStore
 from core.logging_setup import setup_logging
+from core.web import WebServer
 
 log = logging.getLogger("main")
 MAX_RESTARTS = 8
@@ -62,37 +66,6 @@ async def supervise(agent: BaseAgent, stop: asyncio.Event, fatal: asyncio.Event)
                 pass
 
 
-async def health_server(agents: list[BaseAgent], bus: EventBus, store: ConfigStore, port: int,
-                        stop: asyncio.Event) -> None:
-    async def handle(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
-        try:
-            line = (await asyncio.wait_for(reader.readline(), 5)).decode(errors="ignore")
-            path = line.split(" ")[1] if " " in line else "/"
-            status = {a.name: a.health() for a in agents}
-            stale = [n for n, h in status.items() if h.get("stale")]
-            if path.startswith("/health"):
-                code, body = (503, {"ok": False, "stale": stale}) if stale else (200, {"ok": True})
-            else:
-                code, body = 200, {"agents": status, "bus": bus.stats(),
-                                   "config_reloads": store.reload_count,
-                                   "network": store.current.runtime.network,
-                                   "dry_run": store.current.runtime.dry_run}
-            payload = json.dumps(body, default=str).encode()
-            writer.write(f"HTTP/1.1 {code} {'OK' if code == 200 else 'Service Unavailable'}\r\n"
-                         f"Content-Type: application/json\r\nContent-Length: {len(payload)}\r\n"
-                         "Connection: close\r\n\r\n".encode() + payload)
-            await writer.drain()
-        except Exception:  # noqa: BLE001
-            pass
-        finally:
-            writer.close()
-
-    server = await asyncio.start_server(handle, "0.0.0.0", port)
-    log.info("health server on :%d (/health, /status)", port)
-    async with server:
-        await stop.wait()
-
-
 def make_http_session():
     try:
         import aiohttp
@@ -118,8 +91,33 @@ def make_broker(store: ConfigStore):
     return HyperliquidBroker(cfg.hl_api_url())
 
 
+def apply_demo(store: ConfigStore) -> None:
+    """Mode démo : marché synthétique, paper trading, réglages nerveux pour voir de l'activité."""
+    cfg = store.current
+    store._cfg = cfg.model_copy(update={
+        "runtime": cfg.runtime.model_copy(update={"network": "testnet", "dry_run": True}),
+        "data": cfg.data.model_copy(update={
+            "record_market_data": False,
+            "liquidations": cfg.data.liquidations.model_copy(update={"provider": "disabled"}),
+            "whales": cfg.data.whales.model_copy(update={"provider": "disabled"})}),
+        "macro": cfg.macro.model_copy(update={"enabled": False}),
+        "strategy": cfg.strategy.model_copy(update={
+            "entry_threshold": 0.8, "persistence_ticks": 2, "cooldown_s": 20, "max_hold_s": 300,
+            "zscore_window": 300, "cvd_window_s": 60, "max_spread_bps": 10}),
+        "execution": cfg.execution.model_copy(update={"maker_timeout_s": 10}),
+        "telemetry": cfg.telemetry.model_copy(update={"local_log_dir": "data/demo_telemetry"}),
+        "research": cfg.research.model_copy(update={"enabled": False}),
+        "control": cfg.control.model_copy(update={"enabled": False}),
+    })
+
+
 async def amain(args) -> int:
     store = ConfigStore(args.config)
+    if args.demo:
+        apply_demo(store)
+        os.environ.setdefault("UI_PASSWORD", "demo")
+        for k in ("POSTHOG_API_KEY", "TELEGRAM_BOT_TOKEN", "PERPLEXITY_API_KEY", "CONTROL_GITHUB_REPO"):
+            os.environ.pop(k, None)
     cfg = store.current
     setup_logging(os.getenv("LOG_LEVEL", cfg.runtime.log_level))
     bus = EventBus()
@@ -133,10 +131,17 @@ async def amain(args) -> int:
         except NotImplementedError:  # Windows
             pass
 
+    demo_extra = None
+    data_kw = {}
+    if args.demo:
+        from demo.feeds import demo_connect
+        connect, demo_extra = demo_connect([m.coin for m in cfg.markets], speed=args.demo_speed)
+        data_kw["connect_fn"] = connect
+
     agents: list[BaseAgent] = []
     if args.role in ("all", "live"):
         agents += [
-            HyperliquidDataAgent(bus, store, http_session=http),
+            HyperliquidDataAgent(bus, store, http_session=http, **data_kw),
             QuantAgent(bus, store),
             MacroEdgeAgent(bus, store, http_session=http),
             ValidationAgent(bus, store),
@@ -146,13 +151,34 @@ async def amain(args) -> int:
         agents.append(BacktestingAgent(bus, store, http_session=http))
     agents.append(TelemetryAgent(bus, store, http_session=http))
     agents.append(ControlAgent(bus, store, args.role, lambda: compact_status(agents), http_session=http))
+    ui = None
+    if args.role in ("all", "live"):
+        ui = UIStateAgent(bus, store, lambda: {a.name: a.health() for a in agents})
+        agents.append(ui)
 
-    log.info("starting swarm role=%s network=%s dry_run=%s agents=%s", args.role,
-             cfg.runtime.network, cfg.runtime.dry_run, [a.name for a in agents])
+    log.info("starting swarm role=%s network=%s dry_run=%s demo=%s agents=%s", args.role,
+             cfg.runtime.network, cfg.runtime.dry_run, args.demo, [a.name for a in agents])
     tasks = [asyncio.create_task(supervise(a, stop, fatal), name=a.name) for a in agents]
-    tasks.append(asyncio.create_task(store.watch(stop), name="config-watch"))
+    if not args.demo:
+        tasks.append(asyncio.create_task(store.watch(stop), name="config-watch"))
+    if demo_extra:
+        tasks.append(asyncio.create_task(demo_extra(bus, stop), name="demo-positioning"))
+
+    def health() -> dict:
+        stale = [a.name for a in agents if a.health().get("stale")]
+        return {"ok": not stale, "stale": stale}
+
+    web = WebServer(bus=bus, store=store, health_fn=health,
+                    status_fn=lambda: {"agents": {a.name: a.health() for a in agents}, "bus": bus.stats(),
+                                       "config_reloads": store.reload_count,
+                                       "network": store.current.runtime.network,
+                                       "dry_run": store.current.runtime.dry_run},
+                    snapshot_fn=ui.snapshot if ui else None)
     port = int(os.getenv("PORT", cfg.runtime.health_port))
-    tasks.append(asyncio.create_task(health_server(agents, bus, store, port, stop), name="health"))
+    tasks.append(asyncio.create_task(web.serve(port, stop), name="web"))
+    if args.demo:
+        log.warning("DEMO: open http://localhost:%d  (password: %s)", port,
+                    "demo" if os.environ.get("UI_PASSWORD") == "demo" else "UI_PASSWORD")
 
     await stop.wait()
     log.warning("shutdown requested")
@@ -175,6 +201,8 @@ def main() -> None:
     p.add_argument("--role", choices=("all", "live", "research"), default=os.getenv("ROLE", "all"))
     p.add_argument("--optimize", action="store_true", help="run one forced research (optimization) cycle and exit")
     p.add_argument("--go-live", action="store_true", help="print the go/no-go report and exit")
+    p.add_argument("--demo", action="store_true", help="synthetic market + paper trading + UI (no network, no keys)")
+    p.add_argument("--demo-speed", type=float, default=3.0, help="demo time acceleration (1 = real time)")
     args = p.parse_args()
     if args.go_live:
         setup_logging("WARNING")

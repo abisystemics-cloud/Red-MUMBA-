@@ -13,8 +13,8 @@ from agents.brokers import PaperBroker
 from core.bus import EventBus
 from core.config import ConfigStore
 from core.events import now_ms
-from tests.fakes import make_connect
-from tests.synthetic import generate
+from demo.fakes import make_connect
+from demo.synthetic import generate
 
 ROOT = Path(__file__).resolve().parents[1]
 

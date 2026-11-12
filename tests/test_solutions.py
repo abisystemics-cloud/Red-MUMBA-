@@ -16,7 +16,7 @@ from ml_engine.features import FeatureEngine
 from ml_engine.go_live import evaluate, format_report
 from ml_engine.optimizer import required_margin
 from ml_engine.strategy import composite_score
-from tests.synthetic import generate
+from demo.synthetic import generate
 
 CFG = load_config(Path(__file__).resolve().parents[1] / "config.yaml")
 

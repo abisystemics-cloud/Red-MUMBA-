@@ -65,9 +65,11 @@ Les « skills » et « connecteurs » cités dans la demande sont des outils de 
 agents/      les 7 agents + brokers (Hyperliquid L1 / Paper)
 core/        bus, événements, WebSocket résilient, config + hot-reload
 ml_engine/   features, signal, risque, enregistreur, backtester, optimiseur
+ui/          tableau de bord temps réel (une page, servie par core/web.py)
+demo/        marché synthétique et faux flux (mode --demo, tests)
 scripts/     import_history, backtest, request_backtest, coinversa_probe,
              supervise (commandes), posthog_dashboard
-tests/       46 tests hors réseau + tests d'intégration testnet
+tests/       48 tests hors réseau + tests d'intégration testnet
 main.py      orchestrateur (supervision, /health, arrêt propre)
 config.yaml  configuration (section strategy rechargée à chaud)
 ```
@@ -128,10 +130,29 @@ Le workflow `.github/workflows/ci-cd.yml` enchaîne : tests et lint → build et
 - **AWS EC2.** Placez `docker-compose.yml`, `.env` et `config/` dans `~/hl-swarm` sur l'instance. Ajoutez les secrets `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY` et `GHCR_PULL_TOKEN`. Le conteneur research redémarre d'abord, puis live, et le déploiement échoue si `/health` ne répond pas. Pour la latence, une région proche de l'infrastructure API d'Hyperliquid (généralement indiquée à Tokyo, `ap-northeast-1`) est conseillée ; mesurez-la avant de choisir.
 - **Render.** Créez le service depuis `render.yaml`, puis ajoutez le secret `RENDER_DEPLOY_HOOK_URL`. Les deux pôles partagent alors un conteneur (`ROLE=all`), car un disque Render ne s'attache qu'à un seul service.
 
+## Interface temps réel
+
+Le bot sert un tableau de bord web sur son port HTTP (8080 par défaut), mis à jour chaque seconde. Il affiche :
+- le mode (testnet/mainnet, fictif/réel) et le niveau de risque ;
+- le capital, le PnL réalisé et latent, et la courbe sur 24 h ;
+- pour chaque marché : prix, jauge du score composite et contribution de chaque signal ;
+- les positions ouvertes et le journal en direct (signaux, ordres, exécutions, clôtures, incidents) ;
+- l'état des flux de données et des agents.
+
+Les **contrôles** (pause, reprise, fermeture des positions avec confirmation, réduction de la taille, coupure d'un marché) passent par la même liste blanche que la supervision : ils ne peuvent que réduire le risque.
+
+- L'interface n'est active que si **`UI_PASSWORD`** est défini. Elle est protégée par une session (cookie HttpOnly), et un mot de passe faux ralentit les essais suivants.
+- `/health` reste publique pour les sondes ; tout le reste demande la connexion.
+- Elle est responsive : elle s'utilise depuis un téléphone, en thème clair ou sombre selon le système.
+- Sur Render, l'adresse du service est en HTTPS. En auto-hébergement, ne pas l'exposer sans HTTPS : passer par un tunnel SSH ou un proxy.
+
+**Démo sans clé ni réseau :** `python main.py --demo` lance tout l'essaim en paper trading sur un marché synthétique. Ouvrir http://localhost:8080, mot de passe `demo`. `--demo-speed 10` accélère le temps.
+
 ## Supervision (humain ou Claude)
 
 Le bot peut être supervisé à distance sans ouvrir de port sur le serveur. Le guide complet est dans [`SUPERVISION.md`](SUPERVISION.md).
 
+- **Interface web** : voir ci-dessus.
 - **Comptes rendus** : un `status_snapshot` (état complet de l'essaim) part vers PostHog toutes les 5 min, et en réponse à `ping`.
 - **Commandes** : `python scripts/supervise.py pause --reason "..."`. Le bot lit la branche GitHub `control` toutes les 30 s, avec un jeton en lecture seule. Il accuse réception (`command_ack`), applique la commande, confirme (`command_applied`) et envoie une alerte Telegram.
 - **Liste blanche** : ping, pause, resume, flatten, réduction du risque (×0 à ×1), désactivation d'un marché, rapport go/no-go, cycle R&D. Le superviseur ne peut ni augmenter le risque, ni passer en réel, ni toucher aux fonds.

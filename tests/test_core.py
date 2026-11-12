@@ -9,7 +9,7 @@ from core.bus import EventBus
 from core.config import ConfigStore, atomic_update_strategy, load_config
 from core.events import Topic
 from core.ws_client import ResilientWebSocket
-from tests.fakes import make_connect
+from demo.fakes import make_connect
 
 ROOT = Path(__file__).resolve().parents[1]
 

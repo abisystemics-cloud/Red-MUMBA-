@@ -30,7 +30,7 @@ services:
       ROLE: live
       PORT: "8080"
     ports:
-      - "127.0.0.1:8080:8080"     # /health et /status, non exposés publiquement
+      - "127.0.0.1:8080:8080"     # interface + /health ; passer par un tunnel SSH ou un proxy HTTPS
     deploy:
       resources:
         limits: { cpus: "2.0", memory: 2g }

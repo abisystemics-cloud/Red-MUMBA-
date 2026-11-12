@@ -32,6 +32,8 @@ services:
         sync: false
       - key: POSTHOG_PROJECT_ID
         sync: false
+      - key: UI_PASSWORD
+        sync: false
       - key: CONTROL_GITHUB_REPO
         value: abisystemics-cloud/Red-MUMBA-
       - key: CONTROL_GITHUB_TOKEN

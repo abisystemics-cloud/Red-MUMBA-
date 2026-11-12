@@ -8,7 +8,7 @@ from core.config import load_config
 from scripts.backtest import run as run_period
 from scripts.import_history import (downsample, parse_asset_ctxs, parse_binance_agg_trades,
                                     parse_binance_book_ticker, parse_fill_block, parse_l2_line, write_hours)
-from tests.synthetic import generate
+from demo.synthetic import generate
 
 CFG = load_config(Path(__file__).resolve().parents[1] / "config.yaml")
 LV = [[{"px": "100.0", "sz": "2", "n": 1}, {"px": "99.5", "sz": "1", "n": 1}],

@@ -18,6 +18,8 @@ COPY core/ core/
 COPY agents/ agents/
 COPY ml_engine/ ml_engine/
 COPY scripts/ scripts/
+COPY ui/ ui/
+COPY demo/ demo/
 COPY main.py docker-entrypoint.sh ./
 COPY config.yaml /app/config.default.yaml
 

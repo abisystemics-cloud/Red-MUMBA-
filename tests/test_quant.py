@@ -9,7 +9,7 @@ from ml_engine.optimizer import optimize, propose
 from ml_engine.risk import (CircuitBreaker, TradeStats, kelly_fraction, round_px,
                             size_position)
 from agents.validation_agent import validate
-from tests.synthetic import generate
+from demo.synthetic import generate
 from pathlib import Path
 import random
 
