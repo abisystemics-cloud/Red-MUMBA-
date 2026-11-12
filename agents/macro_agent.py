@@ -69,6 +69,8 @@ class MacroEdgeAgent(BaseAgent):
         self.llm: Optional[dict] = None
         self.llm_ts = 0
         self.state = MacroState(now_ms(), RiskLevel.NORMAL, [])
+        self.supervisor_pause: Optional[str] = None
+        self.ctl = bus.subscribe(Topic.CONTROL, self.name, maxsize=64)
 
     # --------------------------------------------------------- detectors
     def _on_quote(self, q) -> None:
@@ -91,6 +93,8 @@ class MacroEdgeAgent(BaseAgent):
 
         if self.kill_file.exists():
             raise_to(RiskLevel.HALT, "manual kill switch file present")
+        if self.supervisor_pause is not None:
+            raise_to(RiskLevel.HALT, f"supervisor pause: {self.supervisor_pause}")
 
         for ev in mc.scheduled_events:
             try:
@@ -154,12 +158,24 @@ class MacroEdgeAgent(BaseAgent):
             except asyncio.TimeoutError:
                 pass
 
+    async def _control(self) -> None:
+        while True:
+            c = await self.ctl.get()
+            if c.cmd == "pause":
+                self.supervisor_pause = c.reason or "no reason given"
+            elif c.cmd == "resume":
+                self.supervisor_pause = None
+            else:
+                continue
+            self.bus.publish(Topic.TELEMETRY, {"event": "command_applied", "command_id": c.id, "cmd": c.cmd, "agent": self.name, "paused": self.supervisor_pause is not None})
+
     async def _quotes(self) -> None:
         while True:
             self._on_quote(await self.sub.get())
 
     async def run(self, stop: asyncio.Event) -> None:
-        tasks = [asyncio.create_task(self._quotes()), asyncio.create_task(self._llm_loop(stop))]
+        tasks = [asyncio.create_task(self._quotes()), asyncio.create_task(self._llm_loop(stop)),
+                 asyncio.create_task(self._control())]
         last_pub = 0.0
         try:
             while not stop.is_set():
@@ -184,4 +200,5 @@ class MacroEdgeAgent(BaseAgent):
         h["level"] = self.state.level.value
         h["reasons"] = self.state.reasons
         h["llm_risk_score"] = self.state.llm_risk_score
+        h["paused"] = self.supervisor_pause
         return h

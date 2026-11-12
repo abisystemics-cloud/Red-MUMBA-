@@ -26,6 +26,7 @@ from agents import (BacktestingAgent, ExecutionAgent, HyperliquidDataAgent, Macr
                     QuantAgent, TelemetryAgent, ValidationAgent)
 from agents.base import BaseAgent
 from agents.brokers import HyperliquidBroker, PaperBroker
+from agents.control_agent import ControlAgent, compact_status
 from core.bus import EventBus
 from core.config import ConfigStore
 from core.logging_setup import setup_logging
@@ -143,6 +144,7 @@ async def amain(args) -> int:
     if args.role in ("all", "research"):
         agents.append(BacktestingAgent(bus, store, http_session=http))
     agents.append(TelemetryAgent(bus, store, http_session=http))
+    agents.append(ControlAgent(bus, store, args.role, lambda: compact_status(agents), http_session=http))
 
     log.info("starting swarm role=%s network=%s dry_run=%s agents=%s", args.role,
              cfg.runtime.network, cfg.runtime.dry_run, [a.name for a in agents])

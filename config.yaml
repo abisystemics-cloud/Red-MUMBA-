@@ -180,6 +180,18 @@ go_live:
   weeks: 4
   report_interval_h: 168        # rapport hebdomadaire
 
+# Canal de supervision : le bot lit des commandes signées par commit dans la
+# branche GitHub `control` (fichier control/commands.json) et rend compte via
+# la télémétrie (événements command_ack, command_applied, status_snapshot).
+# Jeton GitHub en LECTURE SEULE : CONTROL_GITHUB_TOKEN ; dépôt : CONTROL_GITHUB_REPO.
+control:
+  enabled: true
+  branch: control
+  path: control/commands.json
+  poll_seconds: 30
+  status_interval_s: 300        # instantané d'état envoyé à PostHog
+  max_command_age_s: 3600       # une commande plus vieille est ignorée
+
 alerts:
   # Telegram : TELEGRAM_BOT_TOKEN et TELEGRAM_CHAT_ID dans l'environnement
   enabled: true

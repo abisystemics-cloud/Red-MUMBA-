@@ -64,6 +64,8 @@ class ExecutionAgent(BaseAgent):
         self.realized_pnl = 0.0
         self._stop = asyncio.Event()
         self._breaker_reported = False
+        self.risk_scale = 1.0
+        self.ctl = bus.subscribe(Topic.CONTROL, self.name, maxsize=64)
 
     # --------------------------------------------------------------- utils
     @property
@@ -91,7 +93,7 @@ class ExecutionAgent(BaseAgent):
         if book is None:
             return
         ref = book.best_ask if long_ else book.best_bid
-        d = size_position(equity=self.equity, px=ref, is_long=long_, vol_bps=f.realized_vol_bps,
+        d = size_position(equity=self.equity * self.risk_scale, px=ref, is_long=long_, vol_bps=f.realized_vol_bps,
                           stats=self.stats, cfg=r, level=self.level,
                           sz_decimals=self.broker.sz_decimals(coin))
         if d.qty <= 0:
@@ -190,7 +192,7 @@ class ExecutionAgent(BaseAgent):
         qty_done = notional = fees = 0.0
         ref_book = self.books.get(coin)
         ref = (ref_book.best_bid if long_ else ref_book.best_ask) if ref_book else t.entry_px
-        urgent = reason in ("macro_halt", "circuit_breaker", "shutdown", "stop_rejected")
+        urgent = reason in ("macro_halt", "circuit_breaker", "shutdown", "stop_rejected", "supervisor")
         if self.cfg.execution.mode == "maker" and not urgent:
             mf = await self._work_maker(coin, not long_, t.qty, self.cfg.execution.exit_maker_timeout_s, True)
             self._order_event(coin, t.side, t.qty, ref, "exit_maker", mf)
@@ -293,6 +295,17 @@ class ExecutionAgent(BaseAgent):
                 self.log.warning("HALT received → flattening all positions")
                 await self.flatten_all("macro_halt")
 
+    async def _control(self) -> None:
+        while True:
+            c = await self.ctl.get()
+            if c.cmd == "flatten":
+                await self.flatten_all("supervisor")
+            elif c.cmd == "set_risk_scale":
+                self.risk_scale = max(0.0, min(1.0, float(c.args["scale"])))
+            else:
+                continue
+            self.bus.publish(Topic.TELEMETRY, {"event": "command_applied", "command_id": c.id, "cmd": c.cmd, "agent": self.name, "risk_scale": self.risk_scale, "open_positions": len(self.open)})
+
     async def _reconcile(self, stop: asyncio.Event) -> None:
         """Toutes les 5 s : equity, disjoncteur, et positions fermées côté
         exchange (stop/TP touché) ou divergentes."""
@@ -333,7 +346,8 @@ class ExecutionAgent(BaseAgent):
         self._stop = stop
         await self.broker.start()
         self.equity = await self.broker.equity()
-        tasks = [asyncio.create_task(c) for c in (self._books(), self._risk(), self._reconcile(stop))]
+        tasks = [asyncio.create_task(c) for c in (self._books(), self._risk(), self._reconcile(stop),
+                                                  self._control())]
         try:
             while not stop.is_set():
                 try:
@@ -360,5 +374,5 @@ class ExecutionAgent(BaseAgent):
                  open={c: {"side": t.side.value, "qty": t.qty, "entry": t.entry_px} for c, t in self.open.items()},
                  level=self.level.value, breaker=self.breaker.tripped_reason or None,
                  win_rate_est=round(self.stats.win_rate(), 3), payoff_est=round(self.stats.payoff(), 3),
-                 dry_run=self.broker.dry_run)
+                 dry_run=self.broker.dry_run, risk_scale=self.risk_scale)
         return h

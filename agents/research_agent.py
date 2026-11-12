@@ -154,6 +154,7 @@ class BacktestingAgent(BaseAgent):
         self.last_run: Optional[dict] = None
         self.runs = 0
         self.stale_after_s = self.cfg.research.check_interval_s * 2 + 3600
+        self.ctl = bus.subscribe(Topic.CONTROL, self.name, maxsize=16)
         self.graph = _build_graph(
             {"collect_performance": self.collect_performance, "assess": self.assess,
              "explore_data": self.explore_data, "optimize": self.optimize, "deploy": self.deploy},
@@ -285,7 +286,31 @@ class BacktestingAgent(BaseAgent):
         self.log.info("research run: %s", summary.get("done") or summary.get("reason"))
         return state
 
+    async def _control(self) -> None:
+        while True:
+            c = await self.ctl.get()
+            try:
+                if c.cmd == "go_live_report":
+                    rep = await self.go_live_report()
+                    result = rep["verdict"]
+                elif c.cmd == "research_run":
+                    st = await self.run_once(force=True)
+                    result = st.get("done") or st.get("reason")
+                else:
+                    continue
+            except Exception as exc:  # noqa: BLE001
+                result = f"failed: {exc}"
+            self.bus.publish(Topic.TELEMETRY, {"event": "command_applied", "command_id": c.id, "cmd": c.cmd,
+                                               "agent": self.name, "result": result})
+
     async def run(self, stop: asyncio.Event) -> None:
+        ctl_task = asyncio.create_task(self._control())
+        try:
+            await self._run(stop)
+        finally:
+            ctl_task.cancel()
+
+    async def _run(self, stop: asyncio.Event) -> None:
         if not self.cfg.research.enabled:
             await stop.wait()
             return

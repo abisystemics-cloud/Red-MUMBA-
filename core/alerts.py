@@ -27,6 +27,12 @@ def alert_for(ev: dict) -> Optional[tuple[str, str]]:
         return f"protect:{ev.get('coin')}", f"[{net}] CRITIQUE : ordre {ev.get('kind')} refusé sur {ev.get('coin')} ({ev.get('error')})"
     if name == "research_run" and str(ev.get("done") or "").startswith(("proposal", "deployed")):
         return "research", f"[{net}] Agent R&D : {ev.get('done')}"
+    if name == "command_applied":
+        return (f"cmd:{ev.get('command_id')}",
+                f"[{net}] Superviseur : commande « {ev.get('cmd')} » appliquée par {ev.get('agent')}"
+                + (f" → {ev.get('result')}" if ev.get("result") else ""))
+    if name == "command_ack" and ev.get("status") == "rejected":
+        return f"cmdrej:{ev.get('command_id')}", f"[{net}] Commande refusée ({ev.get('cmd')}) : {ev.get('detail')}"
     if name == "go_live_report":
         return "go_live", f"[{net}] {ev.get('text')}"
     return None

@@ -21,12 +21,15 @@ PREMIUM_CHASE_Z = 2.0
 FUNDING_AGAINST = 5e-4   # taux horaire Hyperliquid
 
 
-def validate(sig: Signal, macro: MacroState | None, cfg, now: int) -> list[str]:
+def validate(sig: Signal, macro: MacroState | None, cfg, now: int,
+             disabled: frozenset | set = frozenset()) -> list[str]:
     """Retourne la liste des motifs de rejet (vide = validé)."""
     if sig.side == Side.FLAT:
         return []
     f, st = sig.features, cfg.strategy
     why: list[str] = []
+    if sig.coin in disabled:
+        why.append(f"{sig.coin} disabled by supervisor")
     if macro is None or now - macro.ts > MACRO_STALE_MS:
         why.append("macro state unknown/stale")
     elif macro.level == RiskLevel.HALT:
@@ -57,20 +60,32 @@ class ValidationAgent(BaseAgent):
         self.macro: MacroState | None = None
         self.stats: Counter = Counter()
         self._last_tele: dict[str, tuple] = {}
+        self.disabled: set[str] = set()
+        self.ctl = bus.subscribe(Topic.CONTROL, self.name, maxsize=64)
 
     async def _risk(self) -> None:
         while True:
             self.macro = await self.risk_sub.get()
 
+    async def _control(self) -> None:
+        while True:
+            c = await self.ctl.get()
+            if c.cmd not in ("disable_coin", "enable_coin"):
+                continue
+            coin = c.args.get("coin")
+            (self.disabled.add if c.cmd == "disable_coin" else self.disabled.discard)(coin)
+            self.bus.publish(Topic.TELEMETRY, {"event": "command_applied", "command_id": c.id, "cmd": c.cmd, "agent": self.name, "disabled_coins": sorted(self.disabled)})
+
     async def run(self, stop: asyncio.Event) -> None:
         rt = asyncio.create_task(self._risk())
+        ct = asyncio.create_task(self._control())
         try:
             while not stop.is_set():
                 try:
                     sig: Signal = await asyncio.wait_for(self.sig_sub.get(), timeout=1.0)
                 except asyncio.TimeoutError:
                     continue
-                reasons = validate(sig, self.macro, self.cfg, now_ms())
+                reasons = validate(sig, self.macro, self.cfg, now_ms(), self.disabled)
                 sig.validated = not reasons
                 sig.rejections = reasons
                 if sig.side != Side.FLAT:
@@ -90,8 +105,10 @@ class ValidationAgent(BaseAgent):
                 self.beat()
         finally:
             rt.cancel()
+            ct.cancel()
 
     def health(self) -> dict:
         h = super().health()
         h["stats"] = dict(self.stats)
+        h["disabled_coins"] = sorted(self.disabled)
         return h

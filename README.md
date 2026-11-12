@@ -16,9 +16,13 @@ flowchart LR
     M -->|RISK_STATE| E[5 · Execution & Risk<br/>Kelly · stop dynamique<br/>API wallet L1]
     V -->|VALIDATED| E
     E -->|ordres, fills, PnL| T[6 · Telemetry]
+    CTL[Control<br/>commandes superviseur] -->|pause, flatten, risque| E
     V -->|signaux| T
   end
   T -->|batch| PH[(PostHog)]
+  GH[(GitHub branche control)] -->|lecture 30 s| CTL
+  PH -->|comptes rendus| SUP[Superviseur<br/>humain ou Claude]
+  SUP -->|commit| GH
   T -->|JSONL| FS[(data/)]
   D -->|enregistrement| FS
   subgraph P2[Pôle 2 — R&D · conteneur research]
@@ -61,8 +65,8 @@ Les « skills » et « connecteurs » cités dans la demande sont des outils de 
 agents/      les 7 agents + brokers (Hyperliquid L1 / Paper)
 core/        bus, événements, WebSocket résilient, config + hot-reload
 ml_engine/   features, signal, risque, enregistreur, backtester, optimiseur
-scripts/     création du dashboard PostHog
-tests/       34 tests hors réseau + tests d'intégration testnet
+scripts/     dashboard PostHog, supervise.py (commandes de supervision)
+tests/       37 tests hors réseau + tests d'intégration testnet
 main.py      orchestrateur (supervision, /health, arrêt propre)
 config.yaml  configuration (section strategy rechargée à chaud)
 ```
@@ -122,6 +126,14 @@ Le workflow `.github/workflows/ci-cd.yml` enchaîne : tests et lint → build et
 
 - **AWS EC2.** Placez `docker-compose.yml`, `.env` et `config/` dans `~/hl-swarm` sur l'instance. Ajoutez les secrets `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY` et `GHCR_PULL_TOKEN`. Le conteneur research redémarre d'abord, puis live, et le déploiement échoue si `/health` ne répond pas. Pour la latence, une région proche de l'infrastructure API d'Hyperliquid (généralement indiquée à Tokyo, `ap-northeast-1`) est conseillée ; mesurez-la avant de choisir.
 - **Render.** Créez le service depuis `render.yaml`, puis ajoutez le secret `RENDER_DEPLOY_HOOK_URL`. Les deux pôles partagent alors un conteneur (`ROLE=all`), car un disque Render ne s'attache qu'à un seul service.
+
+## Supervision (humain ou Claude)
+
+Le bot peut être supervisé à distance sans ouvrir de port sur le serveur. Le guide complet est dans [`SUPERVISION.md`](SUPERVISION.md).
+
+- **Comptes rendus** : un `status_snapshot` (état complet de l'essaim) part vers PostHog toutes les 5 min, et en réponse à `ping`.
+- **Commandes** : `python scripts/supervise.py pause --reason "..."`. Le bot lit la branche GitHub `control` toutes les 30 s, avec un jeton en lecture seule. Il accuse réception (`command_ack`), applique la commande, confirme (`command_applied`) et envoie une alerte Telegram.
+- **Liste blanche** : ping, pause, resume, flatten, réduction du risque (×0 à ×1), désactivation d'un marché, rapport go/no-go, cycle R&D. Le superviseur ne peut ni augmenter le risque, ni passer en réel, ni toucher aux fonds.
 
 ## Passage en réel : critères go/no-go
 

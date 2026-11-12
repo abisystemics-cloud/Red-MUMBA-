@@ -182,6 +182,15 @@ class AlertsCfg(BaseModel):
     feed_down_after_s: float = 30
 
 
+class ControlCfg(BaseModel):
+    enabled: bool = True
+    branch: str = "control"
+    path: str = "control/commands.json"
+    poll_seconds: float = 30
+    status_interval_s: float = 300
+    max_command_age_s: float = 3600
+
+
 class TelemetryCfg(BaseModel):
     posthog_host: str = "https://eu.i.posthog.com"
     flush_interval_s: float = 1.0
@@ -221,6 +230,7 @@ class AppConfig(BaseModel):
     research: ResearchCfg = ResearchCfg()
     go_live: GoLiveCfg = GoLiveCfg()
     alerts: AlertsCfg = AlertsCfg()
+    control: ControlCfg = ControlCfg()
 
     # --- helpers ------------------------------------------------------------
     @property

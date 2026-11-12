@@ -32,6 +32,7 @@ class Topic(str, Enum):
     FILL = "fill"                 # FillEvent
     POSITION = "position"         # PositionUpdate
     TELEMETRY = "telemetry"       # dict libre
+    CONTROL = "control"           # ControlCommand (canal de supervision)
     HEALTH = "health"
 
 
@@ -202,3 +203,12 @@ class FillEvent:
     closed_pnl: float
     kind: str
     dry_run: bool
+
+
+@dataclass(slots=True)
+class ControlCommand:
+    id: str
+    cmd: str
+    args: dict[str, Any]
+    reason: str
+    issued_by: str

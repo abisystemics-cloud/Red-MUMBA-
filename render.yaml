@@ -30,6 +30,10 @@ services:
         sync: false
       - key: POSTHOG_PROJECT_ID
         sync: false
+      - key: CONTROL_GITHUB_REPO
+        value: abisystemics-cloud/Red-MUMBA-
+      - key: CONTROL_GITHUB_TOKEN
+        sync: false
       - key: TELEGRAM_BOT_TOKEN
         sync: false
       - key: TELEGRAM_CHAT_ID
