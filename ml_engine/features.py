@@ -263,5 +263,5 @@ class FeatureEngine:
             book_age_ms=int(now - book.exch_ts), ext_age_ms=ext_age,
             liq_magnet_bps=liq_bps, source_recv_ns=book.recv_ns,
             funding_z=self._funding_z,
-            whale_bias=self._whale.bias if self._whale and now - self._whale.ts < 15 * 60_000 else 0.0,
+            whale_bias=self._whale.bias if self._whale and now - self._whale.ts < 90 * 60_000 else 0.0,
         )

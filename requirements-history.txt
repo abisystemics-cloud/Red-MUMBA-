@@ -1,0 +1,3 @@
+# Uniquement pour scripts/import_history.py (pas nécessaire au bot live)
+boto3>=1.34
+lz4>=4.3

@@ -44,18 +44,30 @@ data:
   binance_ws: wss://fstream.binance.com/stream
   bybit_ws: wss://stream.bybit.com/v5/public/linear
   liquidations:
-    # coinglass | firecrawl | disabled
-    provider: coinglass
+    # coinversa | coinglass | firecrawl | disabled
+    provider: coinversa
     poll_seconds: 60
     coinglass_base_url: https://open-api-v4.coinglass.com
     coinglass_heatmap_path: /api/futures/liquidation/heatmap/model1
     # utilisé si provider=firecrawl (page publique, extraction JSON)
     firecrawl_url: ""
-  # Positionnement des "whales" : adresses publiques Hyperliquid à suivre
-  # (positions lues via l'endpoint public /info clearinghouseState).
+  # Positionnement : "coinversa" = biais long/short des catégories de traders
+  # (rentables vs perdants) via l'API Coinversa Pulse (clé COINVERSA_API_KEY) ;
+  # "addresses" = positions publiques d'adresses choisies (endpoint /info).
   whales:
+    provider: coinversa
     addresses: []
     poll_seconds: 60
+  coinversa:
+    base_url: https://api.coinversa.ai/api/public/v1
+    cohort_history_path: /pulse/cohort-bias/history
+    # chemin de la carte des liquidations : vérifié par scripts/coinversa_probe.py
+    heatmap_path: /live/liquidation-heatmap/{coin}
+    heatmap_buckets: 50
+    heatmap_range_pct: 15
+    smart_tiers: [money_printer, smart_money]               # traders les plus rentables
+    crowd_tiers: [exit_liquidity, semi_rekt, full_rekt, giga_rekt]  # traders perdants
+    smart_weight: 0.6             # biais = 0,6 × rentables − 0,4 × perdants
   record_market_data: true
   recordings_dir: data/recordings
   max_staleness_ms: 2500      # au-delà, la donnée est considérée morte

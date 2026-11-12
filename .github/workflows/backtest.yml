@@ -1,0 +1,110 @@
+name: backtest
+
+# Backtest à distance sur données historiques.
+# Deux façons de le lancer :
+#  1. Onglet Actions → backtest → Run workflow (saisir les dates) ;
+#  2. un push sur la branche `backtest-requests` contenant request.json
+#     (c'est ce qu'utilise scripts/request_backtest.py, donc Claude peut le lancer).
+# Les résultats sont publiés sur la branche `backtest-results` (reports/<id>/)
+# et en artefact téléchargeable.
+on:
+  workflow_dispatch:
+    inputs:
+      from:   { description: "Début (YYYY-MM-DD)", required: true }
+      to:     { description: "Fin (YYYY-MM-DD)", required: true }
+      coins:  { description: "Marchés", default: "BTC,ETH" }
+      mode:   { description: "maker | taker", default: "maker" }
+      with_trades: { description: "Importer aussi les fills (volumineux)", type: boolean, default: false }
+  push:
+    branches: [backtest-requests]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: backtest
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-northeast-1
+      COINVERSA_API_KEY: ${{ secrets.COINVERSA_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Paramètres
+        id: p
+        run: |
+          if [ -f request.json ]; then
+            echo "from=$(jq -r .from request.json)" >> "$GITHUB_OUTPUT"
+            echo "to=$(jq -r .to request.json)" >> "$GITHUB_OUTPUT"
+            echo "coins=$(jq -r '.coins // "BTC,ETH"' request.json)" >> "$GITHUB_OUTPUT"
+            echo "mode=$(jq -r '.mode // "maker"' request.json)" >> "$GITHUB_OUTPUT"
+            echo "trades=$(jq -r '.with_trades // false' request.json)" >> "$GITHUB_OUTPUT"
+            echo "id=$(jq -r .id request.json)" >> "$GITHUB_OUTPUT"
+          else
+            echo "from=${{ inputs.from }}" >> "$GITHUB_OUTPUT"
+            echo "to=${{ inputs.to }}" >> "$GITHUB_OUTPUT"
+            echo "coins=${{ inputs.coins }}" >> "$GITHUB_OUTPUT"
+            echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+            echo "trades=${{ inputs.with_trades }}" >> "$GITHUB_OUTPUT"
+            echo "id=manual-$(date -u +%Y%m%dT%H%M%S)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - run: pip install -r requirements.txt -r requirements-history.txt
+
+      - name: Cache des données importées
+        uses: actions/cache@v4
+        with:
+          path: data/recordings
+          key: hist-${{ steps.p.outputs.coins }}-${{ steps.p.outputs.from }}-${{ steps.p.outputs.to }}-${{ steps.p.outputs.trades }}
+
+      - name: Sonde Coinversa
+        if: env.COINVERSA_API_KEY != ''
+        continue-on-error: true
+        run: python scripts/coinversa_probe.py
+
+      - name: Import historique
+        run: |
+          ARGS="--from ${{ steps.p.outputs.from }} --to ${{ steps.p.outputs.to }} --coins ${{ steps.p.outputs.coins }}"
+          [ -z "$AWS_ACCESS_KEY_ID" ] && ARGS="$ARGS --no-s3" && echo "::warning::no AWS secrets: Hyperliquid order book not imported"
+          [ -z "$COINVERSA_API_KEY" ] && ARGS="$ARGS --no-coinversa"
+          [ "${{ steps.p.outputs.trades }}" = "true" ] && ARGS="$ARGS --with-trades"
+          if ls data/recordings/md_*_hist.jsonl.gz >/dev/null 2>&1; then echo "cache hit, skipping import"; else python scripts/import_history.py $ARGS; fi
+
+      - name: Backtest
+        id: bt
+        run: |
+          set +e
+          mkdir -p data/reports
+          python scripts/backtest.py --from ${{ steps.p.outputs.from }} --to ${{ steps.p.outputs.to }} \
+            --coins ${{ steps.p.outputs.coins }} --mode ${{ steps.p.outputs.mode }} | tee data/reports/console.txt
+          echo "rc=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          cat data/reports/backtest_*.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backtest-${{ steps.p.outputs.id }}
+          path: data/reports/
+
+      - name: Publier sur la branche backtest-results
+        run: |
+          ID="${{ steps.p.outputs.id }}"
+          git config user.name "hl-swarm-backtest"
+          git config user.email "actions@users.noreply.github.com"
+          git fetch origin backtest-results || true
+          git worktree add /tmp/results -B backtest-results origin/backtest-results 2>/dev/null \
+            || (git worktree add --detach /tmp/results && cd /tmp/results && git checkout --orphan backtest-results && git rm -rf --quiet . || true)
+          mkdir -p "/tmp/results/reports/$ID"
+          cp data/reports/* "/tmp/results/reports/$ID/"
+          cd /tmp/results && git add -A && git commit -q -m "backtest $ID (exit ${{ steps.bt.outputs.rc }})" && git push origin backtest-results

@@ -8,3 +8,4 @@ data/
 config/
 *.proposed.yaml
 .control-worktree/
+.backtest-request-worktree/

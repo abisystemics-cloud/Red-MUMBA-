@@ -20,6 +20,8 @@ services:
         sync: false
       - key: LIVE_TRADING_CONFIRM
         sync: false
+      - key: COINVERSA_API_KEY
+        sync: false
       - key: COINGLASS_API_KEY
         sync: false
       - key: PERPLEXITY_API_KEY

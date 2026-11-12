@@ -50,7 +50,7 @@ Les « skills » et « connecteurs » cités dans la demande sont des outils de 
 | Demandé | Implémenté par |
 |---|---|
 | `build-connector` SDK Hyperliquid | `hyperliquid-python-sdk` (ordres) + WebSocket natif (`core/ws_client.py`) |
-| Firecrawl heatmaps/liquidations | API Coinglass officielle (clé), Firecrawl `/scrape` en option (`data.liquidations.provider`) |
+| Firecrawl heatmaps/liquidations | API Coinversa Pulse (défaut), Coinglass ou Firecrawl `/scrape` (`data.liquidations.provider`) |
 | CoinGecko prix Binance/Bybit | WebSockets publics Binance USDⓈ-M + Bybit linear (CoinGecko est trop lent pour du temps réel) |
 | `analyze` / `statistical-analysis` | `ml_engine/features.py` (z-scores glissants, OBI, CVD, VPVR, spoofing, premium) |
 | Perplexity Computer / `deep-research` | API Perplexity Sonar (`agents/macro_agent.py`) + déclencheurs de marché sans LLM |
@@ -65,8 +65,9 @@ Les « skills » et « connecteurs » cités dans la demande sont des outils de 
 agents/      les 7 agents + brokers (Hyperliquid L1 / Paper)
 core/        bus, événements, WebSocket résilient, config + hot-reload
 ml_engine/   features, signal, risque, enregistreur, backtester, optimiseur
-scripts/     dashboard PostHog, supervise.py (commandes de supervision)
-tests/       37 tests hors réseau + tests d'intégration testnet
+scripts/     import_history, backtest, request_backtest, coinversa_probe,
+             supervise (commandes), posthog_dashboard
+tests/       46 tests hors réseau + tests d'intégration testnet
 main.py      orchestrateur (supervision, /health, arrêt propre)
 config.yaml  configuration (section strategy rechargée à chaud)
 ```
@@ -83,11 +84,11 @@ curl -s localhost:8080/status | jq .
 
 Sans Docker : `pip install -r requirements-dev.txt && pytest -q && python main.py --role all`.
 
-Backtest ponctuel sur les données enregistrées : `python main.py --backtest`.
+Cycle d'optimisation forcé : `python main.py --optimize`. Backtest sur historique : voir plus bas.
 
 ## Les 7 agents
 
-1. **Data.** Il s'abonne à `l2Book`, `trades` et `activeAssetCtx` (OI, funding, mark/oracle) pour chaque marché. Il streame aussi les meilleurs prix Binance et Bybit, et récupère la carte des liquidations. Il lit enfin les positions publiques des adresses listées dans `data.whales.addresses` (endpoint `/info` `clearinghouseState`) et en tire un biais net long/short. Un watchdog émet `feed_down` si un flux se tait plus de 30 s. Tout est enregistré dans `data/recordings/` pour le backtest. *Limite :* le flux public Hyperliquid fournit **20 niveaux par côté, poussés au plus toutes les 0,5 s**. Pour 100 niveaux, renseignez `HL_BOOK_WS_URL` vers un fournisseur compatible (par ex. Dwellir) ; le paramètre `nLevels` est alors envoyé.
+1. **Data.** Il s'abonne à `l2Book`, `trades` et `activeAssetCtx` (OI, funding, mark/oracle) pour chaque marché. Il streame aussi les meilleurs prix Binance et Bybit, et récupère la carte des liquidations. Il lit enfin le **positionnement des traders** via l'API Coinversa Pulse. Le signal vaut le biais long/short des catégories les plus rentables (`money_printer`, `smart_money`), moins celui des plus perdantes (`exit_liquidity` … `giga_rekt`), qui sert d'indicateur inverse. L'alternative `provider: addresses` suit des adresses choisies. Un watchdog émet `feed_down` si un flux se tait plus de 30 s. Tout est enregistré dans `data/recordings/` pour le backtest. *Limite :* le flux public Hyperliquid fournit **20 niveaux par côté, poussés au plus toutes les 0,5 s**. Pour 100 niveaux, renseignez `HL_BOOK_WS_URL` vers un fournisseur compatible (par ex. Dwellir) ; le paramètre `nLevels` est alors envoyé.
 2. **Quant & Stat.** Il calcule un `FeatureVector` par snapshot, exposable en tenseur avec `to_tensor()`, puis un score composite à 7 termes (poids dans `strategy.weights`) :
    - OBI pondéré, atténué si le côté qui le porte semble spoofé ;
    - pente du CVD ;
@@ -135,6 +136,33 @@ Le bot peut être supervisé à distance sans ouvrir de port sur le serveur. Le 
 - **Commandes** : `python scripts/supervise.py pause --reason "..."`. Le bot lit la branche GitHub `control` toutes les 30 s, avec un jeton en lecture seule. Il accuse réception (`command_ack`), applique la commande, confirme (`command_applied`) et envoie une alerte Telegram.
 - **Liste blanche** : ping, pause, resume, flatten, réduction du risque (×0 à ×1), désactivation d'un marché, rapport go/no-go, cycle R&D. Le superviseur ne peut ni augmenter le risque, ni passer en réel, ni toucher aux fonds.
 
+## Backtest sur historique
+
+Plutôt que d'attendre des semaines de testnet, le bot peut être rejoué sur plusieurs mois de données réelles.
+
+| Donnée | Source | Disponibilité |
+|---|---|---|
+| Carnet d'ordres Hyperliquid (snapshots L2) | Archive S3 officielle `hyperliquid-archive` (transfert ~0,09 $/Go, payé par le demandeur) | Depuis 2023, mise à jour ~1 fois par mois, trous possibles |
+| Funding, OI, prix mark/oracle | Même archive (`asset_ctxs`) | Idem |
+| Trades Hyperliquid (CVD, POC) | `hl-mainnet-node-data/node_fills_by_block` (option `--with-trades`, volumineux) | Idem |
+| Prix Binance (premium) | data.binance.vision (gratuit) | Plusieurs années |
+| Positionnement des traders | Coinversa Pulse | Depuis début septembre 2026 |
+| Carte des liquidations | Coinversa (live uniquement) | **Pas d'historique** : ce signal n'est pas backtestable |
+
+```bash
+pip install -r requirements-history.txt
+python scripts/import_history.py --from 2026-09-01 --to 2026-10-31 --coins BTC,ETH
+python scripts/backtest.py --from 2026-09-01 --to 2026-10-31   # 0 = GO, 3 = NO-GO
+```
+
+Le rapport (`data/reports/backtest_*.md|json`) donne la rentabilité, le drawdown, le profit factor, les frais et le funding payés, les résultats mois par mois, les signaux réellement présents dans les données, et le verdict go/no-go.
+
+**À distance, sans machine :** le workflow GitHub `backtest` (onglet Actions, ou `python scripts/request_backtest.py --from … --to …`) importe, backtest et publie le rapport sur la branche `backtest-results`. Il utilise les secrets `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` et `COINVERSA_API_KEY`.
+
+**Ordre conseillé :** un GO en backtest d'abord, puis 2 semaines de testnet pour valider l'exécution réelle. Un NO-GO en backtest évite des semaines de testnet inutiles.
+
+`python scripts/coinversa_probe.py` vérifie la clé Coinversa et les routes d'API utilisées.
+
 ## Passage en réel : critères go/no-go
 
 Ces critères sont fixés **avant** de voir les résultats (section `go_live`). Le rapport est écrit chaque semaine dans `data/reports/`, envoyé en alerte, et consultable à tout moment :
@@ -165,8 +193,8 @@ POSTHOG_PERSONAL_API_KEY=phx_... POSTHOG_PROJECT_ID=... python scripts/posthog_d
 
 ## Feuille de route avant du capital réel
 
-1. Lancer le workflow **integration-testnet** pour vérifier le code contre les vraies API.
-2. Remplir `data.whales.addresses` avec des adresses à suivre (par exemple des traders rentables repérés sur le leaderboard Hyperliquid).
-3. Faire tourner 2 à 4 semaines en paper trading sur le testnet, avec les alertes Telegram actives.
+1. Backtester sur l'historique disponible (workflow `backtest`). Continuer seulement sur un GO.
+2. Lancer le workflow **integration-testnet** pour vérifier le code contre les vraies API.
+3. Faire tourner 2 semaines en paper trading sur le testnet, avec les alertes Telegram actives.
 4. Lire `python main.py --go-live` et les propositions de l'agent R&D. Passer en réel uniquement sur un **GO**, avec un capital que tu peux perdre entièrement.
 5. Garder en tête que Python + WebSocket public n'est pas du HFT colocalisé : l'avantage visé se situe à l'échelle de la minute, pas de la microseconde.

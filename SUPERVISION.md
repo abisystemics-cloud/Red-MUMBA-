@@ -29,6 +29,17 @@ Ce guide décrit comment un superviseur (toi ou Claude) suit le bot et intervien
 
 **Impossible par construction :** augmenter le risque au-delà de `config.yaml`, passer en réel, toucher aux fonds ou modifier la stratégie. La stratégie ne change que par une proposition de l'agent R&D validée par l'humain.
 
+## Backtests à la demande
+
+Le superviseur peut lancer un backtest distant et lire le résultat, sans accès au serveur :
+
+```bash
+python scripts/request_backtest.py --from 2026-09-01 --to 2026-10-31      # affiche l'id
+python scripts/request_backtest.py --fetch <id> --wait-s 1800             # récupère le rapport
+```
+
+Exemple d'usage : avant de résumer une proposition de l'agent R&D, la faire backtester sur une période plus longue que ses 24 h de données.
+
 ## Routine de surveillance
 
 À chaque passage, lancer ces requêtes HogQL. Le filtre `network` est à remplacer par `mainnet` en réel.

@@ -1,12 +1,14 @@
 """Enregistrement du flux de marché (jsonl.gz horaire) et relecture pour le backtest."""
 from __future__ import annotations
 
+import calendar
 import gzip
 import heapq
 import json
+import re
 import time
 from pathlib import Path
-from typing import Iterator
+from typing import Iterable, Iterator
 
 import numpy as np
 
@@ -82,11 +84,55 @@ def _iter_file(path: Path, since_ms: int) -> Iterator[dict]:
         return
 
 
+def _file_start_ms(p: Path) -> int:
+    m = re.match(r"md_(\d{8}T\d{2})", p.name)
+    if not m:
+        return 0
+    return calendar.timegm(time.strptime(m.group(1), "%Y%m%dT%H")) * 1000
+
+
+def iter_events(directory: str | Path, since_ms: int = 0, until_ms: int | None = None,
+                coins: Iterable[str] | None = None) -> Iterator[dict]:
+    """Flux chronologique de tous les fichiers md_*.jsonl.gz (live et historiques,
+    un fichier par heure), en mémoire constante : adapté à des mois de données.
+    Les fichiers ne sont ouverts qu'au moment où le flux atteint leur heure de
+    début (quelques fichiers ouverts à la fois, jamais des milliers)."""
+    files = sorted(Path(directory).glob("md_*.jsonl.gz"), key=lambda p: (_file_start_ms(p), p.name))
+    # un nom sans heure (start = 0) est toujours lu : il est ouvert dès le début
+    files = [p for p in files if _file_start_ms(p) == 0 or (_file_start_ms(p) + 3_600_000 >= since_ms
+             and (until_ms is None or _file_start_ms(p) <= until_ms))]
+    keep = set(coins) if coins else None
+    heap: list = []
+    nxt = 0
+    seq = 0
+
+    def open_next() -> None:
+        nonlocal nxt, seq
+        it = _iter_file(files[nxt], since_ms)
+        nxt += 1
+        for rec in it:
+            heapq.heappush(heap, (rec["ts"], seq, rec, it))
+            seq += 1
+            break
+
+    while nxt < len(files) or heap:
+        while nxt < len(files) and (not heap or _file_start_ms(files[nxt]) <= heap[0][0]):
+            open_next()
+        if not heap:
+            continue
+        ts, _, rec, it = heapq.heappop(heap)
+        for nrec in it:
+            heapq.heappush(heap, (nrec["ts"], seq, nrec, it))
+            seq += 1
+            break
+        if until_ms is not None and ts > until_ms:
+            continue
+        if keep is None or rec["coin"] in keep:
+            yield rec
+
+
 def load_events(directory: str | Path, since_ms: int = 0, coin: str | None = None) -> list[dict]:
-    files = sorted(Path(directory).glob("md_*.jsonl.gz"))
-    streams = [_iter_file(p, since_ms) for p in files]
-    out = [r for r in heapq.merge(*streams, key=lambda r: r["ts"]) if coin is None or r["coin"] == coin]
-    return out
+    return list(iter_events(directory, since_ms, coins=[coin] if coin else None))
 
 
 def to_event(rec: dict):

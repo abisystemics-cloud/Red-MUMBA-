@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Callable, Iterable, Optional
 
 import numpy as np
 
@@ -116,8 +116,11 @@ class _Pending:
     size: object = None  # SizeDecision pour une entrée
 
 
-def run_backtest(records: list[dict], strategy_cfg, risk_cfg, *, exec_cfg: Optional[ExecutionCfg] = None,
-                 equity: float = 10_000.0, sz_decimals: int = 4, max_staleness_ms: int = 2500) -> BTResult:
+def run_backtest(records: Iterable[dict], strategy_cfg, risk_cfg, *, exec_cfg: Optional[ExecutionCfg] = None,
+                 equity: float = 10_000.0, sz_decimals: int = 4, max_staleness_ms: int = 2500,
+                 curve_step_ms: int = 0, progress: Optional[Callable[[int], None]] = None) -> BTResult:
+    """`records` peut être une liste ou un flux (iter_events) : un seul passage.
+    `curve_step_ms` échantillonne la courbe d'equity (mémoire bornée sur des mois)."""
     ec = exec_cfg or ExecutionCfg()
     maker = ec.mode == "maker"
     engines: dict[str, FeatureEngine] = {}
@@ -165,7 +168,10 @@ def run_backtest(records: list[dict], strategy_cfg, risk_cfg, *, exec_cfg: Optio
                                   p["fees"] + fee, p["funding"]))
         views[coin].side, views[coin].last_exit_ts = Side.FLAT, ts
 
-    for rec in records:
+    last_curve = -10 ** 15
+    for n_rec, rec in enumerate(records):
+        if progress and n_rec % 1_000_000 == 0:
+            progress(n_rec)
         ev = to_event(rec)
         if ev is None:
             continue
@@ -263,6 +269,9 @@ def run_backtest(records: list[dict], strategy_cfg, risk_cfg, *, exec_cfg: Optio
                         open_pos(coin, long_, ref, d.qty, d, ts, f_taker)
 
         # mark-to-market
+        if curve_step_ms and ts - last_curve < curve_step_ms:
+            continue
+        last_curve = ts
         mtm = cash
         for c, p in pos.items():
             m = engines[c]._prev_mid[1] if engines[c]._prev_mid else p["px"]

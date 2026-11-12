@@ -62,8 +62,20 @@ class Liquidations(BaseModel):
 
 
 class WhalesCfg(BaseModel):
+    provider: str = "coinversa"
     addresses: list[str] = Field(default_factory=list)
     poll_seconds: int = 60
+
+
+class CoinversaCfg(BaseModel):
+    base_url: str = "https://api.coinversa.ai/api/public/v1"
+    cohort_history_path: str = "/pulse/cohort-bias/history"
+    heatmap_path: str = "/live/liquidation-heatmap/{coin}"
+    heatmap_buckets: int = 50
+    heatmap_range_pct: float = 15
+    smart_tiers: list[str] = Field(default_factory=lambda: ["money_printer", "smart_money"])
+    crowd_tiers: list[str] = Field(default_factory=lambda: ["exit_liquidity", "semi_rekt", "full_rekt", "giga_rekt"])
+    smart_weight: float = 0.6
 
 
 class DataCfg(BaseModel):
@@ -72,6 +84,7 @@ class DataCfg(BaseModel):
     bybit_ws: str
     liquidations: Liquidations = Liquidations()
     whales: WhalesCfg = WhalesCfg()
+    coinversa: CoinversaCfg = CoinversaCfg()
     record_market_data: bool = True
     recordings_dir: str = "data/recordings"
     max_staleness_ms: int = 2500

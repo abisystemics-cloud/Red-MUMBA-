@@ -8,9 +8,12 @@ Flux :
   une API agrégée de type CoinGecko a des minutes de retard).
 - Carte des liquidations : API Coinglass (clé requise) ou, à défaut, extraction
   Firecrawl d'une page publique, à basse fréquence (≥ 60 s).
-- Positionnement des "whales" : positions publiques des adresses listées dans
-  `data.whales.addresses`, lues via l'endpoint public Hyperliquid /info
-  (clearinghouseState), agrégées en un biais net long/short par marché.
+- Positionnement (`data.whales.provider`) :
+  * `coinversa` (défaut) : biais long/short des catégories de traders rentables
+    vs perdants, via l'API Coinversa Pulse (agents/coinversa.py) ;
+  * `addresses` : positions publiques des adresses de `data.whales.addresses`,
+    lues via l'endpoint Hyperliquid /info (clearinghouseState).
+- Liquidations : carte Coinversa (défaut), Coinglass ou Firecrawl.
 - Watchdog des flux : un flux muet depuis `alerts.feed_down_after_s` déclenche
   un événement `feed_down` (alerte).
 
@@ -28,6 +31,7 @@ import numpy as np
 from agents.base import BaseAgent
 from core.events import (AssetCtx, BookSnapshot, ExternalQuote, LiquidationMap,
                          Topic, Trade, WhaleBias, now_ms)
+from agents.coinversa import CoinversaClient
 from core.ws_client import ResilientWebSocket
 from ml_engine.recorder import MarketRecorder
 
@@ -64,6 +68,7 @@ class HyperliquidDataAgent(BaseAgent):
         kw = {"connect_fn": connect_fn} if connect_fn else {}
         self.recorder = MarketRecorder(cfg.data.recordings_dir) if cfg.data.record_market_data else None
         self._http = http_session
+        self.coinversa = CoinversaClient(cfg.data.coinversa, http_session)
         self.last_seen: dict[str, int] = {}
 
         self.hl_ws = ResilientWebSocket("hyperliquid", cfg.hl_ws_url(), self._on_hl,
@@ -158,7 +163,14 @@ class HyperliquidDataAgent(BaseAgent):
         while not stop.is_set():
             for m in self.cfg.markets:
                 try:
-                    clusters = await (self._coinglass(m) if lc.provider == "coinglass" else self._firecrawl(m))
+                    if lc.provider == "coinversa":
+                        if not self.coinversa.ready:
+                            raise RuntimeError("COINVERSA_API_KEY not set")
+                        clusters = await self.coinversa.heatmap(m.coin)
+                    elif lc.provider == "coinglass":
+                        clusters = await self._coinglass(m)
+                    else:
+                        clusters = await self._firecrawl(m)
                     if clusters:
                         lm = LiquidationMap(m.coin, now_ms(), clusters, lc.provider)
                         self.bus.publish(Topic.LIQ_MAP, lm)
@@ -234,7 +246,10 @@ class HyperliquidDataAgent(BaseAgent):
 
     async def _poll_whales(self, stop: asyncio.Event) -> None:
         wc = self.cfg.data.whales
-        if not wc.addresses or self._http is None:
+        if wc.provider == "coinversa":
+            await self._poll_coinversa_positioning(stop)
+            return
+        if wc.provider != "addresses" or not wc.addresses or self._http is None:
             return
         url = self.cfg.hl_api_url() + "/info"
         while not stop.is_set():
@@ -254,6 +269,33 @@ class HyperliquidDataAgent(BaseAgent):
                     self.recorder.whale(wb)
             try:
                 await asyncio.wait_for(stop.wait(), timeout=wc.poll_seconds)
+            except asyncio.TimeoutError:
+                pass
+
+    async def _poll_coinversa_positioning(self, stop: asyncio.Event) -> None:
+        if not self.coinversa.ready:
+            self.log.warning("positioning provider coinversa: COINVERSA_API_KEY not set → signal off")
+            return
+        last_ts: dict[str, int] = {}
+        warned = False
+        while not stop.is_set():
+            for coin in self.coins:
+                try:
+                    wb = await self.coinversa.latest_bias(coin)
+                except Exception as exc:  # noqa: BLE001
+                    if not warned:
+                        self.log.warning("coinversa positioning unavailable: %s", exc)
+                        warned = True
+                    continue
+                if wb is None or last_ts.get(coin) == wb.ts:
+                    continue
+                last_ts[coin] = wb.ts
+                wb.ts = now_ms()  # horodatage de réception (l'instantané est récent)
+                self.bus.publish(Topic.WHALES, wb)
+                if self.recorder:
+                    self.recorder.whale(wb)
+            try:
+                await asyncio.wait_for(stop.wait(), timeout=self.cfg.data.whales.poll_seconds)
             except asyncio.TimeoutError:
                 pass
 
