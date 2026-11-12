@@ -55,6 +55,8 @@ jobs:
             echo "trades=${{ inputs.with_trades }}" >> "$GITHUB_OUTPUT"
             echo "id=manual-$(date -u +%Y%m%dT%H%M%S)" >> "$GITHUB_OUTPUT"
           fi
+          COINS=$( [ -f request.json ] && jq -r '.coins // "BTC,ETH"' request.json || echo "${{ inputs.coins }}" )
+          echo "coins_key=$(echo "$COINS" | tr ',' '_')" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v5
         with:
@@ -67,7 +69,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/recordings
-          key: hist-${{ steps.p.outputs.coins }}-${{ steps.p.outputs.from }}-${{ steps.p.outputs.to }}-${{ steps.p.outputs.trades }}
+          key: hist-${{ steps.p.outputs.coins_key }}-${{ steps.p.outputs.from }}-${{ steps.p.outputs.to }}-${{ steps.p.outputs.trades }}
 
       - name: Sonde Coinversa
         if: env.COINVERSA_API_KEY != ''
