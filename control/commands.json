@@ -1,0 +1,13 @@
+{
+  "commands": [
+    {
+      "id": "c-20261112T201653-c32a09",
+      "cmd": "ping",
+      "args": {},
+      "reason": "initialisation du canal de supervision",
+      "issued_by": "claude",
+      "issued_at": "2026-11-12T20:16:53+00:00",
+      "expires_at": "2026-11-12T21:16:53+00:00"
+    }
+  ]
+}
