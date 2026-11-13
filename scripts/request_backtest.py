@@ -33,6 +33,8 @@ def request(a) -> int:
            "with_trades": a.with_trades, "binance_flow": a.binance_flow, "requested_by": a.by}
     if a.sweep_split:
         req.update(task="sweep", split=a.sweep_split)
+    if a.bars_split:
+        req.update(task="bars", split=a.bars_split)
     git("fetch", "origin", "main")
     wt = REPO / ".backtest-request-worktree"
     if wt.exists():
@@ -58,7 +60,7 @@ def fetch(rid: str, wait_s: int) -> int:
             out.mkdir(parents=True, exist_ok=True)
             for n in mine:
                 (out / Path(n).name).write_text(git("show", f"origin/backtest-results:{n}"))
-            md = sorted(out.glob("sweep_*.md")) + sorted(out.glob("backtest_*.md"))
+            md = sorted(out.glob("bars_*.md")) + sorted(out.glob("sweep_*.md")) + sorted(out.glob("backtest_*.md"))
             print(md[0].read_text() if md else f"report files: {[Path(n).name for n in mine]}")
             return 0
         if time.time() >= deadline:
@@ -77,6 +79,7 @@ def main() -> int:
     p.add_argument("--binance-flow", action="store_true", help="flux Binance comme proxy pour CVD/POC")
     p.add_argument("--by", default="claude")
     p.add_argument("--sweep-split", help="lance scripts/sweep.py (apprentissage jusqu'à cette date incluse)")
+    p.add_argument("--bars-split", help="lance scripts/bar_research.py (mois YYYY-MM, fin de l'apprentissage)")
     p.add_argument("--fetch")
     p.add_argument("--wait-s", type=int, default=0)
     a = p.parse_args()
