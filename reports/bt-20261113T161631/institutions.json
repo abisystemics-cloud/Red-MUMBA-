@@ -1,0 +1,513 @@
+{
+  "sources": {
+    "cot_weeks": 448,
+    "coinbase_days": 2711,
+    "premium_days": 2710,
+    "gpr_days": 15281
+  },
+  "baseline_momentum": {
+    "train": {
+      "trades": 697,
+      "return_pct": 26.0,
+      "cagr_pct": 5.97,
+      "max_dd_pct": 4.83,
+      "sharpe": 1.55,
+      "profit_factor": 1.83,
+      "win_rate": 0.314,
+      "avg_bars": 12.6,
+      "signal_on_pct": 100.0
+    },
+    "test": {
+      "trades": 541,
+      "return_pct": 7.25,
+      "cagr_pct": 2.5,
+      "max_dd_pct": 3.51,
+      "sharpe": 0.74,
+      "profit_factor": 1.37,
+      "win_rate": 0.301,
+      "avg_bars": 11.5,
+      "signal_on_pct": 100.0
+    }
+  },
+  "as_filter": {
+    "cot_asset_managers": {
+      "rows": [
+        {
+          "params": {
+            "net_rising_weeks": 2
+          },
+          "train": {
+            "trades": 433,
+            "return_pct": 8.06,
+            "cagr_pct": 1.97,
+            "max_dd_pct": 4.98,
+            "sharpe": 0.74,
+            "profit_factor": 1.45,
+            "win_rate": 0.307,
+            "avg_bars": 13.4,
+            "signal_on_pct": 55.5
+          },
+          "test": {
+            "trades": 280,
+            "return_pct": 2.1,
+            "cagr_pct": 0.74,
+            "max_dd_pct": 3.11,
+            "sharpe": 0.34,
+            "profit_factor": 1.21,
+            "win_rate": 0.289,
+            "avg_bars": 12.4,
+            "signal_on_pct": 45.8
+          }
+        },
+        {
+          "params": {
+            "net_rising_weeks": 4
+          },
+          "train": {
+            "trades": 408,
+            "return_pct": 19.94,
+            "cagr_pct": 4.67,
+            "max_dd_pct": 3.61,
+            "sharpe": 1.43,
+            "profit_factor": 2.0,
+            "win_rate": 0.299,
+            "avg_bars": 14.0,
+            "signal_on_pct": 55.6
+          },
+          "test": {
+            "trades": 270,
+            "return_pct": 2.01,
+            "cagr_pct": 0.7,
+            "max_dd_pct": 3.15,
+            "sharpe": 0.33,
+            "profit_factor": 1.2,
+            "win_rate": 0.289,
+            "avg_bars": 11.7,
+            "signal_on_pct": 43.1
+          }
+        },
+        {
+          "params": {
+            "net_rising_weeks": 8
+          },
+          "train": {
+            "trades": 411,
+            "return_pct": 14.21,
+            "cagr_pct": 3.39,
+            "max_dd_pct": 4.15,
+            "sharpe": 1.09,
+            "profit_factor": 1.7,
+            "win_rate": 0.294,
+            "avg_bars": 13.1,
+            "signal_on_pct": 57.8
+          },
+          "test": {
+            "trades": 261,
+            "return_pct": -0.58,
+            "cagr_pct": -0.2,
+            "max_dd_pct": 5.42,
+            "sharpe": -0.08,
+            "profit_factor": 0.96,
+            "win_rate": 0.226,
+            "avg_bars": 12.0,
+            "signal_on_pct": 45.1
+          }
+        }
+      ],
+      "choice": {
+        "net_rising_weeks": 4
+      },
+      "verdict": "N'AIDE PAS"
+    },
+    "coinbase_premium": {
+      "rows": [
+        {
+          "params": {
+            "mean_days": 3
+          },
+          "train": {
+            "trades": 582,
+            "return_pct": 20.36,
+            "cagr_pct": 4.76,
+            "max_dd_pct": 3.86,
+            "sharpe": 1.36,
+            "profit_factor": 1.75,
+            "win_rate": 0.323,
+            "avg_bars": 13.2,
+            "signal_on_pct": 77.3
+          },
+          "test": {
+            "trades": 285,
+            "return_pct": 4.74,
+            "cagr_pct": 1.65,
+            "max_dd_pct": 2.85,
+            "sharpe": 0.66,
+            "profit_factor": 1.44,
+            "win_rate": 0.323,
+            "avg_bars": 13.7,
+            "signal_on_pct": 43.9
+          }
+        },
+        {
+          "params": {
+            "mean_days": 7
+          },
+          "train": {
+            "trades": 582,
+            "return_pct": 17.89,
+            "cagr_pct": 4.22,
+            "max_dd_pct": 5.07,
+            "sharpe": 1.25,
+            "profit_factor": 1.68,
+            "win_rate": 0.323,
+            "avg_bars": 13.0,
+            "signal_on_pct": 79.7
+          },
+          "test": {
+            "trades": 246,
+            "return_pct": 5.7,
+            "cagr_pct": 1.98,
+            "max_dd_pct": 2.28,
+            "sharpe": 0.81,
+            "profit_factor": 1.67,
+            "win_rate": 0.333,
+            "avg_bars": 13.9,
+            "signal_on_pct": 42.5
+          }
+        },
+        {
+          "params": {
+            "mean_days": 14
+          },
+          "train": {
+            "trades": 587,
+            "return_pct": 16.27,
+            "cagr_pct": 3.86,
+            "max_dd_pct": 5.26,
+            "sharpe": 1.17,
+            "profit_factor": 1.61,
+            "win_rate": 0.31,
+            "avg_bars": 12.6,
+            "signal_on_pct": 81.0
+          },
+          "test": {
+            "trades": 238,
+            "return_pct": 1.89,
+            "cagr_pct": 0.66,
+            "max_dd_pct": 3.79,
+            "sharpe": 0.32,
+            "profit_factor": 1.23,
+            "win_rate": 0.294,
+            "avg_bars": 12.9,
+            "signal_on_pct": 43.2
+          }
+        }
+      ],
+      "choice": {
+        "mean_days": 3
+      },
+      "verdict": "N'AIDE PAS"
+    },
+    "geopolitical_risk": {
+      "rows": [
+        {
+          "params": {
+            "max_ratio_vs_1y": 1.25
+          },
+          "train": {
+            "trades": 582,
+            "return_pct": 19.08,
+            "cagr_pct": 4.48,
+            "max_dd_pct": 5.1,
+            "sharpe": 1.26,
+            "profit_factor": 1.71,
+            "win_rate": 0.302,
+            "avg_bars": 12.8,
+            "signal_on_pct": 82.1
+          },
+          "test": {
+            "trades": 461,
+            "return_pct": 5.34,
+            "cagr_pct": 1.85,
+            "max_dd_pct": 3.9,
+            "sharpe": 0.59,
+            "profit_factor": 1.29,
+            "win_rate": 0.304,
+            "avg_bars": 11.6,
+            "signal_on_pct": 81.4
+          }
+        },
+        {
+          "params": {
+            "max_ratio_vs_1y": 1.5
+          },
+          "train": {
+            "trades": 641,
+            "return_pct": 18.65,
+            "cagr_pct": 4.39,
+            "max_dd_pct": 5.77,
+            "sharpe": 1.22,
+            "profit_factor": 1.63,
+            "win_rate": 0.306,
+            "avg_bars": 12.3,
+            "signal_on_pct": 89.6
+          },
+          "test": {
+            "trades": 504,
+            "return_pct": 6.78,
+            "cagr_pct": 2.34,
+            "max_dd_pct": 3.94,
+            "sharpe": 0.71,
+            "profit_factor": 1.36,
+            "win_rate": 0.302,
+            "avg_bars": 11.5,
+            "signal_on_pct": 92.8
+          }
+        },
+        {
+          "params": {
+            "max_ratio_vs_1y": 2.0
+          },
+          "train": {
+            "trades": 676,
+            "return_pct": 18.56,
+            "cagr_pct": 4.37,
+            "max_dd_pct": 6.64,
+            "sharpe": 1.2,
+            "profit_factor": 1.6,
+            "win_rate": 0.305,
+            "avg_bars": 12.2,
+            "signal_on_pct": 94.9
+          },
+          "test": {
+            "trades": 532,
+            "return_pct": 7.02,
+            "cagr_pct": 2.42,
+            "max_dd_pct": 3.51,
+            "sharpe": 0.72,
+            "profit_factor": 1.36,
+            "win_rate": 0.299,
+            "avg_bars": 11.5,
+            "signal_on_pct": 98.0
+          }
+        }
+      ],
+      "choice": {
+        "max_ratio_vs_1y": 1.25
+      },
+      "verdict": "N'AIDE PAS"
+    }
+  },
+  "alone": {
+    "cot_asset_managers": {
+      "rows": [
+        {
+          "params": {
+            "net_rising_weeks": 2
+          },
+          "train": {
+            "trades": 184,
+            "return_pct": 16.59,
+            "cagr_pct": 3.92,
+            "max_dd_pct": 6.63,
+            "sharpe": 1.01,
+            "profit_factor": 2.05,
+            "win_rate": 0.391,
+            "avg_bars": 49.0,
+            "signal_on_pct": 55.5
+          },
+          "test": {
+            "trades": 120,
+            "return_pct": 0.14,
+            "cagr_pct": 0.05,
+            "max_dd_pct": 3.51,
+            "sharpe": 0.03,
+            "profit_factor": 1.02,
+            "win_rate": 0.392,
+            "avg_bars": 47.0,
+            "signal_on_pct": 45.8
+          }
+        },
+        {
+          "params": {
+            "net_rising_weeks": 4
+          },
+          "train": {
+            "trades": 154,
+            "return_pct": 14.8,
+            "cagr_pct": 3.52,
+            "max_dd_pct": 8.36,
+            "sharpe": 0.96,
+            "profit_factor": 1.93,
+            "win_rate": 0.325,
+            "avg_bars": 58.8,
+            "signal_on_pct": 55.6
+          },
+          "test": {
+            "trades": 111,
+            "return_pct": -0.24,
+            "cagr_pct": -0.08,
+            "max_dd_pct": 4.92,
+            "sharpe": -0.01,
+            "profit_factor": 0.98,
+            "win_rate": 0.369,
+            "avg_bars": 47.7,
+            "signal_on_pct": 43.1
+          }
+        },
+        {
+          "params": {
+            "net_rising_weeks": 8
+          },
+          "train": {
+            "trades": 139,
+            "return_pct": 9.91,
+            "cagr_pct": 2.4,
+            "max_dd_pct": 7.32,
+            "sharpe": 0.63,
+            "profit_factor": 1.63,
+            "win_rate": 0.317,
+            "avg_bars": 67.7,
+            "signal_on_pct": 57.8
+          },
+          "test": {
+            "trades": 91,
+            "return_pct": -2.5,
+            "cagr_pct": -0.89,
+            "max_dd_pct": 6.6,
+            "sharpe": -0.29,
+            "profit_factor": 0.76,
+            "win_rate": 0.297,
+            "avg_bars": 60.9,
+            "signal_on_pct": 45.1
+          }
+        }
+      ],
+      "choice": {
+        "net_rising_weeks": 2
+      },
+      "verdict": "NE TIENT PAS",
+      "stress": {
+        "trades": 120,
+        "return_pct": -0.25,
+        "cagr_pct": -0.09,
+        "max_dd_pct": 3.57,
+        "sharpe": -0.02,
+        "profit_factor": 0.98,
+        "win_rate": 0.383,
+        "avg_bars": 47.0,
+        "signal_on_pct": 45.8
+      }
+    },
+    "coinbase_premium": {
+      "rows": [
+        {
+          "params": {
+            "mean_days": 3
+          },
+          "train": {
+            "trades": 251,
+            "return_pct": 21.63,
+            "cagr_pct": 5.03,
+            "max_dd_pct": 6.03,
+            "sharpe": 0.96,
+            "profit_factor": 2.01,
+            "win_rate": 0.382,
+            "avg_bars": 50.3,
+            "signal_on_pct": 77.3
+          },
+          "test": {
+            "trades": 150,
+            "return_pct": 8.85,
+            "cagr_pct": 3.03,
+            "max_dd_pct": 2.95,
+            "sharpe": 1.03,
+            "profit_factor": 1.98,
+            "win_rate": 0.427,
+            "avg_bars": 36.1,
+            "signal_on_pct": 43.9
+          }
+        },
+        {
+          "params": {
+            "mean_days": 7
+          },
+          "train": {
+            "trades": 128,
+            "return_pct": 32.72,
+            "cagr_pct": 7.35,
+            "max_dd_pct": 5.39,
+            "sharpe": 1.29,
+            "profit_factor": 3.51,
+            "win_rate": 0.312,
+            "avg_bars": 101.9,
+            "signal_on_pct": 79.7
+          },
+          "test": {
+            "trades": 85,
+            "return_pct": 7.73,
+            "cagr_pct": 2.66,
+            "max_dd_pct": 2.89,
+            "sharpe": 0.92,
+            "profit_factor": 2.26,
+            "win_rate": 0.412,
+            "avg_bars": 61.8,
+            "signal_on_pct": 42.5
+          }
+        },
+        {
+          "params": {
+            "mean_days": 14
+          },
+          "train": {
+            "trades": 81,
+            "return_pct": 116.36,
+            "cagr_pct": 21.35,
+            "max_dd_pct": 43.36,
+            "sharpe": 0.81,
+            "profit_factor": 11.55,
+            "win_rate": 0.235,
+            "avg_bars": 163.9,
+            "signal_on_pct": 81.0
+          },
+          "test": {
+            "trades": 80,
+            "return_pct": 1.35,
+            "cagr_pct": 0.48,
+            "max_dd_pct": 4.21,
+            "sharpe": 0.17,
+            "profit_factor": 1.21,
+            "win_rate": 0.35,
+            "avg_bars": 66.6,
+            "signal_on_pct": 43.2
+          }
+        }
+      ],
+      "choice": {
+        "mean_days": 7
+      },
+      "verdict": "TIENT",
+      "stress": {
+        "trades": 85,
+        "return_pct": 7.45,
+        "cagr_pct": 2.57,
+        "max_dd_pct": 2.94,
+        "sharpe": 0.88,
+        "profit_factor": 2.19,
+        "win_rate": 0.4,
+        "avg_bars": 61.8,
+        "signal_on_pct": 42.5
+      }
+    }
+  },
+  "periods": {
+    "train": [
+      "2020-01",
+      "2023-12"
+    ],
+    "test": [
+      "2024-01",
+      "2026-10"
+    ]
+  }
+}
