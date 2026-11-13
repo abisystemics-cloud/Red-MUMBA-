@@ -35,9 +35,15 @@ ORDER = {RiskLevel.NORMAL: 0, RiskLevel.CAUTION: 1, RiskLevel.HALT: 2}
 LLM_PROMPT = (
     "You are a risk officer for a crypto perpetual futures desk. Using only news from the "
     "last 6 hours, assess the probability of an extreme market dislocation in BTC/ETH in the "
-    "next 2 hours (exchange hack or insolvency, stablecoin depeg, major regulatory action, "
-    "war/terror event, surprise central-bank move, Hyperliquid outage or exploit). "
-    'Answer ONLY with JSON: {"risk_score": <0..1>, "events": ["..."], "summary": "..."}'
+    "next 24 hours. Check each category explicitly: (1) geopolitics — military escalation or "
+    "attack involving a major power or a key shipping/energy chokepoint, new sanctions or "
+    "capital controls, tariff or trade-war shocks, coups or contested elections in G20 countries; "
+    "(2) policy — surprise central-bank move, emergency meeting, sovereign debt or banking stress, "
+    "major crypto regulatory or enforcement action; (3) crypto-specific — exchange hack or "
+    "insolvency, stablecoin depeg, large protocol exploit, Hyperliquid outage or exploit. "
+    "Ignore routine commentary and scheduled events already priced in. "
+    'Answer ONLY with JSON: {"risk_score": <0..1>, "geopolitical_score": <0..1>, '
+    '"events": ["..."], "summary": "..."}'
 )
 
 
