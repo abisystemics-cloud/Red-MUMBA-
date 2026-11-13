@@ -232,6 +232,11 @@ class Costs:
     fee_bps: float = 4.5      # taker Hyperliquid
     slip_bps: float = 2.0
     mult: float = 1.0
+    maker_fee_bps: float = 1.5  # ordre posté (ALO) Hyperliquid, sans glissement
+
+    @property
+    def maker_side(self) -> float:
+        return self.maker_fee_bps * self.mult / 1e4
 
     @property
     def side(self) -> float:
@@ -239,8 +244,17 @@ class Costs:
 
 
 def simulate(b: Bars, strat: Strategy, costs: Costs, fund_t: np.ndarray, fund_r: np.ndarray, *,
-             risk_pct: float = 0.5, max_lev: float = 3.0, start_ms: float = -1, end_ms: float = 1e18) -> dict:
-    """Une position à la fois. Equity en multiplicatif, valorisée à chaque clôture."""
+             risk_pct: float = 0.5, max_lev: float = 3.0, start_ms: float = -1, end_ms: float = 1e18,
+             entry_mode: str = "taker") -> dict:
+    """Une position à la fois. Equity en multiplicatif, valorisée à chaque clôture.
+
+    entry_mode :
+    - taker       : entrée au marché à l'ouverture de la bougie suivante ;
+    - maker_skip  : ordre posté au prix de clôture du signal, exécuté seulement si la
+                    bougie suivante TRAVERSE ce prix (hypothèse pessimiste) ; sinon abandonné
+                    (le signal peut se représenter à la clôture suivante) ;
+    - maker_taker : idem, mais après un échec le prochain signal entre au marché.
+    Les sorties (signal, stop) restent au marché."""
     n = len(b)
     eq = 1.0
     curve_t, curve_e, trades = [], [], []
@@ -248,6 +262,9 @@ def simulate(b: Bars, strat: Strategy, costs: Costs, fund_t: np.ndarray, fund_r:
     pending: Optional[tuple] = None
     fi = int(np.searchsorted(fund_t, b.ts[0])) if len(fund_t) else 0
     cs = costs.side
+    cm = costs.maker_side
+    force_taker = False
+    attempts = fills = 0
 
     def close(px: float, i: int, why: str):
         nonlocal eq, pos
@@ -269,13 +286,24 @@ def simulate(b: Bars, strat: Strategy, costs: Costs, fund_t: np.ndarray, fund_r:
                 close(b.o[i], i, "signal")
             elif kind == "entry" and pos is None and in_window:
                 e: Entry = arg
-                px = b.o[i]
+                px, ce, ok = b.o[i], cs, True
+                if entry_mode != "taker" and not force_taker:
+                    limit = b.c[i - 1]
+                    attempts += 1
+                    ok = (b.l[i] < limit) if e.side > 0 else (b.h[i] > limit)
+                    if ok:
+                        px, ce = limit, cm
+                        fills += 1
+                    elif entry_mode == "maker_taker":
+                        force_taker = True
+                else:
+                    force_taker = False
                 stop_pct = abs(px - e.stop) / px
-                if stop_pct > 1e-4 and (px - e.stop) * e.side > 0:
+                if ok and stop_pct > 1e-4 and (px - e.stop) * e.side > 0:
                     lev = min(max_lev, risk_pct / 100 / stop_pct)
-                    eq *= (1 - lev * cs)
+                    eq *= (1 - lev * ce)
                     pos = {"side": e.side, "px": px, "stop": e.stop, "target": e.target, "lev": lev,
-                           "i0": i, "max_bars": e.max_bars, "eq0": eq / (1 - lev * cs)}
+                           "i0": i, "max_bars": e.max_bars, "eq0": eq / (1 - lev * ce)}
         # 2) stop / objectif dans la bougie i (stop prioritaire, gap → ouverture)
         if pos is not None:
             s, st, tg = pos["side"], pos["stop"], pos["target"]
@@ -310,7 +338,8 @@ def simulate(b: Bars, strat: Strategy, costs: Costs, fund_t: np.ndarray, fund_r:
         close(b.c[-1], n - 1, "end")
         if curve_e:
             curve_e[-1] = eq
-    return {"t": np.asarray(curve_t), "e": np.asarray(curve_e), "trades": trades}
+    return {"t": np.asarray(curve_t), "e": np.asarray(curve_e), "trades": trades,
+            "maker_attempts": attempts, "maker_fills": fills}
 
 
 def daily_returns(t: np.ndarray, e: np.ndarray) -> dict[int, float]:

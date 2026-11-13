@@ -35,6 +35,8 @@ def request(a) -> int:
         req.update(task="sweep", split=a.sweep_split)
     if a.bars_split:
         req.update(task="bars", split=a.bars_split)
+    if a.maker_split:
+        req.update(task="maker", split=a.maker_split)
     if a.universe_split:
         req.update(task="universe", split=a.universe_split)
     if a.premium_split:
@@ -70,7 +72,7 @@ def fetch(rid: str, wait_s: int) -> int:
             out.mkdir(parents=True, exist_ok=True)
             for n in mine:
                 (out / Path(n).name).write_text(git("show", f"origin/backtest-results:{n}"))
-            md = sorted(out.glob("universe*.md")) + sorted(out.glob("institutions*.md")) + sorted(out.glob("filters_*.md")) + sorted(out.glob("robustness_*.md")) + sorted(out.glob("bars_*.md")) + sorted(out.glob("sweep_*.md")) + sorted(out.glob("backtest_*.md"))
+            md = sorted(out.glob("maker*.md")) + sorted(out.glob("universe*.md")) + sorted(out.glob("institutions*.md")) + sorted(out.glob("filters_*.md")) + sorted(out.glob("robustness_*.md")) + sorted(out.glob("bars_*.md")) + sorted(out.glob("sweep_*.md")) + sorted(out.glob("backtest_*.md"))
             print(md[0].read_text() if md else f"report files: {[Path(n).name for n in mine]}")
             return 0
         if time.time() >= deadline:
@@ -95,6 +97,7 @@ def main() -> int:
     p.add_argument("--inst-split", help="lance scripts/institution_research.py (mois YYYY-MM)")
     p.add_argument("--premium-split", help="lance scripts/premium_robustness.py (mois YYYY-MM)")
     p.add_argument("--universe-split", help="lance scripts/universe_research.py (mois YYYY-MM)")
+    p.add_argument("--maker-split", help="lance scripts/maker_research.py (mois YYYY-MM)")
     p.add_argument("--fetch")
     p.add_argument("--wait-s", type=int, default=0)
     a = p.parse_args()

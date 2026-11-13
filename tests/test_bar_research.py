@@ -67,3 +67,27 @@ def test_universe_strategies_and_prev_windows():
     for st in (breakout(b, 24), reversal(b, 2.0, 4)):
         s = summarize({"X": simulate(b, st, Costs(), np.array([]), np.array([]))})
         assert np.isfinite(s["return_pct"])
+
+
+def test_maker_entry_fills_only_on_trade_through():
+    def one_shot():
+        fired = [False]
+
+        def entry(i):
+            if not fired[0]:
+                fired[0] = True
+                return Entry(+1, 95.0, None)
+            return None
+        return Strategy(entry, warmup=1)
+    b = _bars(10)
+    b.o[:] = 100
+    b.c[:] = 100
+    b.h[:] = 101
+    b.l[:] = 100  # jamais sous 100 → l'ordre posté à 100 n'est pas exécuté
+    r = simulate(b, one_shot(), Costs(), np.array([]), np.array([]), entry_mode="maker_skip")
+    assert r["maker_attempts"] == 1 and r["maker_fills"] == 0 and not r["trades"]
+    b.l[2] = 99.5  # la bougie qui suit le signal traverse 100
+    r = simulate(b, one_shot(), Costs(), np.array([]), np.array([]), entry_mode="maker_skip")
+    assert r["maker_fills"] == 1 and len(r["trades"]) == 1
+    taker = simulate(b, one_shot(), Costs(), np.array([]), np.array([]))
+    assert r["trades"][0]["ret"] > taker["trades"][0]["ret"]  # frais d'entrée plus bas
