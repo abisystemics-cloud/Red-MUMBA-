@@ -1,3 +1,4 @@
 # Uniquement pour scripts/import_history.py (pas nécessaire au bot live)
 boto3>=1.34
 lz4>=4.3
+xlrd>=2.0                          # indice GPR (scripts/institution_research.py)

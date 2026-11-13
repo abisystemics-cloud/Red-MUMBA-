@@ -22,3 +22,13 @@ def test_fomc_blocks_window_only():
     dec = _day_ms("2024-01-31") + 19 * H
     bars = np.array([dec - 25 * H, dec - 24 * H, dec, dec + 5 * H, dec + 6 * H])
     assert fomc_allow(bars, 24).tolist() == [True, False, False, False, True]
+
+
+def test_institution_helpers():
+    from scripts.institution_research import calm, positive_mean, trailing_mean
+    v = np.array([1.0, -1, 3, 3, -5])
+    assert np.isnan(trailing_mean(v, 2)[0]) and trailing_mean(v, 2)[1:].tolist() == [0.0, 1.0, 3.0, -1.0]
+    assert positive_mean(v, 2).tolist() == [False, False, True, True, False]
+    g = np.concatenate([np.full(400, 100.0), np.full(7, 300.0)])
+    c = calm(g, 1.5)
+    assert c[399] and not c[-1] and not c[100]  # calme, puis pic ; pas de verdict avant 1 an d'historique
