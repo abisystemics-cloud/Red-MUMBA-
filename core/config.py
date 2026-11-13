@@ -154,6 +154,10 @@ class RiskCfg(BaseModel):
     prior_payoff: float = 1.2
     flatten_on_halt: bool = True
     paper_equity_usd: float = 10000
+    # kelly : taille apprise des trades passés (live) ; fixed : risque constant
+    # = max_risk_per_trade_pct (recherche/backtest, pour mesurer le signal seul
+    # sans boucle de rétroaction de la taille).
+    sizing: str = "kelly"
 
     @field_validator("kelly_fraction")
     @classmethod

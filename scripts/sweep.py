@@ -90,13 +90,15 @@ def diagnose(cfg, rec_dir: str, start: str, end: str, coins: list[str], max_samp
 
 
 def _job(args):
-    cfg_dict, start, end, coins, rec_dir, entry, persist = args
+    cfg_dict, start, end, coins, rec_dir, entry, persist, mode, sizing = args
     from core.config import AppConfig
     cfg = AppConfig.model_validate(cfg_dict)
-    cfg = cfg.model_copy(update={"strategy": cfg.strategy.model_copy(
-        update={"entry_threshold": entry, "persistence_ticks": persist})})
+    cfg = cfg.model_copy(update={
+        "strategy": cfg.strategy.model_copy(update={"entry_threshold": entry, "persistence_ticks": persist}),
+        "execution": cfg.execution.model_copy(update={"mode": mode}),
+        "risk": cfg.risk.model_copy(update={"sizing": sizing})})
     r = run_period(cfg, start, end, coins, None, rec_dir)
-    return {"entry": entry, "persistence": persist, "period": f"{start}→{end}", **r["summary"],
+    return {"entry": entry, "persistence": persist, "mode": mode, "period": f"{start}→{end}", **r["summary"],
             "fees_usd": r["fees_usd"], "funding_usd": r["funding_usd"]}
 
 
@@ -113,6 +115,9 @@ def main() -> int:
     p.add_argument("--coins", default=None)
     p.add_argument("--entries", default="0.6,0.8,1.0,1.2")
     p.add_argument("--persistences", default="2,6")
+    p.add_argument("--modes", default="maker,taker", help="modes d'exécution testés")
+    p.add_argument("--sizing", default="fixed", choices=("fixed", "kelly"),
+                   help="fixed = risque constant (mesure le signal sans rétroaction de la taille)")
     p.add_argument("--min-trades", type=int, default=30)
     p.add_argument("--workers", type=int, default=4)
     p.add_argument("--config", default=str(Path(__file__).resolve().parents[1] / "config.yaml"))
@@ -127,16 +132,18 @@ def main() -> int:
     diag = diagnose(cfg, a.recordings, a.start, a.end, coins)
     print("diagnostic done", round(time.time() - t0), "s", flush=True)
 
-    grid = [(float(e), int(k)) for e in a.entries.split(",") for k in a.persistences.split(",")]
+    grid = [(float(e), int(k), m) for e in a.entries.split(",") for k in a.persistences.split(",")
+            for m in a.modes.split(",")]
     base = cfg.model_dump()
     with ProcessPoolExecutor(max_workers=a.workers) as ex:
-        train = list(ex.map(_job, [(base, a.start, a.split, coins, a.recordings, e, k) for e, k in grid]))
+        train = list(ex.map(_job, [(base, a.start, a.split, coins, a.recordings, e, k, m, a.sizing) for e, k, m in grid]))
         print("train done", round(time.time() - t0), "s", flush=True)
-        test = list(ex.map(_job, [(base, test_start, a.end, coins, a.recordings, e, k) for e, k in grid]))
+        test = list(ex.map(_job, [(base, test_start, a.end, coins, a.recordings, e, k, m, a.sizing) for e, k, m in grid]))
     choice = pick(train, a.min_trades, cfg.research.max_drawdown_pct)
     chosen_test = None
     if choice:
-        chosen_test = next(r for r in test if r["entry"] == choice["entry"] and r["persistence"] == choice["persistence"])
+        chosen_test = next(r for r in test if r["entry"] == choice["entry"] and r["persistence"] == choice["persistence"]
+                           and r["mode"] == choice["mode"])
     verdict = "pas de réglage éligible sur l'apprentissage"
     if chosen_test:
         holds = (chosen_test["return_pct"] > 0 and chosen_test["sharpe"] > 0
@@ -160,7 +167,7 @@ def main() -> int:
                f"- % du temps où |score| ≥ seuil : {d['share_abs_score_above']}",
                f"- écart-type de la contribution de chaque signal : {d['term_std']}",
                f"- % du temps où chaque signal est actif : {d['term_active_pct']}", ""]
-    cols = ["entry", "persistence", "trades", "return_pct", "max_dd_pct", "sharpe", "win_rate", "profit_factor",
+    cols = ["entry", "persistence", "mode", "trades", "return_pct", "max_dd_pct", "sharpe", "win_rate", "profit_factor",
             "maker_fill_rate", "fees_usd"]
     for name, rows in (("Apprentissage", train), ("Vérification (information seulement)", test)):
         md += [f"## {name}", "", "| " + " | ".join(cols) + " |", "|" + "---|" * len(cols)]

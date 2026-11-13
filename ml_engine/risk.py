@@ -83,7 +83,10 @@ def size_position(*, equity: float, px: float, is_long: bool, vol_bps: float,
                   stats: TradeStats, cfg, level: RiskLevel, sz_decimals: int = 4) -> SizeDecision:
     p, b = stats.win_rate(), stats.payoff()
     k_raw = kelly_fraction(p, b)
-    k_used = min(k_raw * cfg.kelly_fraction, cfg.max_risk_per_trade_pct / 100)
+    if getattr(cfg, "sizing", "kelly") == "fixed":
+        k_used = cfg.max_risk_per_trade_pct / 100
+    else:
+        k_used = min(k_raw * cfg.kelly_fraction, cfg.max_risk_per_trade_pct / 100)
     if level == RiskLevel.CAUTION:
         k_used *= 0.5
     stop_bps = stop_distance_bps(vol_bps, cfg)

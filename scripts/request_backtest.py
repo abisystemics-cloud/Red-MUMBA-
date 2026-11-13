@@ -30,7 +30,7 @@ def git(*args: str, cwd: Path = REPO, check: bool = True) -> str:
 def request(a) -> int:
     rid = f"bt-{datetime.now(timezone.utc):%Y%m%dT%H%M%S}"
     req = {"id": rid, "from": a.start, "to": a.end, "coins": a.coins, "mode": a.mode,
-           "with_trades": a.with_trades, "requested_by": a.by}
+           "with_trades": a.with_trades, "binance_flow": a.binance_flow, "requested_by": a.by}
     if a.sweep_split:
         req.update(task="sweep", split=a.sweep_split)
     git("fetch", "origin", "main")
@@ -74,6 +74,7 @@ def main() -> int:
     p.add_argument("--coins", default="BTC,ETH")
     p.add_argument("--mode", default="maker", choices=("maker", "taker"))
     p.add_argument("--with-trades", action="store_true")
+    p.add_argument("--binance-flow", action="store_true", help="flux Binance comme proxy pour CVD/POC")
     p.add_argument("--by", default="claude")
     p.add_argument("--sweep-split", help="lance scripts/sweep.py (apprentissage jusqu'à cette date incluse)")
     p.add_argument("--fetch")

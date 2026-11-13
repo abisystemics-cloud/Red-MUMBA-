@@ -46,6 +46,7 @@ jobs:
             echo "coins=$(jq -r '.coins // "BTC,ETH"' request.json)" >> "$GITHUB_OUTPUT"
             echo "mode=$(jq -r '.mode // "maker"' request.json)" >> "$GITHUB_OUTPUT"
             echo "trades=$(jq -r '.with_trades // false' request.json)" >> "$GITHUB_OUTPUT"
+            echo "flow=$(jq -r '.binance_flow // false' request.json)" >> "$GITHUB_OUTPUT"
             echo "id=$(jq -r .id request.json)" >> "$GITHUB_OUTPUT"
             echo "task=$(jq -r '.task // "backtest"' request.json)" >> "$GITHUB_OUTPUT"
             echo "split=$(jq -r '.split // ""' request.json)" >> "$GITHUB_OUTPUT"
@@ -55,6 +56,7 @@ jobs:
             echo "coins=${{ inputs.coins }}" >> "$GITHUB_OUTPUT"
             echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
             echo "trades=${{ inputs.with_trades }}" >> "$GITHUB_OUTPUT"
+            echo "flow=false" >> "$GITHUB_OUTPUT"
             echo "id=manual-$(date -u +%Y%m%dT%H%M%S)" >> "$GITHUB_OUTPUT"
           fi
           COINS=$( [ -f request.json ] && jq -r '.coins // "BTC,ETH"' request.json || echo "${{ inputs.coins }}" )
@@ -71,7 +73,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/recordings
-          key: hist-${{ steps.p.outputs.coins_key }}-${{ steps.p.outputs.from }}-${{ steps.p.outputs.to }}-${{ steps.p.outputs.trades }}
+          key: hist-${{ steps.p.outputs.coins_key }}-${{ steps.p.outputs.from }}-${{ steps.p.outputs.to }}-${{ steps.p.outputs.trades }}-flow${{ steps.p.outputs.flow }}
 
       - name: Sonde Coinversa
         if: env.COINVERSA_API_KEY != ''
@@ -84,6 +86,7 @@ jobs:
           [ -z "$AWS_ACCESS_KEY_ID" ] && ARGS="$ARGS --no-s3" && echo "::warning::no AWS secrets: Hyperliquid order book not imported"
           [ -z "$COINVERSA_API_KEY" ] && ARGS="$ARGS --no-coinversa"
           [ "${{ steps.p.outputs.trades }}" = "true" ] && ARGS="$ARGS --with-trades"
+          [ "${{ steps.p.outputs.flow }}" = "true" ] && ARGS="$ARGS --binance-flow"
           if ls data/recordings/md_*_hist.jsonl.gz >/dev/null 2>&1; then echo "cache hit, skipping import"; else python scripts/import_history.py $ARGS; fi
 
       - name: Backtest

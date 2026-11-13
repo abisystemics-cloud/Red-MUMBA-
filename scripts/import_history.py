@@ -150,6 +150,26 @@ def parse_binance_agg_trades(text: str, coin: str) -> Iterator[dict]:
             continue
 
 
+def parse_binance_flow(text: str, coin: str, bucket_ms: int = 2000) -> list[dict]:
+    """aggTrades → flux agresseur agrégé par tranche de `bucket_ms` (un enregistrement
+    acheteur + un vendeur par tranche, au VWAP). Sert de proxy au flux Hyperliquid
+    pour le CVD et le profil de volume quand les fills HL ne sont pas importés."""
+    acc: dict[tuple[int, bool], list[float]] = {}
+    for row in csv.reader(io.StringIO(text)):
+        if not row or not row[0][:1].isdigit():
+            continue
+        try:
+            px, q, ts = float(row[1]), float(row[2]), int(row[5])
+        except (IndexError, ValueError):
+            continue
+        buy = row[6].strip().lower() != "true"  # is_buyer_maker=true → vendeur agresseur
+        a = acc.setdefault((ts - ts % bucket_ms, buy), [0.0, 0.0])
+        a[0] += px * q
+        a[1] += q
+    return [{"t": "trade", "coin": coin, "ts": b + bucket_ms - 1, "px": v / q, "sz": q, "buy": buy, "src": "binance"}
+            for (b, buy), (v, q) in sorted(acc.items()) if q > 0]
+
+
 def downsample(recs: Iterable[dict], interval_ms: int) -> list[dict]:
     out, last = [], {}
     for r in recs:
@@ -208,17 +228,21 @@ def http_get(url: str, headers: Optional[dict] = None, timeout: int = 60) -> Opt
         raise
 
 
-def binance_day(symbol: str, coin: str, day: date) -> tuple[list[dict], str]:
+def binance_day(symbol: str, coin: str, day: date, flow: bool = False) -> tuple[list[dict], str, list[dict]]:
+    """→ (cotations de référence, source, flux agresseur si `flow` et aggTrades dispo)."""
     d = day.isoformat()
     for kind, parser in (("bookTicker", parse_binance_book_ticker), ("aggTrades", parse_binance_agg_trades)):
+        if flow and kind == "bookTicker":
+            continue  # le flux exige les aggTrades
         url = f"https://data.binance.vision/data/futures/um/daily/{kind}/{symbol}/{symbol}-{kind}-{d}.zip"
         raw = http_get(url)
         if raw is None:
             continue
         with zipfile.ZipFile(io.BytesIO(raw)) as z:
             text = z.read(z.namelist()[0]).decode()
-        return list(parser(text, coin)), kind
-    return [], "missing"
+        fl = parse_binance_flow(text, coin) if flow and kind == "aggTrades" else []
+        return list(parser(text, coin)), kind, fl
+    return [], "missing", []
 
 
 def coinversa_range(coin: str, start: datetime, end: datetime, cfg) -> list[dict]:
@@ -265,6 +289,8 @@ def main() -> int:
     p.add_argument("--ext-interval-ms", type=int, default=1000)
     p.add_argument("--levels", type=int, default=10)
     p.add_argument("--with-trades", action="store_true", help="fills Hyperliquid (volumineux)")
+    p.add_argument("--binance-flow", action="store_true",
+                   help="flux agresseur Binance (aggTrades) comme proxy du flux pour CVD/POC")
     p.add_argument("--fills-prefix", default="node_fills_by_block/hourly/")
     p.add_argument("--no-s3", action="store_true")
     p.add_argument("--no-binance", action="store_true")
@@ -318,10 +344,10 @@ def main() -> int:
                         recs += tr
         if not a.no_binance:
             for c in coins:
-                ext, kind = binance_day(bin_sym.get(c, f"{c}USDT"), c, day)
+                ext, kind, fl = binance_day(bin_sym.get(c, f"{c}USDT"), c, day, flow=a.binance_flow)
                 ext = downsample(ext, a.ext_interval_ms)
-                dcov["binance"][c] = {"source": kind, "rows": len(ext)}
-                recs += ext
+                dcov["binance"][c] = {"source": kind, "rows": len(ext), "flow": len(fl)}
+                recs += ext + fl
         lo = int(datetime(day.year, day.month, day.day, tzinfo=timezone.utc).timestamp() * 1000)
         for c in coins:
             w = [r for r in whales.get(c, []) if lo <= r["ts"] < lo + 86_400_000]
