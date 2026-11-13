@@ -1,0 +1,329 @@
+{
+  "periods": {
+    "train": [
+      "2026-09-01",
+      "2026-10-15"
+    ],
+    "test": [
+      "2026-10-16",
+      "2026-11-11"
+    ]
+  },
+  "coins": [
+    "BTC",
+    "ETH"
+  ],
+  "rule": "Sharpe max parmi trades \u2265 30 et drawdown < 10.0 % (apprentissage)",
+  "diagnostic": {
+    "BTC": {
+      "n": 400000,
+      "score_quantiles": {
+        "1": -0.804,
+        "5": -0.639,
+        "25": -0.365,
+        "50": -0.147,
+        "75": 0.075,
+        "95": 0.411,
+        "99": 0.649
+      },
+      "score_std": 0.321,
+      "share_abs_score_above": {
+        "0.4": 26.972,
+        "0.6": 8.229,
+        "0.8": 1.396,
+        "1.0": 0.183,
+        "1.2": 0.019,
+        "1.4": 0.002
+      },
+      "term_std": {
+        "obi": 0.151,
+        "cvd": 0.0,
+        "premium": 0.112,
+        "poc": 0.0,
+        "funding": 0.216,
+        "liq": 0.0,
+        "whale": 0.029
+      },
+      "term_active_pct": {
+        "obi": 100.0,
+        "cvd": 0.0,
+        "premium": 100.0,
+        "poc": 0.0,
+        "funding": 89.8,
+        "liq": 0.0,
+        "whale": 100.0
+      }
+    },
+    "ETH": {
+      "n": 400000,
+      "score_quantiles": {
+        "1": -0.886,
+        "5": -0.695,
+        "25": -0.406,
+        "50": -0.19,
+        "75": 0.037,
+        "95": 0.376,
+        "99": 0.58
+      },
+      "score_std": 0.324,
+      "share_abs_score_above": {
+        "0.4": 29.89,
+        "0.6": 10.337,
+        "0.8": 2.279,
+        "1.0": 0.334,
+        "1.2": 0.032,
+        "1.4": 0.007
+      },
+      "term_std": {
+        "obi": 0.154,
+        "cvd": 0.0,
+        "premium": 0.113,
+        "poc": 0.0,
+        "funding": 0.202,
+        "liq": 0.0,
+        "whale": 0.041
+      },
+      "term_active_pct": {
+        "obi": 100.0,
+        "cvd": 0.0,
+        "premium": 100.0,
+        "poc": 0.0,
+        "funding": 85.6,
+        "liq": 0.0,
+        "whale": 100.0
+      }
+    }
+  },
+  "train": [
+    {
+      "entry": 0.6,
+      "persistence": 2,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 3,
+      "return_pct": -0.199,
+      "max_dd_pct": 0.199,
+      "sharpe": -4.397,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.121,
+      "fees_usd": 7.5,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 0.6,
+      "persistence": 6,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 3,
+      "return_pct": -0.111,
+      "max_dd_pct": 0.111,
+      "sharpe": -4.644,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.308,
+      "fees_usd": 7.5,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 0.8,
+      "persistence": 2,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 3,
+      "return_pct": -0.142,
+      "max_dd_pct": 0.142,
+      "sharpe": -4.973,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.138,
+      "fees_usd": 7.5,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 0.8,
+      "persistence": 6,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 3,
+      "return_pct": -0.151,
+      "max_dd_pct": 0.159,
+      "sharpe": -4.54,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.081,
+      "fees_usd": 9.0,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 1.0,
+      "persistence": 2,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 3,
+      "return_pct": -0.152,
+      "max_dd_pct": 0.152,
+      "sharpe": -5.51,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.158,
+      "fees_usd": 9.0,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 1.0,
+      "persistence": 6,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 3,
+      "return_pct": -0.268,
+      "max_dd_pct": 0.268,
+      "sharpe": -7.482,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.13,
+      "fees_usd": 9.01,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 1.2,
+      "persistence": 2,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 4,
+      "return_pct": 0.039,
+      "max_dd_pct": 0.311,
+      "sharpe": 0.476,
+      "win_rate": 0.5,
+      "profit_factor": 1.217,
+      "maker_fill_rate": 0.167,
+      "fees_usd": 7.76,
+      "funding_usd": -0.25
+    },
+    {
+      "entry": 1.2,
+      "persistence": 6,
+      "period": "2026-09-01\u21922026-10-15",
+      "trades": 1,
+      "return_pct": -0.143,
+      "max_dd_pct": 0.143,
+      "sharpe": -3.695,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.167,
+      "fees_usd": 3.0,
+      "funding_usd": -0.0
+    }
+  ],
+  "test": [
+    {
+      "entry": 0.6,
+      "persistence": 2,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 3,
+      "return_pct": -0.113,
+      "max_dd_pct": 0.113,
+      "sharpe": -6.501,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.133,
+      "fees_usd": 7.5,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 0.6,
+      "persistence": 6,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 3,
+      "return_pct": -0.162,
+      "max_dd_pct": 0.162,
+      "sharpe": -5.656,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.086,
+      "fees_usd": 9.0,
+      "funding_usd": -0.01
+    },
+    {
+      "entry": 0.8,
+      "persistence": 2,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 3,
+      "return_pct": -0.23,
+      "max_dd_pct": 0.23,
+      "sharpe": -7.206,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.143,
+      "fees_usd": 9.0,
+      "funding_usd": -0.01
+    },
+    {
+      "entry": 0.8,
+      "persistence": 6,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 3,
+      "return_pct": -0.193,
+      "max_dd_pct": 0.193,
+      "sharpe": -7.274,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.167,
+      "fees_usd": 9.0,
+      "funding_usd": -0.0
+    },
+    {
+      "entry": 1.0,
+      "persistence": 2,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 15,
+      "return_pct": -0.204,
+      "max_dd_pct": 0.419,
+      "sharpe": -2.617,
+      "win_rate": 0.333,
+      "profit_factor": 0.697,
+      "maker_fill_rate": 0.186,
+      "fees_usd": 38.91,
+      "funding_usd": -0.07
+    },
+    {
+      "entry": 1.0,
+      "persistence": 6,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 6,
+      "return_pct": -0.194,
+      "max_dd_pct": 0.196,
+      "sharpe": -4.833,
+      "win_rate": 0.167,
+      "profit_factor": 0.23,
+      "maker_fill_rate": 0.156,
+      "fees_usd": 16.0,
+      "funding_usd": -0.02
+    },
+    {
+      "entry": 1.2,
+      "persistence": 2,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 3,
+      "return_pct": -0.302,
+      "max_dd_pct": 0.302,
+      "sharpe": -6.61,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.222,
+      "fees_usd": 7.16,
+      "funding_usd": -0.01
+    },
+    {
+      "entry": 1.2,
+      "persistence": 6,
+      "period": "2026-10-16\u21922026-11-11",
+      "trades": 0,
+      "return_pct": 0.0,
+      "max_dd_pct": 0.0,
+      "sharpe": 0.0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "maker_fill_rate": 0.0,
+      "fees_usd": 0,
+      "funding_usd": 0
+    }
+  ],
+  "choice": null,
+  "choice_on_test": null,
+  "verdict": "pas de r\u00e9glage \u00e9ligible sur l'apprentissage",
+  "runtime_s": 3260
+}
