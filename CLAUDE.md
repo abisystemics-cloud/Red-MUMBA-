@@ -5,19 +5,28 @@ hl-swarm (projet « Red MUMBA ») : bot de trading autonome à 7 agents pour les
 Le propriétaire ne veut écrire aucune ligne de code : Claude code, teste, pousse et explique en français.
 Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` (règles d'intervention).
 
-## État (mis à jour le 12/11/2026)
-- Code complet sur `main` : 7 agents, exécution maker, signaux funding / liquidations / positionnement Coinversa,
-  canal de supervision (branche `control`), backtest historique (workflow `backtest`),
-  interface web temps réel (`ui/index.html`, `core/web.py`, `UI_PASSWORD`) et mode `python main.py --demo`.
-- AWS : utilisateur IAM `hl-swarm-backtest` (lecture seule archive Hyperliquid) créé ; compte AWS en Free plan
-  (6 mois). Archive S3 disponible jusqu'au 11/11/2026 ; Coinversa depuis le 01/09/2026.
-- Capital disponible du propriétaire : ~50 $ ; horizon de décision : 5 mois. Production prévue sur Render.
-- **Rien n'est déployé.** Aucun test contre les vraies API n'a encore tourné.
-- Étape en cours : le propriétaire ajoute les secrets GitHub `COINVERSA_API_KEY`, `AWS_ACCESS_KEY_ID`,
-  `AWS_SECRET_ACCESS_KEY`. Ensuite : `python scripts/request_backtest.py --from 2026-09-01 --to 2026-10-31`,
-  puis `--fetch <id> --wait-s 1800`, et lui expliquer le verdict.
-- Suite si GO : workflow `integration-testnet`, déploiement (AWS ou Render), 2 semaines de paper trading,
-  puis tâche planifiée de supervision via PostHog (projet « Default project », id 337957, hôte UE).
+## État (mis à jour le 13/11/2026)
+- **Orientation décidée par le propriétaire (13/11)** : il ne cherche pas « la » stratégie mais un système complet —
+  règles, données, exécution, recherche — autonome, auto-apprenant, sans LLM dans les décisions ; Claude supervise au début.
+- **Laboratoire autonome en service** (`lab/`, workflow `.github/workflows/lab.yml`, simulation uniquement) :
+  - `lab/catalog.py` : catalogue de 19 règles (familles blend / carry / xsmom / trend) — ajouter une idée = ajouter une famille ;
+  - `lab/hl_data.py` : clôtures journalières + funding via l'API publique Hyperliquid (30 marchés, sans clé) ;
+  - `lab/paper.py` : un livre de paper trading par règle et par capital (1 000 $ et 50 $), frais taker, ordres < 10 $ ignorés ;
+  - `lab/research.py` : fiche de score hebdomadaire sur l'historique Binance 2020→dernier mois complet (porte : Sharpe < 2024 > 0,
+    borne basse IC 95 % ≥ 2024 > 0, rendement positif à coûts ×2 ; Sharpe déflaté ; colonne « données propres » ≥ 2026-07) ;
+  - `lab/governor.py` : champion provisoire puis champion après 28 jours de paper ; suspension si SPRT rejette ou baisse > 25 % ;
+  - planification : quotidien 00:25 UTC, hebdo lundi 02:40 UTC ; déclenchement manuel = push sur `lab-requests`
+    (`git push origin main:refs/heads/lab-requests --force`) ; état et rapport sur la branche `lab-state` (`lab/report.md`).
+  - Premier passage le 13/11/2026 : 10 règles sur 19 passent la porte ; champion provisoire `blend(carry=7,hold=1,k=0,mom=14,w=0.7)` ;
+    avec 50 $ les règles à 6+6 et 3+3 positions n'exécutent rien (ordres < 10 $).
+- Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
+- **Pas encore fait** : brancher le champion du laboratoire sur l'agent d'exécution du bot (`agents/`), qui contient toujours
+  l'ancienne stratégie microstructure (perdante) ; agent « mathématicien » temps réel ; règles ML dans le catalogue
+  (testées et rejetées, voir journal). Rien n'est déployé en réel ; aucun secret requis par le laboratoire.
+- Capital du propriétaire : ~50 $ ; horizon de décision 5 mois. Les tests sur données propres (≥ 2026-07) ne confirment pas
+  l'avantage des backtests : ne jamais proposer d'argent réel sur la seule base d'un backtest.
+- AWS : utilisateur IAM `hl-swarm-backtest` (lecture seule archive Hyperliquid) ; secrets GitHub `COINVERSA_API_KEY`,
+  `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` en place (utilisés seulement par le workflow `backtest`).
 
 ## Règles non négociables
 - `config.yaml` versionné reste **testnet + dry_run** (la CI le vérifie). Le passage en réel se fait
@@ -36,6 +45,8 @@ python scripts/request_backtest.py --from A --to B     # backtest distant (GitHu
 python scripts/supervise.py ping --reason "..."        # commande de supervision (branche control)
 python main.py --go-live                               # rapport go/no-go
 python main.py --demo                                  # démo + interface http://localhost:8080 (mdp: demo)
+python -m lab.run daily --state state/lab              # laboratoire : un pas de paper trading (réseau requis)
+git show origin/lab-state:lab/report.md                # dernier rapport du laboratoire (après git fetch origin lab-state)
 ```
 
 ## Backtest results log
