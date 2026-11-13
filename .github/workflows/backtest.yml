@@ -70,19 +70,19 @@ jobs:
       - run: pip install -r requirements.txt -r requirements-history.txt
 
       - name: Cache des données importées
-        if: steps.p.outputs.task != 'bars' && steps.p.outputs.task != 'robust' && steps.p.outputs.task != 'filters' && steps.p.outputs.task != 'institutions'
+        if: steps.p.outputs.task != 'bars' && steps.p.outputs.task != 'robust' && steps.p.outputs.task != 'filters' && steps.p.outputs.task != 'institutions' && steps.p.outputs.task != 'premium'
         uses: actions/cache@v4
         with:
           path: data/recordings
           key: hist-${{ steps.p.outputs.coins_key }}-${{ steps.p.outputs.from }}-${{ steps.p.outputs.to }}-${{ steps.p.outputs.trades }}-flow${{ steps.p.outputs.flow }}
 
       - name: Sonde Coinversa
-        if: env.COINVERSA_API_KEY != '' && steps.p.outputs.task != 'bars' && steps.p.outputs.task != 'robust' && steps.p.outputs.task != 'filters' && steps.p.outputs.task != 'institutions'
+        if: env.COINVERSA_API_KEY != '' && steps.p.outputs.task != 'bars' && steps.p.outputs.task != 'robust' && steps.p.outputs.task != 'filters' && steps.p.outputs.task != 'institutions' && steps.p.outputs.task != 'premium'
         continue-on-error: true
         run: python scripts/coinversa_probe.py
 
       - name: Import historique
-        if: steps.p.outputs.task != 'bars' && steps.p.outputs.task != 'robust' && steps.p.outputs.task != 'filters' && steps.p.outputs.task != 'institutions'
+        if: steps.p.outputs.task != 'bars' && steps.p.outputs.task != 'robust' && steps.p.outputs.task != 'filters' && steps.p.outputs.task != 'institutions' && steps.p.outputs.task != 'premium'
         run: |
           ARGS="--from ${{ steps.p.outputs.from }} --to ${{ steps.p.outputs.to }} --coins ${{ steps.p.outputs.coins }}"
           [ -z "$AWS_ACCESS_KEY_ID" ] && ARGS="$ARGS --no-s3" && echo "::warning::no AWS secrets: Hyperliquid order book not imported"
@@ -96,7 +96,11 @@ jobs:
         run: |
           set +e
           mkdir -p data/reports
-          if [ "${{ steps.p.outputs.task }}" = "institutions" ]; then
+          if [ "${{ steps.p.outputs.task }}" = "premium" ]; then
+            python scripts/premium_robustness.py --coins ${{ steps.p.outputs.coins }} \
+              --from ${{ steps.p.outputs.from }} --to ${{ steps.p.outputs.to }} --split ${{ steps.p.outputs.split }} \
+              | tee data/reports/console.txt
+          elif [ "${{ steps.p.outputs.task }}" = "institutions" ]; then
             python scripts/institution_research.py --coins ${{ steps.p.outputs.coins }} \
               --from ${{ steps.p.outputs.from }} --to ${{ steps.p.outputs.to }} --split ${{ steps.p.outputs.split }} \
               | tee data/reports/console.txt

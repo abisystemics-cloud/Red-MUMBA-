@@ -35,6 +35,8 @@ def request(a) -> int:
         req.update(task="sweep", split=a.sweep_split)
     if a.bars_split:
         req.update(task="bars", split=a.bars_split)
+    if a.premium_split:
+        req.update(task="premium", split=a.premium_split)
     if a.inst_split:
         req.update(task="institutions", split=a.inst_split)
     if a.filters_split:
@@ -89,6 +91,7 @@ def main() -> int:
     p.add_argument("--robust-split", help="lance scripts/tsmom_robustness.py (mois YYYY-MM)")
     p.add_argument("--filters-split", help="lance scripts/filter_research.py (mois YYYY-MM)")
     p.add_argument("--inst-split", help="lance scripts/institution_research.py (mois YYYY-MM)")
+    p.add_argument("--premium-split", help="lance scripts/premium_robustness.py (mois YYYY-MM)")
     p.add_argument("--fetch")
     p.add_argument("--wait-s", type=int, default=0)
     a = p.parse_args()
