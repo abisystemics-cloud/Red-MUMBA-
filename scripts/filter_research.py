@@ -83,6 +83,36 @@ def load_fred(series: str, cache_dir: Path) -> tuple[np.ndarray, np.ndarray]:
     return np.asarray(ts), np.asarray(val)
 
 
+def load_nasdaq(cache_dir: Path) -> tuple[np.ndarray, np.ndarray, str]:
+    """Nasdaq Composite journalier : FRED, sinon Yahoo Finance, sinon Stooq."""
+    t, v = load_fred("NASDAQCOM", cache_dir)
+    if len(t) > 500:
+        return t, v, "fred"
+    raw = _fetch("https://query1.finance.yahoo.com/v8/finance/chart/%5EIXIC?period1=1527811200&period2=1900000000"
+                 "&interval=1d", cache_dir / "macro" / "ixic_yahoo.json")
+    try:
+        res = json.loads(raw)["chart"]["result"][0]
+        ts = np.asarray(res["timestamp"], dtype=np.float64)
+        cl = np.asarray([np.nan if x is None else x for x in res["indicators"]["quote"][0]["close"]], dtype=np.float64)
+        ok = np.isfinite(cl)
+        ts = np.floor(ts[ok] / 86400) * DAY  # date de séance à 00:00 UTC
+        if ok.sum() > 500:
+            return ts, cl[ok], "yahoo"
+    except (TypeError, KeyError, ValueError, IndexError):
+        pass
+    raw = _fetch("https://stooq.com/q/d/l/?s=^ndq&i=d", cache_dir / "macro" / "ndq_stooq.csv")
+    ts, val = [], []
+    for row in csv.reader(io.StringIO(raw.decode(errors="ignore"))) if raw else []:
+        try:
+            d, c = _day_ms(row[0]), float(row[4])
+        except (ValueError, IndexError):
+            continue
+        if d >= _day_ms("2018-06-01"):
+            ts.append(d)
+            val.append(c)
+    return np.asarray(ts), np.asarray(val), "stooq" if len(ts) > 500 else "indisponible"
+
+
 def load_stablecoins(cache_dir: Path) -> tuple[np.ndarray, np.ndarray]:
     raw = _fetch("https://stablecoins.llama.fi/stablecoincharts/all", cache_dir / "macro" / "stablecoins.json")
     ts, val = [], []
@@ -161,9 +191,11 @@ def main() -> int:
     for c in coins:
         sym = SYMBOLS.get(c, f"{c}USDT")
         data[c] = {"6h": resample(load_klines(sym, ml, cache), 6 * H), "fund": load_funding(sym, ml, cache)}
-    nq_t, nq_v = load_fred("NASDAQCOM", cache)
+    nq_t, nq_v, nq_src = load_nasdaq(cache)
+    if nq_src == "indisponible":
+        nq_t, nq_v = np.asarray([]), np.asarray([])
     st_t, st_v = load_stablecoins(cache)
-    sources = {"nasdaq_days": len(nq_t), "stablecoin_days": len(st_t), "fomc_dates": len(FOMC)}
+    sources = {"nasdaq_days": len(nq_t), "nasdaq_source": nq_src, "stablecoin_days": len(st_t), "fomc_dates": len(FOMC)}
     print("sources", sources, flush=True)
 
     def close_ts(c):
