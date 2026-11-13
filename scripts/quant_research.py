@@ -136,15 +136,9 @@ def stats(pnl: np.ndarray, turn: np.ndarray, chg: np.ndarray) -> dict:
             "turnover_per_month": round(float(turn.sum() / (len(pnl) / 30.44)), 1)}
 
 
-def main() -> int:
-    p = argparse.ArgumentParser()
-    p.add_argument("--from", dest="start", default="2020-01")
-    p.add_argument("--to", dest="end", default="2026-10")
-    p.add_argument("--split", default="2023-12")
-    p.add_argument("--cache", default="data/bars")
-    p.add_argument("--out", default="data/reports")
-    a = p.parse_args()
-    cache, ml = Path(a.cache), months(a.start, a.end)
+def build_panel(cache: Path, start: str, end: str):
+    """→ (coins, raw, days, C, F, R, b) : clôtures et funding journaliers alignés (NaN avant cotation)."""
+    ml = months(start, end)
     coins = CORE + OTHERS
 
     def prefetch(job):
@@ -161,7 +155,7 @@ def main() -> int:
         if len(b1) >= 2000:
             raw[c] = {"1h": b1, "6h": resample(b1, 6 * H), "fund": load_funding(f"{c}USDT", ml, cache)}
     coins = [c for c in coins if c in raw]
-    t0, t1 = ms(a.start), ms(next_month(a.end))
+    t0, t1 = ms(start), ms(next_month(end))
     days = np.arange(t0, t1, DAY)
     T, N = len(days), len(coins)
     C, F = np.full((T, N), np.nan), np.zeros((T, N))
@@ -176,7 +170,35 @@ def main() -> int:
         np.add.at(F[:, j], fi[okf], fr[okf])
     R = np.full((T, N), np.nan)
     R[1:] = C[1:] / C[:-1] - 1
-    b = coins.index("BTC")
+    return coins, raw, days, C, F, R, coins.index("BTC")
+
+
+def mom_signal(C: np.ndarray, L: int) -> np.ndarray:
+    out = np.full(C.shape, np.nan)
+    out[L:] = C[L:] / C[:-L] - 1
+    return out
+
+
+def carry_signal(C: np.ndarray, F: np.ndarray, n: int) -> np.ndarray:
+    out = np.full(C.shape, np.nan)
+    c = np.cumsum(np.vstack([np.zeros((1, C.shape[1])), F]), axis=0)
+    out[n - 1:] = -(c[n:] - c[:-n]) / n
+    out[~np.isfinite(C)] = np.nan
+    return out
+
+
+def main() -> int:
+    p = argparse.ArgumentParser()
+    p.add_argument("--from", dest="start", default="2020-01")
+    p.add_argument("--to", dest="end", default="2026-10")
+    p.add_argument("--split", default="2023-12")
+    p.add_argument("--cache", default="data/bars")
+    p.add_argument("--out", default="data/reports")
+    a = p.parse_args()
+    cache = Path(a.cache)
+    coins, raw, days, C, F, R, b = build_panel(cache, a.start, a.end)
+    T, N = C.shape
+    t1 = ms(next_month(a.end))
 
     def mom(L):
         out = np.full((T, N), np.nan)
