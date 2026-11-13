@@ -42,25 +42,27 @@ DAY = 24 * H
 N_TRIALS_PROJECT = 150  # ordre de grandeur des réglages essayés depuis le début
 
 
-def xs_weights(sig: np.ndarray, frac: float = 0.2, min_n: int = 10) -> np.ndarray:
+def xs_weights(sig: np.ndarray, frac: float = 0.2, min_n: int = 10, k_fixed: int = 0) -> np.ndarray:
     w = np.zeros(len(sig))
     ok = np.flatnonzero(np.isfinite(sig))
     if len(ok) < min_n:
         return w
-    k = max(2, int(len(ok) * frac))
+    k = k_fixed or max(2, int(len(ok) * frac))
     order = ok[np.argsort(sig[ok], kind="stable")]
     w[order[-k:]] = 0.5 / k
     w[order[:k]] = -0.5 / k
     return w
 
 
-def hold_weights(sig: np.ndarray, hold: int) -> np.ndarray:
-    """sig[t] connu à la clôture du jour t → poids tenus `hold` jours."""
+def hold_weights(sig: np.ndarray, hold: int, k_fixed: int = 0) -> np.ndarray:
+    """sig[t] connu à la clôture du jour t → poids tenus `hold` jours.
+    `k_fixed` : nombre fixe de marchés par côté (version petit compte : peu de
+    positions, toutes de même taille, on ne touche qu'aux noms qui sortent du classement)."""
     W = np.zeros_like(sig)
     cur = np.zeros(sig.shape[1])
     for t in range(sig.shape[0]):
         if t % hold == 0:
-            cur = xs_weights(sig[t])
+            cur = xs_weights(sig[t], k_fixed=k_fixed)
         W[t] = cur
     return W
 
@@ -196,6 +198,15 @@ def main() -> int:
         "combo_mom_carry": [({"mom_weight": w, "hold_days": h},
                              (lambda w=w, h=h: hold_weights(w * rank01(mom(14)) + (1 - w) * rank01(carry(7)), h)))
                             for w in (0.5, 0.7) for h in (1, 7)],
+        # petit compte : k positions par côté, de taille égale, rééquilibrage hebdomadaire.
+        # Avec 50 $ et une exposition brute de 2× (100 $), k = 3 → ~17 $ par position,
+        # k = 5 → 10 $ (le minimum d'Hyperliquid) ; k = 2 → 25 $.
+        "small_account": [({"signal": name, "k_per_side": k},
+                           (lambda name=name, k=k: hold_weights(
+                               carry(7) if name == "carry" else
+                               (0.5 if name == "blend_50" else 0.7) * rank01(mom(14))
+                               + (0.5 if name == "blend_50" else 0.3) * rank01(carry(7)), 7, k_fixed=k)))
+                          for name in ("carry", "blend_50", "blend_70") for k in (2, 3, 5)],
         "pairs_ou": [({"z_entry": k, "window_days": w}, (lambda k=k, w=w: pairs_weights(C, b, k, w)))
                      for k in (1.5, 2.0) for w in (30, 60)],
     }
