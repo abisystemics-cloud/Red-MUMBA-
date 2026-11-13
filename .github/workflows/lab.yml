@@ -1,0 +1,73 @@
+name: lab
+
+# Laboratoire autonome (simulation uniquement — aucun ordre réel, aucun secret requis).
+#  - chaque jour : données Hyperliquid, paper trading de tout le catalogue, suspensions ;
+#  - chaque lundi : fiche de score du catalogue sur l'historique long + champion/challengers.
+# L'état et le rapport sont versionnés sur la branche `lab-state` (lab/report.md).
+# Lancement manuel : onglet Actions → lab → Run workflow, ou un push sur `lab-requests`.
+on:
+  schedule:
+    - cron: "25 0 * * *"
+    - cron: "40 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      mode: { description: "daily | weekly", default: "daily" }
+  push:
+    branches: [lab-requests]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lab
+  cancel-in-progress: false
+
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install numpy
+
+      - name: Mode
+        id: m
+        run: |
+          MODE="daily"
+          [ "${{ github.event_name }}" = "push" ] && MODE="weekly"
+          [ "${{ github.event.schedule }}" = "40 2 * * 1" ] && MODE="weekly"
+          [ "${{ github.event_name }}" = "workflow_dispatch" ] && MODE="${{ inputs.mode }}"
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "month=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache de l'historique long
+        if: steps.m.outputs.mode == 'weekly'
+        uses: actions/cache@v4
+        with:
+          path: data/bars
+          key: lab-bars-${{ steps.m.outputs.month }}
+          restore-keys: lab-bars-
+
+      - name: État (branche lab-state)
+        run: |
+          git config user.name "hl-swarm-lab"
+          git config user.email "actions@users.noreply.github.com"
+          git fetch origin lab-state || true
+          git worktree add /tmp/labstate -B lab-state origin/lab-state 2>/dev/null \
+            || (git worktree add --detach /tmp/labstate && cd /tmp/labstate && git checkout --orphan lab-state && git rm -rf --quiet . || true)
+
+      - name: Laboratoire
+        run: python -m lab.run ${{ steps.m.outputs.mode }} --state /tmp/labstate/lab
+
+      - name: Enregistrer l'état
+        run: |
+          cd /tmp/labstate && git add -A
+          git diff --cached --quiet || (git commit -q -m "lab ${{ steps.m.outputs.mode }} $(date -u +%Y-%m-%dT%H:%MZ)" && git push origin lab-state)
