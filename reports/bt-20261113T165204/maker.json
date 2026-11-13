@@ -1,0 +1,398 @@
+{
+  "periods": {
+    "train": [
+      "2020-01",
+      "2023-12"
+    ],
+    "test": [
+      "2024-01",
+      "2026-10"
+    ]
+  },
+  "cases": {
+    "momentum 6h \u2014 BTC/ETH/SOL": {
+      "rows": {
+        "taker": {
+          "train": {
+            "trades": 697,
+            "return_pct": 26.0,
+            "cagr_pct": 5.97,
+            "max_dd_pct": 4.83,
+            "sharpe": 1.55,
+            "profit_factor": 1.83,
+            "win_rate": 0.314,
+            "avg_bars": 12.6,
+            "fill_rate": null,
+            "trades_per_month": 14.5
+          },
+          "test": {
+            "trades": 541,
+            "return_pct": 7.25,
+            "cagr_pct": 2.5,
+            "max_dd_pct": 3.51,
+            "sharpe": 0.74,
+            "profit_factor": 1.37,
+            "win_rate": 0.301,
+            "avg_bars": 11.5,
+            "fill_rate": null,
+            "trades_per_month": 15.9
+          }
+        },
+        "maker_skip": {
+          "train": {
+            "trades": 696,
+            "return_pct": 26.64,
+            "cagr_pct": 6.11,
+            "max_dd_pct": 4.79,
+            "sharpe": 1.59,
+            "profit_factor": 1.86,
+            "win_rate": 0.319,
+            "avg_bars": 12.6,
+            "fill_rate": 0.99,
+            "trades_per_month": 14.5
+          },
+          "test": {
+            "trades": 540,
+            "return_pct": 7.82,
+            "cagr_pct": 2.69,
+            "max_dd_pct": 3.29,
+            "sharpe": 0.79,
+            "profit_factor": 1.41,
+            "win_rate": 0.311,
+            "avg_bars": 11.6,
+            "fill_rate": 0.99,
+            "trades_per_month": 15.9
+          }
+        },
+        "maker_taker": {
+          "train": {
+            "trades": 696,
+            "return_pct": 26.63,
+            "cagr_pct": 6.11,
+            "max_dd_pct": 4.8,
+            "sharpe": 1.59,
+            "profit_factor": 1.86,
+            "win_rate": 0.319,
+            "avg_bars": 12.6,
+            "fill_rate": 0.99,
+            "trades_per_month": 14.5
+          },
+          "test": {
+            "trades": 540,
+            "return_pct": 7.82,
+            "cagr_pct": 2.69,
+            "max_dd_pct": 3.29,
+            "sharpe": 0.79,
+            "profit_factor": 1.41,
+            "win_rate": 0.311,
+            "avg_bars": 11.6,
+            "fill_rate": 0.99,
+            "trades_per_month": 15.9
+          }
+        }
+      },
+      "choice": "maker_skip",
+      "stress": {
+        "trades": 540,
+        "return_pct": 6.57,
+        "cagr_pct": 2.27,
+        "max_dd_pct": 3.66,
+        "sharpe": 0.67,
+        "profit_factor": 1.33,
+        "win_rate": 0.3,
+        "avg_bars": 11.6,
+        "fill_rate": 0.99,
+        "trades_per_month": 15.9
+      },
+      "verdict": "NE TIENT PAS"
+    },
+    "momentum 6h \u2014 30 march\u00e9s": {
+      "rows": {
+        "taker": {
+          "train": {
+            "trades": 5653,
+            "return_pct": 20.62,
+            "cagr_pct": 4.82,
+            "max_dd_pct": 3.45,
+            "sharpe": 1.61,
+            "profit_factor": 1.66,
+            "win_rate": 0.311,
+            "avg_bars": 11.3,
+            "fill_rate": null,
+            "trades_per_month": 117.8
+          },
+          "test": {
+            "trades": 5230,
+            "return_pct": 3.56,
+            "cagr_pct": 1.24,
+            "max_dd_pct": 3.47,
+            "sharpe": 0.47,
+            "profit_factor": 1.2,
+            "win_rate": 0.295,
+            "avg_bars": 10.9,
+            "fill_rate": null,
+            "trades_per_month": 153.8
+          }
+        },
+        "maker_skip": {
+          "train": {
+            "trades": 5646,
+            "return_pct": 21.0,
+            "cagr_pct": 4.9,
+            "max_dd_pct": 3.29,
+            "sharpe": 1.63,
+            "profit_factor": 1.68,
+            "win_rate": 0.315,
+            "avg_bars": 11.4,
+            "fill_rate": 0.99,
+            "trades_per_month": 117.6
+          },
+          "test": {
+            "trades": 5227,
+            "return_pct": 3.77,
+            "cagr_pct": 1.31,
+            "max_dd_pct": 3.34,
+            "sharpe": 0.5,
+            "profit_factor": 1.21,
+            "win_rate": 0.3,
+            "avg_bars": 10.9,
+            "fill_rate": 0.99,
+            "trades_per_month": 153.7
+          }
+        },
+        "maker_taker": {
+          "train": {
+            "trades": 5646,
+            "return_pct": 21.0,
+            "cagr_pct": 4.9,
+            "max_dd_pct": 3.29,
+            "sharpe": 1.63,
+            "profit_factor": 1.68,
+            "win_rate": 0.315,
+            "avg_bars": 11.4,
+            "fill_rate": 0.99,
+            "trades_per_month": 117.6
+          },
+          "test": {
+            "trades": 5227,
+            "return_pct": 3.77,
+            "cagr_pct": 1.31,
+            "max_dd_pct": 3.34,
+            "sharpe": 0.5,
+            "profit_factor": 1.21,
+            "win_rate": 0.3,
+            "avg_bars": 10.9,
+            "fill_rate": 0.99,
+            "trades_per_month": 153.7
+          }
+        }
+      },
+      "choice": "maker_skip",
+      "stress": {
+        "trades": 5227,
+        "return_pct": 2.86,
+        "cagr_pct": 1.0,
+        "max_dd_pct": 3.88,
+        "sharpe": 0.38,
+        "profit_factor": 1.16,
+        "win_rate": 0.29,
+        "avg_bars": 10.9,
+        "fill_rate": 0.99,
+        "trades_per_month": 153.7
+      },
+      "verdict": "NE TIENT PAS"
+    },
+    "cassure 96h (1h) \u2014 30 march\u00e9s": {
+      "rows": {
+        "taker": {
+          "train": {
+            "trades": 6854,
+            "return_pct": 41.48,
+            "cagr_pct": 9.08,
+            "max_dd_pct": 7.83,
+            "sharpe": 0.96,
+            "profit_factor": 1.25,
+            "win_rate": 0.212,
+            "avg_bars": 55.2,
+            "fill_rate": null,
+            "trades_per_month": 142.8
+          },
+          "test": {
+            "trades": 7130,
+            "return_pct": 12.73,
+            "cagr_pct": 4.31,
+            "max_dd_pct": 8.28,
+            "sharpe": 0.55,
+            "profit_factor": 1.16,
+            "win_rate": 0.231,
+            "avg_bars": 53.0,
+            "fill_rate": null,
+            "trades_per_month": 209.7
+          }
+        },
+        "maker_skip": {
+          "train": {
+            "trades": 6851,
+            "return_pct": 42.9,
+            "cagr_pct": 9.35,
+            "max_dd_pct": 7.38,
+            "sharpe": 1.0,
+            "profit_factor": 1.26,
+            "win_rate": 0.211,
+            "avg_bars": 54.8,
+            "fill_rate": 0.98,
+            "trades_per_month": 142.7
+          },
+          "test": {
+            "trades": 7145,
+            "return_pct": 13.21,
+            "cagr_pct": 4.47,
+            "max_dd_pct": 8.65,
+            "sharpe": 0.57,
+            "profit_factor": 1.16,
+            "win_rate": 0.23,
+            "avg_bars": 52.4,
+            "fill_rate": 0.97,
+            "trades_per_month": 210.1
+          }
+        },
+        "maker_taker": {
+          "train": {
+            "trades": 6852,
+            "return_pct": 42.86,
+            "cagr_pct": 9.35,
+            "max_dd_pct": 7.38,
+            "sharpe": 0.99,
+            "profit_factor": 1.26,
+            "win_rate": 0.211,
+            "avg_bars": 54.8,
+            "fill_rate": 0.98,
+            "trades_per_month": 142.8
+          },
+          "test": {
+            "trades": 7145,
+            "return_pct": 13.2,
+            "cagr_pct": 4.47,
+            "max_dd_pct": 8.67,
+            "sharpe": 0.57,
+            "profit_factor": 1.16,
+            "win_rate": 0.23,
+            "avg_bars": 52.5,
+            "fill_rate": 0.97,
+            "trades_per_month": 210.1
+          }
+        }
+      },
+      "choice": "maker_skip",
+      "stress": {
+        "trades": 7145,
+        "return_pct": 8.27,
+        "cagr_pct": 2.84,
+        "max_dd_pct": 9.97,
+        "sharpe": 0.38,
+        "profit_factor": 1.11,
+        "win_rate": 0.227,
+        "avg_bars": 52.4,
+        "fill_rate": 0.97,
+        "trades_per_month": 210.1
+      },
+      "verdict": "NE TIENT PAS"
+    },
+    "prime Coinbase 7j \u2014 BTC/ETH/SOL": {
+      "rows": {
+        "taker": {
+          "train": {
+            "trades": 128,
+            "return_pct": 32.72,
+            "cagr_pct": 7.35,
+            "max_dd_pct": 5.39,
+            "sharpe": 1.29,
+            "profit_factor": 3.51,
+            "win_rate": 0.312,
+            "avg_bars": 101.9,
+            "fill_rate": null,
+            "trades_per_month": 2.7
+          },
+          "test": {
+            "trades": 85,
+            "return_pct": 7.73,
+            "cagr_pct": 2.66,
+            "max_dd_pct": 2.89,
+            "sharpe": 0.92,
+            "profit_factor": 2.26,
+            "win_rate": 0.412,
+            "avg_bars": 61.8,
+            "fill_rate": null,
+            "trades_per_month": 2.5
+          }
+        },
+        "maker_skip": {
+          "train": {
+            "trades": 128,
+            "return_pct": 32.94,
+            "cagr_pct": 7.4,
+            "max_dd_pct": 5.4,
+            "sharpe": 1.3,
+            "profit_factor": 3.54,
+            "win_rate": 0.32,
+            "avg_bars": 101.9,
+            "fill_rate": 1.0,
+            "trades_per_month": 2.7
+          },
+          "test": {
+            "trades": 85,
+            "return_pct": 7.83,
+            "cagr_pct": 2.7,
+            "max_dd_pct": 2.87,
+            "sharpe": 0.93,
+            "profit_factor": 2.29,
+            "win_rate": 0.412,
+            "avg_bars": 61.8,
+            "fill_rate": 1.0,
+            "trades_per_month": 2.5
+          }
+        },
+        "maker_taker": {
+          "train": {
+            "trades": 128,
+            "return_pct": 32.94,
+            "cagr_pct": 7.4,
+            "max_dd_pct": 5.4,
+            "sharpe": 1.3,
+            "profit_factor": 3.54,
+            "win_rate": 0.32,
+            "avg_bars": 101.9,
+            "fill_rate": 1.0,
+            "trades_per_month": 2.7
+          },
+          "test": {
+            "trades": 85,
+            "return_pct": 7.83,
+            "cagr_pct": 2.7,
+            "max_dd_pct": 2.87,
+            "sharpe": 0.93,
+            "profit_factor": 2.29,
+            "win_rate": 0.412,
+            "avg_bars": 61.8,
+            "fill_rate": 1.0,
+            "trades_per_month": 2.5
+          }
+        }
+      },
+      "choice": "maker_skip",
+      "stress": {
+        "trades": 85,
+        "return_pct": 7.66,
+        "cagr_pct": 2.64,
+        "max_dd_pct": 2.9,
+        "sharpe": 0.91,
+        "profit_factor": 2.25,
+        "win_rate": 0.412,
+        "avg_bars": 61.8,
+        "fill_rate": 1.0,
+        "trades_per_month": 2.5
+      },
+      "verdict": "TIENT"
+    }
+  }
+}
