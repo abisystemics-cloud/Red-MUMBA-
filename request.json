@@ -1,0 +1,12 @@
+{
+  "id": "bt-20261113T202310",
+  "from": "2020-01",
+  "to": "2026-10",
+  "coins": "BTC,ETH",
+  "mode": "maker",
+  "with_trades": false,
+  "binance_flow": false,
+  "requested_by": "claude",
+  "task": "postcutoff",
+  "split": "2026-07"
+}
