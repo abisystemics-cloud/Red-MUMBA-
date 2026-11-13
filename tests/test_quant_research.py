@@ -77,7 +77,8 @@ def test_uncertainty_tools():
 
 
 def test_ml_target_has_no_lookahead_and_walk_forward_purges():
-    from sklearn.linear_model import Ridge
+    import pytest
+    Ridge = pytest.importorskip("sklearn.linear_model").Ridge
 
     from scripts.ml_research import HORIZON, make_features, make_target, walk_forward_scores
     rng = np.random.default_rng(7)
