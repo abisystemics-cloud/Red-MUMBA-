@@ -268,6 +268,42 @@
   }
  },
  {
+  "name": "blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "news_tone",
+   "hold": 7,
+   "k": 0,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "geo_news",
+   "hold": 7,
+   "k": 0,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "fng",
+   "hold": 7,
+   "k": 0,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
   "name": "blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7)",
   "family": "blend",
   "params": {
@@ -345,6 +381,42 @@
   "params": {
    "carry": 7,
    "gate": "risk_on",
+   "hold": 1,
+   "k": 0,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "news_tone",
+   "hold": 1,
+   "k": 0,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "geo_news",
+   "hold": 1,
+   "k": 0,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "fng",
    "hold": 1,
    "k": 0,
    "mom": 14,
