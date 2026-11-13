@@ -114,7 +114,7 @@ def load_klines(sym: str, mlist: list[str], cache_dir: Path, interval: str = "15
     cols = [[] for _ in range(7)]
     for mo in mlist:
         raw = _get(f"{BASE}/klines/{sym}/{interval}/{sym}-{interval}-{mo}.zip",
-                   cache_dir / "klines" / sym / f"{mo}.zip")
+                   cache_dir / "klines" / sym / f"{interval}-{mo}.zip")
         if not raw:
             continue
         for r in _rows(raw):

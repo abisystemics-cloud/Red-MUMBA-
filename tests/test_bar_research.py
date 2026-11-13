@@ -56,3 +56,14 @@ def test_strategies_run_on_random_walk_without_crashing():
         res = simulate(bars, st, Costs(), ft, fr)
         s = summarize({"X": res})
         assert s["max_dd_pct"] >= 0 and np.isfinite(s["return_pct"])
+
+
+def test_universe_strategies_and_prev_windows():
+    from scripts.universe_research import breakout, prev_max, prev_median, reversal
+    x = np.array([1.0, 3, 2, 5, 4])
+    assert np.isnan(prev_max(x, 2)[1]) and prev_max(x, 2)[2:].tolist() == [3.0, 3.0, 5.0]  # fenêtre AVANT la bougie
+    assert prev_median(x, 3)[3:].tolist() == [2.0, 3.0]
+    b = resample(_bars(8000), H)
+    for st in (breakout(b, 24), reversal(b, 2.0, 4)):
+        s = summarize({"X": simulate(b, st, Costs(), np.array([]), np.array([]))})
+        assert np.isfinite(s["return_pct"])
