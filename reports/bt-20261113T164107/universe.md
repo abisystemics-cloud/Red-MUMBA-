@@ -1,0 +1,49 @@
+# Univers élargi (30 marchés) et stratégies 1 h
+
+Apprentissage 2020-01 → 2023-12 · vérification 2024-01 → 2026-10
+
+## 1. Momentum 6 h (réglage gelé) sur les marchés jamais vus
+
+| | période | trades | trades_per_month | return_pct | max_dd_pct | sharpe | profit_factor | win_rate |
+|---|---|---|---|---|---|---|---|---|
+| long seulement — 27 autres marchés | tout | 9632 | 117.5 | 24.12 | 3.74 | 1.12 | 1.41 | 0.302 |
+| long seulement — 27 autres marchés | test | 4689 | 137.9 | 3.14 | 3.74 | 0.42 | 1.18 | 0.295 |
+| long seulement — les 30 marchés | test | 5230 | 153.8 | 3.56 | 3.47 | 0.47 | 1.2 | 0.295 |
+| long seulement | verdict | **ÉCHOUE** (93 % des marchés positifs) | | | | | | |
+| long/short — 27 autres marchés | tout | 15127 | 184.5 | 27.9 | 3.72 | 1.13 | 1.28 | 0.326 |
+| long/short — 27 autres marchés | test | 7482 | 220.1 | 2.69 | 3.72 | 0.32 | 1.09 | 0.314 |
+| long/short — les 30 marchés | test | 8319 | 244.7 | 3.29 | 3.51 | 0.39 | 1.11 | 0.315 |
+| long/short | verdict | **ÉCHOUE** (89 % des marchés positifs) | | | | | | |
+
+## 2. Stratégies actives sur 1 h
+
+| famille | réglage choisi | verdict | coûts ×2 (rendement %) |
+|---|---|---|---|
+| breakout | {'n_hours': 96} | **NE TIENT PAS** | 4.83 |
+| tsmom_1h | {'lookback_h': 72, 'long_only': True} | **NE TIENT PAS** | -19.19 |
+| reversal | {'k_atr': 3.0, 'hold_h': 12} | **NE TIENT PAS** | -13.38 |
+
+| | période | trades | trades_per_month | return_pct | max_dd_pct | sharpe | profit_factor | win_rate |
+|---|---|---|---|---|---|---|---|---|
+| breakout {'n_hours': 24} | train | 19067 | 397.3 | -1.5 | 14.74 | 0.01 | 0.98 | 0.294 |
+| breakout {'n_hours': 24} | test | 19629 | 577.3 | -5.27 | 14.73 | -0.16 | 0.98 | 0.3 |
+| breakout {'n_hours': 48} | train | 11349 | 236.5 | 18.24 | 8.42 | 0.49 | 1.07 | 0.255 |
+| breakout {'n_hours': 48} | test | 11723 | 344.8 | 10.34 | 7.99 | 0.42 | 1.08 | 0.271 |
+| breakout {'n_hours': 96} | train | 6854 | 142.8 | 41.48 | 7.83 | 0.96 | 1.25 | 0.212 |
+| breakout {'n_hours': 96} | test | 7130 | 209.7 | 12.73 | 8.28 | 0.55 | 1.16 | 0.231 |
+| tsmom_1h {'lookback_h': 24, 'long_only': True} | train | 38182 | 795.5 | -15.06 | 25.49 | -0.63 | 0.89 | 0.26 |
+| tsmom_1h {'lookback_h': 24, 'long_only': True} | test | 35494 | 1043.9 | -22.62 | 25.8 | -1.39 | 0.83 | 0.256 |
+| tsmom_1h {'lookback_h': 24, 'long_only': False} | train | 59666 | 1243.1 | -36.16 | 42.08 | -1.39 | 0.86 | 0.267 |
+| tsmom_1h {'lookback_h': 24, 'long_only': False} | test | 55935 | 1645.1 | -32.47 | 33.8 | -1.77 | 0.85 | 0.27 |
+| tsmom_1h {'lookback_h': 72, 'long_only': True} | train | 21858 | 455.4 | 31.6 | 9.02 | 1.03 | 1.18 | 0.279 |
+| tsmom_1h {'lookback_h': 72, 'long_only': True} | test | 20400 | 600.0 | -6.0 | 17.14 | -0.3 | 0.95 | 0.255 |
+| tsmom_1h {'lookback_h': 72, 'long_only': False} | train | 34270 | 714.0 | 33.68 | 6.91 | 0.91 | 1.11 | 0.286 |
+| tsmom_1h {'lookback_h': 72, 'long_only': False} | test | 32380 | 952.3 | -9.83 | 20.92 | -0.43 | 0.95 | 0.272 |
+| reversal {'k_atr': 2.0, 'hold_h': 4} | train | 10815 | 225.3 | -43.18 | 42.95 | -3.86 | 0.65 | 0.363 |
+| reversal {'k_atr': 2.0, 'hold_h': 4} | test | 10237 | 301.1 | -35.13 | 35.29 | -3.43 | 0.65 | 0.314 |
+| reversal {'k_atr': 2.0, 'hold_h': 12} | train | 10625 | 221.4 | -39.49 | 39.27 | -2.6 | 0.73 | 0.282 |
+| reversal {'k_atr': 2.0, 'hold_h': 12} | test | 10070 | 296.2 | -30.36 | 30.36 | -2.42 | 0.75 | 0.25 |
+| reversal {'k_atr': 3.0, 'hold_h': 4} | train | 3312 | 69.0 | -12.69 | 12.88 | -1.41 | 0.69 | 0.38 |
+| reversal {'k_atr': 3.0, 'hold_h': 4} | test | 2743 | 80.7 | -9.32 | 9.68 | -1.56 | 0.69 | 0.329 |
+| reversal {'k_atr': 3.0, 'hold_h': 12} | train | 3304 | 68.8 | -9.81 | 13.01 | -0.9 | 0.76 | 0.313 |
+| reversal {'k_atr': 3.0, 'hold_h': 12} | test | 2736 | 80.5 | -7.56 | 7.86 | -1.05 | 0.79 | 0.274 |
