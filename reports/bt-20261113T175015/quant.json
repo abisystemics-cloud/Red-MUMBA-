@@ -1,0 +1,1073 @@
+{
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "BNB",
+    "XRP",
+    "DOGE",
+    "ADA",
+    "AVAX",
+    "LINK",
+    "LTC",
+    "DOT",
+    "ATOM",
+    "NEAR",
+    "APT",
+    "ARB",
+    "OP",
+    "SUI",
+    "INJ",
+    "TIA",
+    "SEI",
+    "AAVE",
+    "UNI",
+    "FIL",
+    "BCH",
+    "ETC",
+    "XLM",
+    "TRX",
+    "HBAR",
+    "ICP",
+    "RUNE"
+  ],
+  "families": {
+    "xs_carry": {
+      "rows": [
+        {
+          "params": {
+            "funding_days": 3,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 0.99,
+            "return_pct": 264.4,
+            "cagr_pct": 38.1,
+            "max_dd_pct": 35.9,
+            "orders_per_month": 116.0,
+            "turnover_per_month": 14.5
+          },
+          "test": {
+            "sharpe": 0.65,
+            "return_pct": 36.4,
+            "cagr_pct": 11.6,
+            "max_dd_pct": 24.3,
+            "orders_per_month": 189.0,
+            "turnover_per_month": 15.9
+          },
+          "test_cost_x2": {
+            "sharpe": 0.03,
+            "return_pct": -3.9,
+            "cagr_pct": -1.4,
+            "max_dd_pct": 30.4,
+            "orders_per_month": 189.0,
+            "turnover_per_month": 15.9
+          }
+        },
+        {
+          "params": {
+            "funding_days": 3,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 1.31,
+            "return_pct": 492.2,
+            "cagr_pct": 55.9,
+            "max_dd_pct": 38.0,
+            "orders_per_month": 36.0,
+            "turnover_per_month": 4.7
+          },
+          "test": {
+            "sharpe": 1.09,
+            "return_pct": 74.5,
+            "cagr_pct": 21.7,
+            "max_dd_pct": 17.9,
+            "orders_per_month": 54.0,
+            "turnover_per_month": 4.8
+          },
+          "test_cost_x2": {
+            "sharpe": 0.9,
+            "return_pct": 57.0,
+            "cagr_pct": 17.3,
+            "max_dd_pct": 18.9,
+            "orders_per_month": 54.0,
+            "turnover_per_month": 4.8
+          }
+        },
+        {
+          "params": {
+            "funding_days": 7,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 0.79,
+            "return_pct": 119.0,
+            "cagr_pct": 21.6,
+            "max_dd_pct": 36.2,
+            "orders_per_month": 68.0,
+            "turnover_per_month": 8.5
+          },
+          "test": {
+            "sharpe": 1.17,
+            "return_pct": 86.9,
+            "cagr_pct": 24.7,
+            "max_dd_pct": 18.7,
+            "orders_per_month": 105.0,
+            "turnover_per_month": 8.8
+          },
+          "test_cost_x2": {
+            "sharpe": 0.84,
+            "return_pct": 53.9,
+            "cagr_pct": 16.4,
+            "max_dd_pct": 20.0,
+            "orders_per_month": 105.0,
+            "turnover_per_month": 8.8
+          }
+        },
+        {
+          "params": {
+            "funding_days": 7,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 0.91,
+            "return_pct": 151.8,
+            "cagr_pct": 25.9,
+            "max_dd_pct": 37.6,
+            "orders_per_month": 32.0,
+            "turnover_per_month": 4.1
+          },
+          "test": {
+            "sharpe": 1.18,
+            "return_pct": 82.8,
+            "cagr_pct": 23.7,
+            "max_dd_pct": 18.4,
+            "orders_per_month": 47.0,
+            "turnover_per_month": 4.1
+          },
+          "test_cost_x2": {
+            "sharpe": 1.02,
+            "return_pct": 66.8,
+            "cagr_pct": 19.8,
+            "max_dd_pct": 19.4,
+            "orders_per_month": 47.0,
+            "turnover_per_month": 4.1
+          }
+        },
+        {
+          "params": {
+            "funding_days": 14,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 0.48,
+            "return_pct": 50.4,
+            "cagr_pct": 10.7,
+            "max_dd_pct": 39.3,
+            "orders_per_month": 42.0,
+            "turnover_per_month": 5.2
+          },
+          "test": {
+            "sharpe": 1.41,
+            "return_pct": 100.3,
+            "cagr_pct": 27.8,
+            "max_dd_pct": 12.0,
+            "orders_per_month": 67.0,
+            "turnover_per_month": 5.6
+          },
+          "test_cost_x2": {
+            "sharpe": 1.18,
+            "return_pct": 77.1,
+            "cagr_pct": 22.3,
+            "max_dd_pct": 12.9,
+            "orders_per_month": 67.0,
+            "turnover_per_month": 5.6
+          }
+        },
+        {
+          "params": {
+            "funding_days": 14,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 0.67,
+            "return_pct": 87.5,
+            "cagr_pct": 17.0,
+            "max_dd_pct": 44.5,
+            "orders_per_month": 23.0,
+            "turnover_per_month": 2.8
+          },
+          "test": {
+            "sharpe": 0.91,
+            "return_pct": 52.2,
+            "cagr_pct": 16.0,
+            "max_dd_pct": 15.6,
+            "orders_per_month": 32.0,
+            "turnover_per_month": 2.7
+          },
+          "test_cost_x2": {
+            "sharpe": 0.79,
+            "return_pct": 43.3,
+            "cagr_pct": 13.5,
+            "max_dd_pct": 15.8,
+            "orders_per_month": 32.0,
+            "turnover_per_month": 2.7
+          }
+        }
+      ],
+      "choice": {
+        "funding_days": 3,
+        "hold_days": 7
+      },
+      "verdict": "TIENT"
+    },
+    "xs_momentum": {
+      "rows": [
+        {
+          "params": {
+            "lookback_days": 7,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 1.12,
+            "return_pct": 353.8,
+            "cagr_pct": 45.9,
+            "max_dd_pct": 38.5,
+            "orders_per_month": 153.0,
+            "turnover_per_month": 19.4
+          },
+          "test": {
+            "sharpe": -0.23,
+            "return_pct": -22.4,
+            "cagr_pct": -8.6,
+            "max_dd_pct": 37.6,
+            "orders_per_month": 221.0,
+            "turnover_per_month": 18.8
+          },
+          "test_cost_x2": {
+            "sharpe": -0.81,
+            "return_pct": -48.8,
+            "cagr_pct": -21.0,
+            "max_dd_pct": 50.6,
+            "orders_per_month": 221.0,
+            "turnover_per_month": 18.8
+          }
+        },
+        {
+          "params": {
+            "lookback_days": 7,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 0.27,
+            "return_pct": 13.7,
+            "cagr_pct": 3.3,
+            "max_dd_pct": 48.6,
+            "orders_per_month": 47.0,
+            "turnover_per_month": 6.8
+          },
+          "test": {
+            "sharpe": 0.21,
+            "return_pct": 6.5,
+            "cagr_pct": 2.2,
+            "max_dd_pct": 38.7,
+            "orders_per_month": 67.0,
+            "turnover_per_month": 6.6
+          },
+          "test_cost_x2": {
+            "sharpe": 0.0,
+            "return_pct": -8.1,
+            "cagr_pct": -2.9,
+            "max_dd_pct": 41.1,
+            "orders_per_month": 67.0,
+            "turnover_per_month": 6.6
+          }
+        },
+        {
+          "params": {
+            "lookback_days": 14,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 1.29,
+            "return_pct": 477.7,
+            "cagr_pct": 55.0,
+            "max_dd_pct": 47.4,
+            "orders_per_month": 109.0,
+            "turnover_per_month": 13.6
+          },
+          "test": {
+            "sharpe": 0.69,
+            "return_pct": 49.9,
+            "cagr_pct": 15.3,
+            "max_dd_pct": 27.4,
+            "orders_per_month": 158.0,
+            "turnover_per_month": 13.2
+          },
+          "test_cost_x2": {
+            "sharpe": 0.28,
+            "return_pct": 11.8,
+            "cagr_pct": 4.0,
+            "max_dd_pct": 31.7,
+            "orders_per_month": 158.0,
+            "turnover_per_month": 13.2
+          }
+        },
+        {
+          "params": {
+            "lookback_days": 14,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 0.92,
+            "return_pct": 204.7,
+            "cagr_pct": 32.1,
+            "max_dd_pct": 40.6,
+            "orders_per_month": 37.0,
+            "turnover_per_month": 4.8
+          },
+          "test": {
+            "sharpe": 0.2,
+            "return_pct": 5.8,
+            "cagr_pct": 2.0,
+            "max_dd_pct": 29.8,
+            "orders_per_month": 52.0,
+            "turnover_per_month": 4.7
+          },
+          "test_cost_x2": {
+            "sharpe": 0.05,
+            "return_pct": -4.7,
+            "cagr_pct": -1.7,
+            "max_dd_pct": 31.3,
+            "orders_per_month": 52.0,
+            "turnover_per_month": 4.7
+          }
+        },
+        {
+          "params": {
+            "lookback_days": 28,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 1.55,
+            "return_pct": 776.6,
+            "cagr_pct": 72.0,
+            "max_dd_pct": 36.0,
+            "orders_per_month": 79.0,
+            "turnover_per_month": 9.8
+          },
+          "test": {
+            "sharpe": 0.04,
+            "return_pct": -6.5,
+            "cagr_pct": -2.4,
+            "max_dd_pct": 28.2,
+            "orders_per_month": 116.0,
+            "turnover_per_month": 9.7
+          },
+          "test_cost_x2": {
+            "sharpe": -0.26,
+            "return_pct": -24.6,
+            "cagr_pct": -9.5,
+            "max_dd_pct": 34.6,
+            "orders_per_month": 116.0,
+            "turnover_per_month": 9.7
+          }
+        },
+        {
+          "params": {
+            "lookback_days": 28,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 1.22,
+            "return_pct": 392.6,
+            "cagr_pct": 48.9,
+            "max_dd_pct": 32.1,
+            "orders_per_month": 28.0,
+            "turnover_per_month": 3.6
+          },
+          "test": {
+            "sharpe": 0.05,
+            "return_pct": -5.8,
+            "cagr_pct": -2.1,
+            "max_dd_pct": 30.5,
+            "orders_per_month": 40.0,
+            "turnover_per_month": 3.4
+          },
+          "test_cost_x2": {
+            "sharpe": -0.05,
+            "return_pct": -12.7,
+            "cagr_pct": -4.7,
+            "max_dd_pct": 32.4,
+            "orders_per_month": 40.0,
+            "turnover_per_month": 3.4
+          }
+        }
+      ],
+      "choice": {
+        "lookback_days": 28,
+        "hold_days": 1
+      },
+      "verdict": "NE TIENT PAS"
+    },
+    "xs_reversal": {
+      "rows": [
+        {
+          "params": {
+            "lookback_days": 1
+          },
+          "train": {
+            "sharpe": -1.39,
+            "return_pct": -95.2,
+            "cagr_pct": -53.2,
+            "max_dd_pct": 95.5,
+            "orders_per_month": 319.0,
+            "turnover_per_month": 46.7
+          },
+          "test": {
+            "sharpe": -1.95,
+            "return_pct": -76.7,
+            "cagr_pct": -40.2,
+            "max_dd_pct": 82.4,
+            "orders_per_month": 472.0,
+            "turnover_per_month": 46.8
+          },
+          "test_cost_x2": {
+            "sharpe": -3.43,
+            "return_pct": -91.7,
+            "cagr_pct": -58.5,
+            "max_dd_pct": 93.4,
+            "orders_per_month": 472.0,
+            "turnover_per_month": 46.8
+          }
+        },
+        {
+          "params": {
+            "lookback_days": 3
+          },
+          "train": {
+            "sharpe": -1.02,
+            "return_pct": -91.3,
+            "cagr_pct": -45.7,
+            "max_dd_pct": 91.9,
+            "orders_per_month": 216.0,
+            "turnover_per_month": 28.2
+          },
+          "test": {
+            "sharpe": -1.25,
+            "return_pct": -63.1,
+            "cagr_pct": -29.7,
+            "max_dd_pct": 68.1,
+            "orders_per_month": 316.0,
+            "turnover_per_month": 27.8
+          },
+          "test_cost_x2": {
+            "sharpe": -2.1,
+            "return_pct": -80.1,
+            "cagr_pct": -43.4,
+            "max_dd_pct": 81.9,
+            "orders_per_month": 316.0,
+            "turnover_per_month": 27.8
+          }
+        }
+      ],
+      "choice": {
+        "lookback_days": 3
+      },
+      "verdict": "NE TIENT PAS"
+    },
+    "combo_mom_carry": {
+      "rows": [
+        {
+          "params": {
+            "mom_weight": 0.5,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 1.66,
+            "return_pct": 657.9,
+            "cagr_pct": 65.9,
+            "max_dd_pct": 26.0,
+            "orders_per_month": 108.0,
+            "turnover_per_month": 13.6
+          },
+          "test": {
+            "sharpe": 1.22,
+            "return_pct": 101.5,
+            "cagr_pct": 28.0,
+            "max_dd_pct": 11.2,
+            "orders_per_month": 170.0,
+            "turnover_per_month": 14.2
+          },
+          "test_cost_x2": {
+            "sharpe": 0.72,
+            "return_pct": 47.1,
+            "cagr_pct": 14.6,
+            "max_dd_pct": 16.4,
+            "orders_per_month": 170.0,
+            "turnover_per_month": 14.2
+          }
+        },
+        {
+          "params": {
+            "mom_weight": 0.5,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 1.07,
+            "return_pct": 235.1,
+            "cagr_pct": 35.3,
+            "max_dd_pct": 37.9,
+            "orders_per_month": 36.0,
+            "turnover_per_month": 4.7
+          },
+          "test": {
+            "sharpe": 1.53,
+            "return_pct": 152.0,
+            "cagr_pct": 38.5,
+            "max_dd_pct": 13.1,
+            "orders_per_month": 54.0,
+            "turnover_per_month": 4.7
+          },
+          "test_cost_x2": {
+            "sharpe": 1.37,
+            "return_pct": 127.2,
+            "cagr_pct": 33.6,
+            "max_dd_pct": 13.9,
+            "orders_per_month": 54.0,
+            "turnover_per_month": 4.7
+          }
+        },
+        {
+          "params": {
+            "mom_weight": 0.7,
+            "hold_days": 1
+          },
+          "train": {
+            "sharpe": 1.28,
+            "return_pct": 436.1,
+            "cagr_pct": 52.1,
+            "max_dd_pct": 42.7,
+            "orders_per_month": 119.0,
+            "turnover_per_month": 15.0
+          },
+          "test": {
+            "sharpe": 1.46,
+            "return_pct": 144.8,
+            "cagr_pct": 37.1,
+            "max_dd_pct": 15.1,
+            "orders_per_month": 177.0,
+            "turnover_per_month": 14.8
+          },
+          "test_cost_x2": {
+            "sharpe": 0.97,
+            "return_pct": 76.4,
+            "cagr_pct": 22.2,
+            "max_dd_pct": 20.5,
+            "orders_per_month": 177.0,
+            "turnover_per_month": 14.8
+          }
+        },
+        {
+          "params": {
+            "mom_weight": 0.7,
+            "hold_days": 7
+          },
+          "train": {
+            "sharpe": 0.89,
+            "return_pct": 180.4,
+            "cagr_pct": 29.4,
+            "max_dd_pct": 40.2,
+            "orders_per_month": 36.0,
+            "turnover_per_month": 4.7
+          },
+          "test": {
+            "sharpe": 1.05,
+            "return_pct": 91.0,
+            "cagr_pct": 25.6,
+            "max_dd_pct": 16.9,
+            "orders_per_month": 54.0,
+            "turnover_per_month": 4.7
+          },
+          "test_cost_x2": {
+            "sharpe": 0.9,
+            "return_pct": 72.0,
+            "cagr_pct": 21.1,
+            "max_dd_pct": 17.6,
+            "orders_per_month": 54.0,
+            "turnover_per_month": 4.7
+          }
+        }
+      ],
+      "choice": {
+        "mom_weight": 0.5,
+        "hold_days": 1
+      },
+      "verdict": "TIENT"
+    },
+    "small_account": {
+      "rows": [
+        {
+          "params": {
+            "signal": "carry",
+            "k_per_side": 2
+          },
+          "train": {
+            "sharpe": 1.04,
+            "return_pct": 307.1,
+            "cagr_pct": 42.0,
+            "max_dd_pct": 55.1,
+            "orders_per_month": 19.0,
+            "turnover_per_month": 4.9
+          },
+          "test": {
+            "sharpe": 1.0,
+            "return_pct": 114.0,
+            "cagr_pct": 30.8,
+            "max_dd_pct": 22.7,
+            "orders_per_month": 22.0,
+            "turnover_per_month": 5.5
+          },
+          "test_cost_x2": {
+            "sharpe": 0.86,
+            "return_pct": 89.5,
+            "cagr_pct": 25.3,
+            "max_dd_pct": 23.8,
+            "orders_per_month": 22.0,
+            "turnover_per_month": 5.5
+          }
+        },
+        {
+          "params": {
+            "signal": "carry",
+            "k_per_side": 3
+          },
+          "train": {
+            "sharpe": 0.59,
+            "return_pct": 79.2,
+            "cagr_pct": 15.7,
+            "max_dd_pct": 44.6,
+            "orders_per_month": 26.0,
+            "turnover_per_month": 4.4
+          },
+          "test": {
+            "sharpe": 1.25,
+            "return_pct": 136.6,
+            "cagr_pct": 35.5,
+            "max_dd_pct": 17.6,
+            "orders_per_month": 30.0,
+            "turnover_per_month": 5.1
+          },
+          "test_cost_x2": {
+            "sharpe": 1.1,
+            "return_pct": 111.3,
+            "cagr_pct": 30.2,
+            "max_dd_pct": 19.1,
+            "orders_per_month": 30.0,
+            "turnover_per_month": 5.1
+          }
+        },
+        {
+          "params": {
+            "signal": "carry",
+            "k_per_side": 5
+          },
+          "train": {
+            "sharpe": 0.53,
+            "return_pct": 65.4,
+            "cagr_pct": 13.4,
+            "max_dd_pct": 38.2,
+            "orders_per_month": 35.0,
+            "turnover_per_month": 3.8
+          },
+          "test": {
+            "sharpe": 1.24,
+            "return_pct": 101.4,
+            "cagr_pct": 28.0,
+            "max_dd_pct": 19.0,
+            "orders_per_month": 43.0,
+            "turnover_per_month": 4.4
+          },
+          "test_cost_x2": {
+            "sharpe": 1.08,
+            "return_pct": 82.6,
+            "cagr_pct": 23.7,
+            "max_dd_pct": 20.1,
+            "orders_per_month": 43.0,
+            "turnover_per_month": 4.4
+          }
+        },
+        {
+          "params": {
+            "signal": "blend_50",
+            "k_per_side": 2
+          },
+          "train": {
+            "sharpe": 0.88,
+            "return_pct": 240.3,
+            "cagr_pct": 35.8,
+            "max_dd_pct": 57.6,
+            "orders_per_month": 22.0,
+            "turnover_per_month": 5.5
+          },
+          "test": {
+            "sharpe": 0.79,
+            "return_pct": 97.6,
+            "cagr_pct": 27.1,
+            "max_dd_pct": 29.1,
+            "orders_per_month": 24.0,
+            "turnover_per_month": 6.1
+          },
+          "test_cost_x2": {
+            "sharpe": 0.67,
+            "return_pct": 72.7,
+            "cagr_pct": 21.2,
+            "max_dd_pct": 31.9,
+            "orders_per_month": 24.0,
+            "turnover_per_month": 6.1
+          }
+        },
+        {
+          "params": {
+            "signal": "blend_50",
+            "k_per_side": 3
+          },
+          "train": {
+            "sharpe": 1.04,
+            "return_pct": 275.9,
+            "cagr_pct": 39.2,
+            "max_dd_pct": 46.3,
+            "orders_per_month": 29.0,
+            "turnover_per_month": 4.9
+          },
+          "test": {
+            "sharpe": 1.06,
+            "return_pct": 126.9,
+            "cagr_pct": 33.5,
+            "max_dd_pct": 18.9,
+            "orders_per_month": 33.0,
+            "turnover_per_month": 5.5
+          },
+          "test_cost_x2": {
+            "sharpe": 0.92,
+            "return_pct": 100.7,
+            "cagr_pct": 27.9,
+            "max_dd_pct": 19.6,
+            "orders_per_month": 33.0,
+            "turnover_per_month": 5.5
+          }
+        },
+        {
+          "params": {
+            "signal": "blend_50",
+            "k_per_side": 5
+          },
+          "train": {
+            "sharpe": 1.39,
+            "return_pct": 342.0,
+            "cagr_pct": 45.0,
+            "max_dd_pct": 33.6,
+            "orders_per_month": 38.0,
+            "turnover_per_month": 4.2
+          },
+          "test": {
+            "sharpe": 1.45,
+            "return_pct": 157.8,
+            "cagr_pct": 39.6,
+            "max_dd_pct": 16.1,
+            "orders_per_month": 48.0,
+            "turnover_per_month": 4.9
+          },
+          "test_cost_x2": {
+            "sharpe": 1.29,
+            "return_pct": 131.1,
+            "cagr_pct": 34.4,
+            "max_dd_pct": 17.2,
+            "orders_per_month": 48.0,
+            "turnover_per_month": 4.9
+          }
+        },
+        {
+          "params": {
+            "signal": "blend_70",
+            "k_per_side": 2
+          },
+          "train": {
+            "sharpe": 0.89,
+            "return_pct": 264.3,
+            "cagr_pct": 38.1,
+            "max_dd_pct": 49.9,
+            "orders_per_month": 22.0,
+            "turnover_per_month": 5.5
+          },
+          "test": {
+            "sharpe": 0.82,
+            "return_pct": 94.1,
+            "cagr_pct": 26.3,
+            "max_dd_pct": 31.6,
+            "orders_per_month": 24.0,
+            "turnover_per_month": 6.2
+          },
+          "test_cost_x2": {
+            "sharpe": 0.69,
+            "return_pct": 69.3,
+            "cagr_pct": 20.4,
+            "max_dd_pct": 33.7,
+            "orders_per_month": 24.0,
+            "turnover_per_month": 6.2
+          }
+        },
+        {
+          "params": {
+            "signal": "blend_70",
+            "k_per_side": 3
+          },
+          "train": {
+            "sharpe": 0.92,
+            "return_pct": 221.6,
+            "cagr_pct": 33.9,
+            "max_dd_pct": 44.8,
+            "orders_per_month": 29.0,
+            "turnover_per_month": 5.1
+          },
+          "test": {
+            "sharpe": 1.01,
+            "return_pct": 110.8,
+            "cagr_pct": 30.1,
+            "max_dd_pct": 28.0,
+            "orders_per_month": 33.0,
+            "turnover_per_month": 5.6
+          },
+          "test_cost_x2": {
+            "sharpe": 0.87,
+            "return_pct": 86.4,
+            "cagr_pct": 24.5,
+            "max_dd_pct": 29.7,
+            "orders_per_month": 33.0,
+            "turnover_per_month": 5.6
+          }
+        },
+        {
+          "params": {
+            "signal": "blend_70",
+            "k_per_side": 5
+          },
+          "train": {
+            "sharpe": 0.77,
+            "return_pct": 119.3,
+            "cagr_pct": 21.7,
+            "max_dd_pct": 34.0,
+            "orders_per_month": 40.0,
+            "turnover_per_month": 4.4
+          },
+          "test": {
+            "sharpe": 1.12,
+            "return_pct": 113.9,
+            "cagr_pct": 30.8,
+            "max_dd_pct": 18.0,
+            "orders_per_month": 48.0,
+            "turnover_per_month": 5.0
+          },
+          "test_cost_x2": {
+            "sharpe": 0.97,
+            "return_pct": 91.5,
+            "cagr_pct": 25.7,
+            "max_dd_pct": 19.6,
+            "orders_per_month": 48.0,
+            "turnover_per_month": 5.0
+          }
+        }
+      ],
+      "choice": {
+        "signal": "blend_50",
+        "k_per_side": 5
+      },
+      "verdict": "TIENT"
+    },
+    "pairs_ou": {
+      "rows": [
+        {
+          "params": {
+            "z_entry": 1.5,
+            "window_days": 30
+          },
+          "train": {
+            "sharpe": -1.64,
+            "return_pct": -59.9,
+            "cagr_pct": -20.4,
+            "max_dd_pct": 60.7,
+            "orders_per_month": 88.0,
+            "turnover_per_month": 2.3
+          },
+          "test": {
+            "sharpe": -1.31,
+            "return_pct": -44.7,
+            "cagr_pct": -18.9,
+            "max_dd_pct": 49.2,
+            "orders_per_month": 117.0,
+            "turnover_per_month": 3.7
+          },
+          "test_cost_x2": {
+            "sharpe": -1.5,
+            "return_pct": -49.1,
+            "cagr_pct": -21.2,
+            "max_dd_pct": 53.0,
+            "orders_per_month": 117.0,
+            "turnover_per_month": 3.7
+          }
+        },
+        {
+          "params": {
+            "z_entry": 1.5,
+            "window_days": 60
+          },
+          "train": {
+            "sharpe": -1.19,
+            "return_pct": -42.7,
+            "cagr_pct": -13.0,
+            "max_dd_pct": 43.3,
+            "orders_per_month": 64.0,
+            "turnover_per_month": 1.3
+          },
+          "test": {
+            "sharpe": -0.47,
+            "return_pct": -18.4,
+            "cagr_pct": -6.9,
+            "max_dd_pct": 31.3,
+            "orders_per_month": 82.0,
+            "turnover_per_month": 2.0
+          },
+          "test_cost_x2": {
+            "sharpe": -0.59,
+            "return_pct": -22.0,
+            "cagr_pct": -8.4,
+            "max_dd_pct": 33.1,
+            "orders_per_month": 82.0,
+            "turnover_per_month": 2.0
+          }
+        },
+        {
+          "params": {
+            "z_entry": 2.0,
+            "window_days": 30
+          },
+          "train": {
+            "sharpe": -1.86,
+            "return_pct": -63.3,
+            "cagr_pct": -22.1,
+            "max_dd_pct": 64.0,
+            "orders_per_month": 71.0,
+            "turnover_per_month": 1.8
+          },
+          "test": {
+            "sharpe": -0.78,
+            "return_pct": -28.2,
+            "cagr_pct": -11.0,
+            "max_dd_pct": 39.7,
+            "orders_per_month": 91.0,
+            "turnover_per_month": 2.8
+          },
+          "test_cost_x2": {
+            "sharpe": -0.94,
+            "return_pct": -32.5,
+            "cagr_pct": -13.0,
+            "max_dd_pct": 41.1,
+            "orders_per_month": 91.0,
+            "turnover_per_month": 2.8
+          }
+        },
+        {
+          "params": {
+            "z_entry": 2.0,
+            "window_days": 60
+          },
+          "train": {
+            "sharpe": -0.77,
+            "return_pct": -32.1,
+            "cagr_pct": -9.2,
+            "max_dd_pct": 34.5,
+            "orders_per_month": 55.0,
+            "turnover_per_month": 1.1
+          },
+          "test": {
+            "sharpe": -0.44,
+            "return_pct": -16.1,
+            "cagr_pct": -6.0,
+            "max_dd_pct": 27.6,
+            "orders_per_month": 67.0,
+            "turnover_per_month": 1.5
+          },
+          "test_cost_x2": {
+            "sharpe": -0.53,
+            "return_pct": -18.9,
+            "cagr_pct": -7.1,
+            "max_dd_pct": 28.8,
+            "orders_per_month": 67.0,
+            "turnover_per_month": 1.5
+          }
+        }
+      ],
+      "choice": {
+        "z_entry": 2.0,
+        "window_days": 60
+      },
+      "verdict": "NE TIENT PAS"
+    }
+  },
+  "periods": {
+    "train": [
+      "2020-01",
+      "2023-12"
+    ],
+    "test": [
+      "2024-01",
+      "2026-10"
+    ]
+  },
+  "luck_test": {
+    "n_trials": 150,
+    "var_trial_sharpes_daily": 0.002249342461687177,
+    "strategies": {
+      "xs_carry": {
+        "sharpe_annualized": 1.09,
+        "prob_true_sharpe_positive": 0.971,
+        "prob_not_luck_after_trials": 0.011
+      },
+      "xs_momentum": {
+        "sharpe_annualized": 0.04,
+        "prob_true_sharpe_positive": 0.525,
+        "prob_not_luck_after_trials": 0.0
+      },
+      "xs_reversal": {
+        "sharpe_annualized": -1.25,
+        "prob_true_sharpe_positive": 0.015,
+        "prob_not_luck_after_trials": 0.0
+      },
+      "combo_mom_carry": {
+        "sharpe_annualized": 1.22,
+        "prob_true_sharpe_positive": 0.981,
+        "prob_not_luck_after_trials": 0.022
+      },
+      "small_account": {
+        "sharpe_annualized": 1.45,
+        "prob_true_sharpe_positive": 0.993,
+        "prob_not_luck_after_trials": 0.05
+      },
+      "pairs_ou": {
+        "sharpe_annualized": -0.44,
+        "prob_true_sharpe_positive": 0.231,
+        "prob_not_luck_after_trials": 0.0
+      },
+      "momentum_6h (d\u00e9j\u00e0 retenu)": {
+        "sharpe_annualized": 0.74,
+        "prob_true_sharpe_positive": 0.905,
+        "prob_not_luck_after_trials": 0.001
+      },
+      "prime_coinbase (d\u00e9j\u00e0 retenu)": {
+        "sharpe_annualized": 0.92,
+        "prob_true_sharpe_positive": 0.938,
+        "prob_not_luck_after_trials": 0.006
+      }
+    }
+  }
+}
