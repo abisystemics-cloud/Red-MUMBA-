@@ -15,7 +15,7 @@ Familles :
   semaine (`ridge` ou `gbm`, voir lab/ml.py).
 `gate` (facultatif) branche une règle sur le contexte : exposition pleine quand le feu
 est vert, divisée par deux quand il est rouge. Feux : nasdaq, stable, premium, cot, gpr,
-fomc (voir lab/context.py) et risk_on (au moins la moitié des cinq premiers au vert).
+fomc, news_tone, geo_news, fng (voir lab/context.py) et risk_on (au moins la moitié des cinq premiers au vert).
 `k` = nombre de marchés par côté (0 = 20 % de l'univers) ; `hold` = jours entre deux
 rééquilibrages, calés sur le calendrier (jour epoch % hold) pour que backtest et temps
 réel tombent sur les mêmes dates.
@@ -64,7 +64,7 @@ def default_catalog() -> list[Spec]:
     return cat
 
 
-GATES = ("nasdaq", "stable", "premium", "cot", "gpr", "fomc", "risk_on")
+GATES = ("nasdaq", "stable", "premium", "cot", "gpr", "fomc", "risk_on", "news_tone", "geo_news", "fng")
 
 
 def gate_flag(panel: dict, gate: str) -> np.ndarray:

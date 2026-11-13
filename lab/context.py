@@ -11,27 +11,65 @@ réel de publication (aucun regard vers le futur) :
 - gpr     : risque géopolitique calme — moyenne 7 j ≤ 1,5 × moyenne 1 an (indice
             Caldara-Iacoviello, +2 j) ;
 - fomc    : hors des 24 h précédant une décision de la Fed.
+Et trois feux tirés d'un balayage du web, sans aucun LLM (ce sont des comptages) :
+- news_tone : ton moyen des articles de presse mondiaux sur les cryptos (GDELT, qui
+              indexe la presse en ligne de presque tous les pays) meilleur sur 7 jours
+              que sur 90 jours ;
+- geo_news  : part de la presse mondiale consacrée aux sanctions, invasions et frappes
+              — calme si la moyenne 7 j ≤ 1,5 × la moyenne 1 an (GDELT, quotidien, là où
+              l'indice GPR a plusieurs jours de retard) ;
+- fng       : indice « Fear & Greed » des cryptos au-dessus de sa moyenne 30 jours
+              (alternative.me : volatilité, volumes, réseaux sociaux, recherches Google).
 Une source en panne donne `None` : les règles qui en dépendent la traitent comme
 neutre, et le rapport le signale.
 """
 from __future__ import annotations
 
+import json
 import shutil
+import time
+import urllib.parse
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import numpy as np
 
 from scripts.bar_research import _get, _ms, _rows, months
-from scripts.filter_research import above_sma, daily_flag_to_bars, fomc_allow, load_nasdaq, load_stablecoins, rising
+from scripts.filter_research import (_fetch, above_sma, daily_flag_to_bars, fomc_allow, load_nasdaq, load_stablecoins,
+                                     rising)
 from scripts.institution_research import (calm, load_binance_spot_daily, load_coinbase_daily, load_cot, load_gpr,
-                                          positive_mean)
+                                          positive_mean, trailing_mean)
 
 DAY_MS = 86_400_000
-KEYS = ("nasdaq", "stable", "premium", "cot", "gpr", "fomc")
+KEYS = ("nasdaq", "stable", "premium", "cot", "gpr", "fomc", "news_tone", "geo_news", "fng")
+CRYPTO_QUERY = "(bitcoin OR cryptocurrency OR ethereum)"
+GEO_QUERY = '(sanctions OR invasion OR airstrike OR "missile attack")'
 LABELS = {"nasdaq": "Nasdaq au-dessus de sa moyenne 100 j", "stable": "Stablecoins en hausse sur 30 j",
           "premium": "Prime Coinbase positive (7 j)", "cot": "Gérants d'actifs CME en hausse (4 sem.)",
-          "gpr": "Risque géopolitique calme", "fomc": "Hors fenêtre de décision de la Fed"}
+          "gpr": "Risque géopolitique calme", "fomc": "Hors fenêtre de décision de la Fed",
+          "news_tone": "Ton de la presse mondiale sur les cryptos en amélioration",
+          "geo_news": "Presse mondiale : tensions géopolitiques calmes", "fng": "Indice Fear & Greed au-dessus de sa moyenne 30 j"}
+
+
+def _gdelt_daily(query: str, mode: str, start: datetime, cache: Path, name: str) -> tuple[np.ndarray, np.ndarray]:
+    """Série journalière GDELT (ton moyen ou part de la couverture) pour une recherche."""
+    now = datetime.now(timezone.utc)
+    url = ("https://api.gdeltproject.org/api/v2/doc/doc?query=" + urllib.parse.quote(query) + f"&mode={mode}&format=json"
+           f"&startdatetime={start:%Y%m%d}000000&enddatetime={now:%Y%m%d%H%M%S}")
+    raw = _fetch(url, cache / "macro" / name)
+    time.sleep(6)   # GDELT : une requête toutes les 5 secondes
+    acc: dict[float, list[float]] = {}
+    for d in json.loads(raw)["timeline"][0]["data"]:
+        day = datetime.strptime(str(d["date"])[:8], "%Y%m%d").replace(tzinfo=timezone.utc).timestamp() * 1000
+        acc.setdefault(day, []).append(float(d["value"]))
+    ks = sorted(acc)
+    return np.asarray(ks), np.asarray([float(np.mean(acc[k])) for k in ks])
+
+
+def _fear_greed(cache: Path) -> tuple[np.ndarray, np.ndarray]:
+    raw = _fetch("https://api.alternative.me/fng/?limit=0&format=json", cache / "macro" / "fng.json")
+    rows = sorted((float(r["timestamp"]) * 1000, float(r["value"])) for r in json.loads(raw)["data"])
+    return np.asarray([r[0] for r in rows]), np.asarray([r[1] for r in rows])
 
 
 def _spot_recent(cache: Path, n_days: int) -> dict[float, float]:
@@ -101,6 +139,29 @@ def build_context(days: np.ndarray, cache: Path, live: bool) -> tuple[dict, dict
         prem = np.asarray([cb[k] / spot[k] - 1 for k in common])
         return daily_flag_to_bars(close, common, positive_mean(prem, 7), 1.01), f"Coinbase vs Binance spot, {len(common)} jours"
 
+    def news_tone():
+        t, v = _gdelt_daily(CRYPTO_QUERY, "timelinetone", first, cache, "gdelt_tone.json")
+        if len(t) < 120:
+            return None, f"indisponible ({len(t)} jours)"
+        short, long_ = trailing_mean(v, 7), trailing_mean(v, 90)
+        return daily_flag_to_bars(close, t, np.isfinite(long_) & (short > long_), 1), f"GDELT, {len(t)} jours"
+
+    def geo_news():
+        t, v = _gdelt_daily(GEO_QUERY, "timelinevol", first, cache, "gdelt_geo.json")
+        if len(t) < 380:
+            return None, f"indisponible ({len(t)} jours)"
+        return daily_flag_to_bars(close, t, calm(v, 1.5), 1), f"GDELT, {len(t)} jours"
+
+    def fng():
+        t, v = _fear_greed(cache)
+        if len(t) < 60:
+            return None, "indisponible"
+        m = trailing_mean(v, 30)
+        return daily_flag_to_bars(close, t, np.isfinite(m) & (v > m), 0), f"alternative.me, {len(t)} jours"
+
+    attempt("news_tone", news_tone)
+    attempt("geo_news", geo_news)
+    attempt("fng", fng)
     attempt("nasdaq", nasdaq)
     attempt("stable", stable)
     attempt("cot", cot)
