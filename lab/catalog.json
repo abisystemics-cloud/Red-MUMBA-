@@ -1,0 +1,186 @@
+[
+ {
+  "name": "blend(carry=7,hold=1,k=0,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 1,
+   "k": 0,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "blend(carry=7,hold=1,k=3,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 1,
+   "k": 3,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "blend(carry=7,hold=7,k=0,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 7,
+   "k": 0,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "blend(carry=7,hold=7,k=3,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 7,
+   "k": 3,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "blend(carry=7,hold=1,k=0,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 1,
+   "k": 0,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "blend(carry=7,hold=1,k=3,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 1,
+   "k": 3,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "blend(carry=7,hold=7,k=0,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 7,
+   "k": 0,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "blend(carry=7,hold=7,k=3,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "hold": 7,
+   "k": 3,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "carry(carry=3,hold=7,k=0)",
+  "family": "carry",
+  "params": {
+   "carry": 3,
+   "hold": 7,
+   "k": 0
+  }
+ },
+ {
+  "name": "carry(carry=3,hold=7,k=3)",
+  "family": "carry",
+  "params": {
+   "carry": 3,
+   "hold": 7,
+   "k": 3
+  }
+ },
+ {
+  "name": "carry(carry=7,hold=7,k=0)",
+  "family": "carry",
+  "params": {
+   "carry": 7,
+   "hold": 7,
+   "k": 0
+  }
+ },
+ {
+  "name": "carry(carry=7,hold=7,k=3)",
+  "family": "carry",
+  "params": {
+   "carry": 7,
+   "hold": 7,
+   "k": 3
+  }
+ },
+ {
+  "name": "carry(carry=14,hold=7,k=0)",
+  "family": "carry",
+  "params": {
+   "carry": 14,
+   "hold": 7,
+   "k": 0
+  }
+ },
+ {
+  "name": "carry(carry=14,hold=7,k=3)",
+  "family": "carry",
+  "params": {
+   "carry": 14,
+   "hold": 7,
+   "k": 3
+  }
+ },
+ {
+  "name": "xsmom(hold=7,k=0,mom=14)",
+  "family": "xsmom",
+  "params": {
+   "hold": 7,
+   "k": 0,
+   "mom": 14
+  }
+ },
+ {
+  "name": "xsmom(hold=7,k=0,mom=28)",
+  "family": "xsmom",
+  "params": {
+   "hold": 7,
+   "k": 0,
+   "mom": 28
+  }
+ },
+ {
+  "name": "trend(hold=1,mom=7)",
+  "family": "trend",
+  "params": {
+   "hold": 1,
+   "mom": 7
+  }
+ },
+ {
+  "name": "trend(hold=1,mom=14)",
+  "family": "trend",
+  "params": {
+   "hold": 1,
+   "mom": 14
+  }
+ },
+ {
+  "name": "trend(hold=1,mom=28)",
+  "family": "trend",
+  "params": {
+   "hold": 1,
+   "mom": 28
+  }
+ }
+]
