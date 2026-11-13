@@ -58,6 +58,13 @@ def _gdelt_daily(query: str, mode: str, start: datetime, cache: Path, name: str)
            f"&startdatetime={start:%Y%m%d}000000&enddatetime={now:%Y%m%d%H%M%S}")
     raw = _fetch(url, cache / "macro" / name)
     time.sleep(6)   # GDELT : une requête toutes les 5 secondes
+    if not raw or not raw.lstrip().startswith(b"{"):   # limite de débit ou page d'erreur : un second essai, plus tard
+        (cache / "macro" / name).unlink(missing_ok=True)
+        time.sleep(25)
+        raw = _fetch(url, cache / "macro" / name)
+        time.sleep(6)
+    if not raw:
+        raise RuntimeError("GDELT ne répond pas")
     acc: dict[float, list[float]] = {}
     for d in json.loads(raw)["timeline"][0]["data"]:
         day = datetime.strptime(str(d["date"])[:8], "%Y%m%d").replace(tzinfo=timezone.utc).timestamp() * 1000

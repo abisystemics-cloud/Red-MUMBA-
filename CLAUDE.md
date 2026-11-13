@@ -9,11 +9,13 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
 - **Orientation décidée par le propriétaire (13/11)** : il ne cherche pas « la » stratégie mais un système complet —
   règles, données, exécution, recherche — autonome, auto-apprenant, sans LLM dans les décisions ; Claude supervise au début.
 - **Laboratoire autonome en service** (`lab/`, workflow `.github/workflows/lab.yml`, simulation uniquement) :
-  - `lab/catalog.py` : catalogue de 39 règles (familles blend / carry / xsmom / trend + règles `gate=` branchées sur le
+  - `lab/catalog.py` : catalogue de 45 règles (familles blend / carry / xsmom / trend + règles `gate=` branchées sur le
     contexte, règle `premium`, règles `ml`) — ajouter une idée = ajouter une famille ;
   - `lab/context.py` : six feux de contexte journaliers avec délais de publication (Nasdaq > SMA100, stablecoins en hausse 30 j,
     prime Coinbase 7 j, gérants d'actifs CME en hausse 4 sem., risque géopolitique calme, hors fenêtre FOMC — la liste FOMC
-    codée en dur dans `scripts/filter_research.py` s'arrête fin 2026 : à prolonger) ; source en panne = neutre + signalée ;
+    codée en dur dans `scripts/filter_research.py` s'arrête fin 2026 : à prolonger) + trois feux « balayage du web » sans LLM :
+    ton de la presse mondiale crypto et couverture géopolitique (GDELT DOC API, 1 requête / 5 s, parfois en échec → neutre),
+    indice Fear & Greed (alternative.me) ; source en panne = neutre + signalée ;
   - `lab/ml.py` : ridge + gradient boosting ré-entraînés chaque lundi (10 caractéristiques de marché + 6 feux), fiche de score
     en walk-forward annuel, modèles sauvés dans `lab-state:lab/models/` (ridge en JSON, gbm en pickle, sklearn 1.9.1 épinglé) ;
   - `lab/hl_data.py` : clôtures journalières + funding via l'API publique Hyperliquid (30 marchés, sans clé) ;
@@ -23,9 +25,11 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   - `lab/governor.py` : champion provisoire puis champion après 28 jours de paper ; suspension si SPRT rejette ou baisse > 25 % ;
   - planification : quotidien 00:25 UTC, hebdo lundi 02:40 UTC ; déclenchement manuel = push sur `lab-requests`
     (`git push origin main:refs/heads/lab-requests --force`) ; état et rapport sur la branche `lab-state` (`lab/report.md`).
-  - Passage du 13/11/2026 (39 règles) : 24 passent la porte, dont les mélanges avec feux de contexte en tête ; `premium`, `ml` et `trend` ne la passent pas (ML : Sharpe < 2024 négatif, ≥ 2024 0,7–0,8). Premier passage (19 règles) : 10 passaient ; champion provisoire `blend(carry=7,hold=1,k=0,mom=14,w=0.7)` ;
+  - Passage du 13/11/2026 (45 règles) : 30 passent la porte (39 règles : 24), dont les mélanges avec feux de contexte en tête ; `premium`, `ml` et `trend` ne la passent pas (ML : Sharpe < 2024 négatif, ≥ 2024 0,7–0,8). Premier passage (19 règles) : 10 passaient ; champion provisoire `blend(carry=7,hold=1,k=0,mom=14,w=0.7)` ;
     avec 50 $ les règles à 6+6 et 3+3 positions n'exécutent rien (ordres < 10 $).
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
+- Les connecteurs de Claude (Keel, Coinversa, Bigdata.com, Firecrawl, PostHog…) appartiennent à la session Claude, pas au bot :
+  le bot ne peut appeler que des API (gratuites aujourd'hui ; Coinversa/Perplexity/Firecrawl exigeraient des clés en secrets GitHub).
 - **Pas encore fait** : brancher le champion du laboratoire sur l'agent d'exécution du bot (`agents/`), qui contient toujours
   l'ancienne stratégie microstructure (perdante) ; agent « mathématicien » temps réel ; familles rapides et setups des livres
   (VWAP, Wyckoff, cassures, momentum 6 h) dans le catalogue ; gros traders Coinversa ; générateur de règles. Rien n'est déployé en réel ; aucun secret requis par le laboratoire.
