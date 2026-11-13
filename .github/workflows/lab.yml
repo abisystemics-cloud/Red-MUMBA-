@@ -36,7 +36,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: pip install numpy
+      - run: pip install numpy scikit-learn==1.9.1 xlrd
 
       - name: Mode
         id: m

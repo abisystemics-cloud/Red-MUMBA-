@@ -8,7 +8,14 @@ Familles :
 - blend : rang(momentum L j) × w + rang(funding bas sur n j) × (1 − w), long/short ;
 - carry : funding seul (long les funding bas, short les hauts) ;
 - xsmom : momentum relatif seul, long/short ;
-- trend : chaque marché en hausse sur L jours est acheté (long seulement).
+- trend : chaque marché en hausse sur L jours est acheté (long seulement) ;
+- premium : BTC, ETH et SOL achetés tant que la prime Coinbase est positive (demande
+  institutionnelle américaine) ;
+- ml : long/short sur les scores d'un modèle de machine learning ré-entraîné chaque
+  semaine (`ridge` ou `gbm`, voir lab/ml.py).
+`gate` (facultatif) branche une règle sur le contexte : exposition pleine quand le feu
+est vert, divisée par deux quand il est rouge. Feux : nasdaq, stable, premium, cot, gpr,
+fomc (voir lab/context.py) et risk_on (au moins la moitié des cinq premiers au vert).
 `k` = nombre de marchés par côté (0 = 20 % de l'univers) ; `hold` = jours entre deux
 rééquilibrages, calés sur le calendrier (jour epoch % hold) pour que backtest et temps
 réel tombent sur les mêmes dates.
@@ -31,9 +38,10 @@ class Spec:
 
     @property
     def name(self) -> str:
-        return self.family + "(" + ",".join(f"{k}={v:g}" for k, v in self.params) + ")"
+        fmt = lambda v: v if isinstance(v, str) else f"{v:g}"  # noqa: E731
+        return self.family + "(" + ",".join(f"{k}={fmt(v)}" for k, v in self.params) + ")"
 
-    def p(self, key: str, default: float = 0) -> float:
+    def p(self, key: str, default=0):
         return dict(self.params).get(key, default)
 
 
@@ -46,7 +54,28 @@ def default_catalog() -> list[Spec]:
     cat += [spec("carry", carry=n, hold=7, k=k) for n in (3, 7, 14) for k in (0, 3)]
     cat += [spec("xsmom", mom=L, hold=7, k=0) for L in (14, 28)]
     cat += [spec("trend", mom=L, hold=1) for L in (7, 14, 28)]
+    # règles branchées sur le contexte (macro, institutions, géopolitique)
+    cat += [spec("blend", w=w, mom=14, carry=7, hold=h, k=0, gate=g)
+            for (w, h) in ((0.5, 7), (0.7, 1)) for g in GATES]
+    cat += [spec("trend", mom=14, hold=1, gate=g) for g in ("nasdaq", "premium", "risk_on")]
+    cat += [spec("premium", hold=1)]
+    # règles apprises par machine learning (ré-entraînées chaque lundi)
+    cat += [spec("ml", model=m, hold=7, k=0) for m in ("ridge", "gbm")]
     return cat
+
+
+GATES = ("nasdaq", "stable", "premium", "cot", "gpr", "fomc", "risk_on")
+
+
+def gate_flag(panel: dict, gate: str) -> np.ndarray:
+    """Feu vert (True) / rouge par jour ; une source indisponible compte comme verte."""
+    ctx = panel.get("ctx") or {}
+    T = len(panel["days"])
+    if gate == "risk_on":
+        avail = [np.asarray(ctx[g], dtype=float) for g in ("nasdaq", "stable", "premium", "cot", "gpr") if ctx.get(g) is not None]
+        return np.mean(avail, axis=0) >= 0.5 if avail else np.ones(T, bool)
+    f = ctx.get(gate)
+    return np.ones(T, bool) if f is None else np.asarray(f, dtype=bool)
 
 
 def signal(panel: dict, s: Spec) -> np.ndarray:
@@ -58,11 +87,22 @@ def signal(panel: dict, s: Spec) -> np.ndarray:
         return carry_signal(C, F, int(s.p("carry")))
     if s.family in ("xsmom", "trend"):
         return mom_signal(C, int(s.p("mom")))
+    if s.family == "ml":
+        sc = (panel.get("ml_scores") or {}).get(s.p("model"))
+        return np.full(C.shape, np.nan) if sc is None else sc
     raise ValueError(f"famille inconnue : {s.family}")
 
 
 def weights(panel: dict, s: Spec) -> np.ndarray:
     """Poids cibles (T×N) ; la ligne t n'utilise que les données ≤ clôture du jour t."""
+    if s.family == "premium":
+        T, N = panel["C"].shape
+        W = np.zeros((T, N))
+        flag = (panel.get("ctx") or {}).get("premium")
+        idx = [panel["coins"].index(c) for c in ("BTC", "ETH", "SOL") if c in panel["coins"]]
+        if flag is not None and idx:
+            W[:, idx] = np.asarray(flag, dtype=float)[:, None] / len(idx)
+        return W
     sig = signal(panel, s)
     T, N = sig.shape
     day_idx = (np.asarray(panel["days"]) // DAY_MS).astype(np.int64)
@@ -79,4 +119,7 @@ def weights(panel: dict, s: Spec) -> np.ndarray:
                 cur = xs_weights(sig[t], k_fixed=int(s.p("k")))
             started = started or bool(np.isfinite(sig[t]).any())
         W[t] = cur
+    gate = s.p("gate", None)
+    if gate:
+        W = W * np.where(gate_flag(panel, gate), 1.0, 0.5)[:, None]
     return W

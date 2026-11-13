@@ -16,7 +16,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from lab import governor, hl_data, paper, research
+from lab import context, governor, hl_data, ml, paper, research
 from lab.catalog import default_catalog
 from scripts.bar_research import Costs
 
@@ -46,6 +46,18 @@ def report(state: dict, score: dict | None, panel_info: str) -> str:
                 pos = ", ".join(f"{c} {w * cap * bk['equity']:+.0f} $" for c, w in sorted(bk["weights"].items(), key=lambda x: -x[1]))
                 md.append(f"- positions simulées pour {cap:g} $ : {pos or 'aucune (ordres sous le minimum de 10 $)'}")
         md.append("")
+    c = state.get("context")
+    if c:
+        md += ["## Contexte du jour (macro, institutions, géopolitique)", "", "| indicateur | feu | source |", "|---|---|---|"]
+        md += [f"| {context.LABELS[k]} | {'vert' if c['flags'].get(k) else 'rouge' if c['flags'].get(k) is False else 'indisponible'} | "
+               f"{c['info'].get(k, '')} |" for k in context.KEYS]
+        md.append("")
+    m = state.get("ml")
+    if m:
+        md += ["## Machine learning", "", f"Dernier entraînement le {m['trained']} sur l'historique {m['history'][0]} → {m['history'][1]} "
+               f"({m['rows']} exemples). Modèles en service aujourd'hui : {', '.join(m.get('live', [])) or 'aucun'}.", ""]
+        if m.get("ridge_top"):
+            md += ["Ce que la régression a appris (poids les plus forts) : " + ", ".join(f"{k} {v:+.3f}" for k, v in m["ridge_top"]) + ".", ""]
     md += ["## Livres de paper trading", "",
            "| règle | capital $ | jours | rendement % | pire baisse % | Sharpe | ordres | ordres ignorés (< 10 $) | état | test séquentiel | porte backtest |",
            "|---|---|---|---|---|---|---|---|---|---|---|"]
@@ -90,6 +102,20 @@ def main() -> int:
         last_full = f"{end.year - (end.month == 1):04d}-{(end.month - 2) % 12 + 1:02d}"   # dernier mois complet
         coins, _raw, days, C, F, R, _b = build_panel(Path(a.cache), a.history_from, last_full)
         hist = {"coins": coins, "days": days, "C": C, "F": F, "R": R}
+        hist["ctx"], _ = context.build_context(days, Path(a.cache), live=False)
+        hist["ml_scores"], rows, ridge_top = {}, 0, []
+        for kind in ml.MODELS:
+            try:
+                hist["ml_scores"][kind] = ml.walk_forward(hist, kind)
+                model, rows = ml.train_final(hist, kind)
+                ml.save(model, kind, sdir, {"trained": today, "rows": rows, "history": [a.history_from, last_full]})
+                if kind == "ridge":
+                    ridge_top = sorted(zip(ml.FEATURE_NAMES, [float(x) for x in model.coef_], strict=True),
+                                       key=lambda kv: -abs(kv[1]))[:5]
+            except Exception as e:  # noqa: BLE001 — un modèle qui échoue ne bloque pas le reste du laboratoire
+                log.append(f"{today} — entraînement {kind} impossible : {type(e).__name__}: {e}")
+        state["ml"] = {"trained": today, "rows": rows, "history": [a.history_from, last_full], "ridge_top": ridge_top}
+        log.append(f"{today} — modèles ML ré-entraînés sur {rows} exemples")
         score = research.scorecard(hist, catalog, cost, ms(SPLIT), ms(CLEAN_FROM))
         score["history"] = [a.history_from, last_full]
         save(sdir / "scorecard.json", score)
@@ -98,6 +124,11 @@ def main() -> int:
 
     from scripts.universe_research import CORE, OTHERS
     panel = hl_data.fetch_panel(CORE + OTHERS, now_ms=int(time.time() * 1000))
+    panel["ctx"], cinfo = context.build_context(panel["days"], Path(a.cache), live=True)
+    state["context"] = {"flags": {k: (None if v is None else bool(v[-1])) for k, v in panel["ctx"].items()}, "info": cinfo}
+    panel["ml_scores"] = {k: sc for k in ml.MODELS if (sc := ml.predict(k, sdir, panel)) is not None}
+    if "ml" in state:
+        state["ml"]["live"] = sorted(panel["ml_scores"])
     for line in paper.step_books(state, panel, catalog, cost):
         print(line, flush=True)
     log += governor.decide(state, score, paper.book_stats, today)

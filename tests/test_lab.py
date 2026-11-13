@@ -21,7 +21,7 @@ def test_catalog_names_unique_and_weights_sane():
     for s in cat:
         W = weights(p, s)
         assert np.isfinite(W).all() and np.abs(W).sum(axis=1).max() <= 1 + 1e-9
-        if s.family != "trend":
+        if s.family not in ("trend", "premium"):
             assert abs(W[-1].sum()) < 1e-9  # long/short : exposition nette nulle
     weekly = weights(p, spec("carry", carry=7, hold=7, k=3))
     idx = (p["days"] // DAY_MS).astype(int)
@@ -111,3 +111,44 @@ def test_paper_step_is_idempotent_without_new_day():
     out = paper.step_books(state, p, cat, 0.00065)
     assert "aucun nouveau jour" in out[0]
     assert snap == {k: (b["equity"], len(b["history"])) for k, b in state["books"].items()}
+
+
+def test_context_gates_scale_exposure_and_premium_rule():
+    from lab.catalog import gate_flag
+    p = _panel(N=14)
+    p["coins"][:3] = ["BTC", "ETH", "SOL"]
+    T = len(p["days"])
+    on = np.arange(T) % 2 == 0
+    p["ctx"] = {"nasdaq": on, "stable": ~on, "premium": on, "cot": None, "gpr": on, "fomc": np.ones(T, bool)}
+    base = weights(p, spec("blend", w=0.5, mom=14, carry=7, hold=1, k=0))
+    gated = weights(p, spec("blend", w=0.5, mom=14, carry=7, hold=1, k=0, gate="nasdaq"))
+    assert np.allclose(gated[on], base[on]) and np.allclose(gated[~on], base[~on] / 2)
+    assert gate_flag(p, "cot").all()                                  # source indisponible = neutre
+    assert (gate_flag(p, "risk_on") == on).all()                      # 3 feux sur 4 disponibles suivent `on`
+    prem = weights(p, spec("premium", hold=1))
+    assert np.allclose(prem[on].sum(axis=1), 1) and not prem[~on].any() and not prem[:, 3:].any()
+    assert not weights({**p, "ctx": {}}, spec("premium", hold=1)).any()   # sans donnée : à plat, pas « toujours acheteur »
+
+
+def test_ml_rules_train_save_predict(tmp_path):
+    import pytest
+    pytest.importorskip("sklearn")
+    from lab import ml
+    p = _panel(T=700, N=14)
+    p["coins"][0] = "BTC"
+    T = len(p["days"])
+    p["ctx"] = dict.fromkeys(("nasdaq", "stable", "premium", "cot", "gpr"), np.arange(T) % 3 == 0) | {"fomc": None}
+    X = ml.features(p)
+    assert X.shape == (T, 14, len(ml.FEATURE_NAMES)) and np.nanmax(X[..., -1]) == 0.5     # source absente → 0,5
+    wf = ml.walk_forward({**p, "days": (19_000 + np.arange(T)) * float(DAY_MS)}, "ridge")
+    assert np.isnan(wf[:200]).all() and np.isfinite(wf[-1]).any()     # la 1re année n'est jamais prédite
+    scores = {}
+    for kind in ml.MODELS:
+        model, rows = ml.train_final(p, kind)
+        ml.save(model, kind, tmp_path, {"trained": "2026-01-01", "rows": rows})
+        scores[kind] = ml.predict(kind, tmp_path, p)
+        assert scores[kind] is not None and np.isfinite(scores[kind][-1]).all()
+    assert ml.predict("gbm", tmp_path / "nowhere", p) is None
+    W = weights({**p, "ml_scores": scores}, spec("ml", model="gbm", hold=7, k=0))
+    assert abs(W[-1].sum()) < 1e-9 and np.abs(W[-1]).sum() > 0.99
+    assert not weights(p, spec("ml", model="gbm", hold=7, k=0)).any()  # pas de modèle → règle à plat
