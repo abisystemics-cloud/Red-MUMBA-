@@ -37,3 +37,8 @@ python scripts/supervise.py ping --reason "..."        # commande de supervision
 python main.py --go-live                               # rapport go/no-go
 python main.py --demo                                  # démo + interface http://localhost:8080 (mdp: demo)
 ```
+
+## Backtest results log
+- bt-20261112T225821 (2026-09-01→11-11, BTC+ETH, maker): 1 trade. Invalid measure — Kelly sizing hit 0 after 3 losses and never recovered (still true in live; fix before any real money).
+- bt-20261112T233005 sweep: same lock-out, 1–15 trades per setting, uninformative.
+- bt-20261113T055142 sweep (fixed sizing, CVD/POC from Binance aggTrades flow, maker+taker, 16 settings): NO-GO. Every setting loses on both train and validation (48–5400 trades). Best (entry 1.2, persistence 6, maker): −0.9 % train / −0.9 % validation, PF 0.66–0.70, fees ≈ all of the loss → no gross edge above costs. Taker strictly worse. Current strategy (short-horizon microstructure) should not trade real money.
