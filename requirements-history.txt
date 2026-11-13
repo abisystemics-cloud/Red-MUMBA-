@@ -2,3 +2,4 @@
 boto3>=1.34
 lz4>=4.3
 xlrd>=2.0                          # indice GPR (scripts/institution_research.py)
+scikit-learn>=1.4                  # modèles ML (scripts/ml_research.py)

@@ -74,3 +74,28 @@ def test_uncertainty_tools():
     out_g = [good.update(x) for x in rng.normal(1.5 / np.sqrt(365) * 0.01, 0.01, 4000)]
     out_b = [bad.update(x) for x in rng.normal(-0.0005, 0.01, 4000)]
     assert "confirmed" in out_g and "rejected" in out_b
+
+
+def test_ml_target_has_no_lookahead_and_walk_forward_purges():
+    from sklearn.linear_model import Ridge
+
+    from scripts.ml_research import HORIZON, make_features, make_target, walk_forward_scores
+    rng = np.random.default_rng(7)
+    T, N = 900, 12
+    R = rng.normal(0, 0.02, (T, N))
+    C = 100 * np.exp(np.cumsum(R, axis=0))
+    R[0] = np.nan
+    F = np.zeros((T, N))
+    y = make_target(C, F, R)
+    assert np.isnan(y[-HORIZON:]).all() and np.isfinite(y[:-HORIZON]).all()
+    # la cible du jour t ne dépend que des jours t+1..t+7
+    R2 = R.copy()
+    R2[500, 3] += 0.5  # un seul marché, sinon les rangs ne bougent pas
+    y2 = make_target(C, F, R2)
+    changed = np.flatnonzero(np.abs(np.nan_to_num(y2) - np.nan_to_num(y)).sum(axis=1) > 0)
+    assert changed.min() >= 500 - HORIZON and changed.max() <= 499
+    X = make_features(C, F, R, 0)
+    years = np.repeat([2020, 2021, 2022], 300)
+    sc, info = walk_forward_scores(X, y, years, 2021, 2022, lambda: Ridge(alpha=10.0))
+    assert np.isnan(sc[:300]).all() and np.isfinite(sc[300:]).any()
+    assert info[0][1] <= (300 - HORIZON) * N  # purge respectée
