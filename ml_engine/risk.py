@@ -87,6 +87,7 @@ def size_position(*, equity: float, px: float, is_long: bool, vol_bps: float,
         k_used = cfg.max_risk_per_trade_pct / 100
     else:
         k_used = min(k_raw * cfg.kelly_fraction, cfg.max_risk_per_trade_pct / 100)
+        k_used = max(k_used, min(getattr(cfg, "min_risk_per_trade_pct", 0.0), cfg.max_risk_per_trade_pct) / 100)
     if level == RiskLevel.CAUTION:
         k_used *= 0.5
     stop_bps = stop_distance_bps(vol_bps, cfg)

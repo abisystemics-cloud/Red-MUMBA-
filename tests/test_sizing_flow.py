@@ -11,11 +11,16 @@ def _losing_stats(cfg):
     return st
 
 
-def test_kelly_locks_out_after_three_losses_but_fixed_does_not():
+def test_kelly_no_longer_locks_out_after_three_losses():
+    locked = RiskCfg(min_risk_per_trade_pct=0.0)
+    st = _losing_stats(locked)
+    d = size_position(equity=10_000, px=100, is_long=True, vol_bps=1.0, stats=st, cfg=locked, level=RiskLevel.NORMAL)
+    assert d.qty == 0  # l'ancien comportement : bot figé pour toujours
     kelly = RiskCfg()
-    st = _losing_stats(kelly)
     d = size_position(equity=10_000, px=100, is_long=True, vol_bps=1.0, stats=st, cfg=kelly, level=RiskLevel.NORMAL)
-    assert d.qty == 0  # le comportement qui figeait les backtests à 3 trades
+    assert d.qty > 0 and abs(d.risk_usd - 10_000 * 0.001) < 1e-6  # plancher : 0,1 % du capital
+    halted = size_position(equity=10_000, px=100, is_long=True, vol_bps=1.0, stats=st, cfg=kelly, level=RiskLevel.HALT)
+    assert halted.qty == 0  # le plancher ne contourne jamais un arrêt
     fixed = RiskCfg(sizing="fixed")
     d = size_position(equity=10_000, px=100, is_long=True, vol_bps=1.0, stats=st, cfg=fixed, level=RiskLevel.NORMAL)
     assert d.qty > 0 and abs(d.risk_usd - 10_000 * fixed.max_risk_per_trade_pct / 100) < 1e-6

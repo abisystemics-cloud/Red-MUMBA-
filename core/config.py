@@ -158,6 +158,10 @@ class RiskCfg(BaseModel):
     # = max_risk_per_trade_pct (recherche/backtest, pour mesurer le signal seul
     # sans boucle de rétroaction de la taille).
     sizing: str = "kelly"
+    # Plancher de risque en mode kelly : sans lui, 3 pertes de suite ramènent Kelly à 0,
+    # le bot ne trade plus et ses statistiques ne peuvent jamais se rétablir. Le
+    # disjoncteur (perte journalière, pertes consécutives) reste le vrai garde-fou.
+    min_risk_per_trade_pct: float = 0.1
 
     @field_validator("kelly_fraction")
     @classmethod
