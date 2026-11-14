@@ -27,6 +27,14 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
     (`git push origin main:refs/heads/lab-requests --force`) ; état et rapport sur la branche `lab-state` (`lab/report.md`).
   - Passage du 13/11/2026 (45 règles) : 30 passent la porte (39 règles : 24), dont les mélanges avec feux de contexte en tête ; `premium`, `ml` et `trend` ne la passent pas (ML : Sharpe < 2024 négatif, ≥ 2024 0,7–0,8). Premier passage (19 règles) : 10 passaient ; champion provisoire `blend(carry=7,hold=1,k=0,mom=14,w=0.7)` ;
     avec 50 $ les règles à 6+6 et 3+3 positions n'exécutent rien (ordres < 10 $).
+- **Consigne du propriétaire (14/11, soir)** : le bot tourne en arrière-plan, s'entraîne en boucle en backtest/simulation
+  « jusqu'à nouvel ordre », invente et développe ses propres règles ; Claude lui fournit ce dont il a besoin ; Claude ne donne
+  des nouvelles que lorsque le propriétaire les demande (pas de notification spontanée). Toujours aucun argent réel.
+- **Boucle nocturne (14/11)** : le workflow `lab` fait désormais CHAQUE NUIT (00:25 UTC) le passage complet (historique,
+  ré-entraînement ML, fiche de score, paper trading). `lab/evolve.py` : 16 règles candidates par nuit (mutations des
+  meilleures + hasard, familles blend/carry/xsmom/ml), adoptées en paper trading seulement si porte + Sharpe déflaté ≥ 0,6
+  calculé sur TOUS les essais cumulés (`state.evolve.trials`), 2 adoptions par nuit au plus, 24 règles nées au plus, retrait
+  des règles suspendues. Les données propres (≥ 2026-07) ne servent jamais à sélectionner.
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
 - **Canal bot → Claude (14/11)** : le bot écrit ses demandes dans `lab-state:lab/requests.json` (4 types en liste blanche,
   `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).

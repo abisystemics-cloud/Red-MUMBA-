@@ -16,7 +16,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from lab import ask, context, governor, hl_data, ml, paper, research
+from lab import ask, context, evolve, governor, hl_data, ml, paper, research
 from lab.catalog import default_catalog
 from scripts.bar_research import Costs
 
@@ -74,6 +74,14 @@ def report(state: dict, score: dict | None, panel_info: str) -> str:
                f"({m['rows']} exemples). Modèles en service aujourd'hui : {', '.join(m.get('live', [])) or 'aucun'}.", ""]
         if m.get("ridge_top"):
             md += ["Ce que la régression a appris (poids les plus forts) : " + ", ".join(f"{k} {v:+.3f}" for k, v in m["ridge_top"]) + ".", ""]
+    ev = state.get("evolve")
+    if ev:
+        last = ev["log"][-1] if ev.get("log") else None
+        md += ["## Évolution (règles inventées par le laboratoire)", "",
+               f"{ev['trials']} règles essayées depuis le début, {len(ev['born'])} en service." +
+               (f" Dernière nuit ({last['day']}) : {last['tested']} essayées, {last['passed_gate']} passent la porte, {last['adopted']} adoptée(s)."
+                if last else ""), ""]
+        md += [f"- {b['name']} — née le {b['born']}, Sharpe déflaté {b['dsr']}" for b in ev["born"]] + [""]
     md += ["## Livres de paper trading", "",
            "| règle | capital $ | jours | rendement % | pire baisse % | Sharpe | ordres | ordres ignorés (< 10 $) | état | test séquentiel | porte backtest |",
            "|---|---|---|---|---|---|---|---|---|---|---|"]
@@ -106,7 +114,7 @@ def main() -> int:
     sdir = Path(a.state)
     state = load(sdir / "state.json", {})
     score = load(sdir / "scorecard.json", None)
-    catalog = default_catalog()
+    catalog = default_catalog() + evolve.born_specs(state)
     save(sdir / "catalog.json", [{"name": s.name, "family": s.family, "params": dict(s.params)} for s in catalog])
     cost = Costs().side
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -133,7 +141,18 @@ def main() -> int:
                 log.append(f"{today} — entraînement {kind} impossible : {type(e).__name__}: {e}")
         state["ml"] = {"trained": today, "rows": rows, "history": [a.history_from, last_full], "ridge_top": ridge_top}
         log.append(f"{today} — modèles ML ré-entraînés sur {rows} exemples")
-        score = research.scorecard(hist, catalog, cost, ms(SPLIT), ms(CLEAN_FROM))
+        # le laboratoire propose ses propres règles, les évalue avec le catalogue, n'adopte que les plus solides
+        base = default_catalog()
+        known = evolve.born_specs(state)
+        cands = evolve.propose(state, score, {s.name for s in base + known}, seed=int(end.strftime("%Y%m%d")))
+        tried = state["evolve"]["trials"]
+        full = research.scorecard(hist, base + known + cands, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=tried)
+        log += evolve.select(state, full, cands, today)
+        catalog = base + evolve.born_specs(state)
+        keep = {s.name for s in catalog}
+        score = {**full, "rules": {n: r for n, r in full["rules"].items() if n in keep}, "n_rules": len(catalog),
+                 "n_trials": len(base) + state["evolve"]["trials"]}
+        save(sdir / "catalog.json", [{"name": s.name, "family": s.family, "params": dict(s.params)} for s in catalog])
         score["history"] = [a.history_from, last_full]
         save(sdir / "scorecard.json", score)
         log.append(f"{today} — fiche de score recalculée sur {a.history_from} → {last_full} : "

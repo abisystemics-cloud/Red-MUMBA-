@@ -18,7 +18,8 @@ from ml_engine.stats import deflated_sharpe, moments, sharpe_ci
 from scripts.quant_research import backtest, stats
 
 
-def scorecard(panel: dict, catalog: list[Spec], cost: float, split_ms: float, clean_ms: float) -> dict:
+def scorecard(panel: dict, catalog: list[Spec], cost: float, split_ms: float, clean_ms: float, extra_trials: int = 0) -> dict:
+    """`extra_trials` = règles déjà essayées puis écartées par lab/evolve.py : elles comptent dans le Sharpe déflaté."""
     days, R, F = np.asarray(panel["days"]), panel["R"], panel["F"]
     pre, post, clean = days < split_ms, days >= split_ms, days >= clean_ms
     rows, series = {}, {}
@@ -36,6 +37,6 @@ def scorecard(panel: dict, catalog: list[Spec], cost: float, split_ms: float, cl
                         "post_daily_vol": float(pnl[post].std(ddof=1))}
     var_trials = float(np.var([moments(p[post])[0] for p in series.values()]))
     for name, row in rows.items():
-        row["deflated_sharpe"] = round(deflated_sharpe(series[name][post], len(catalog), var_trials), 3)
+        row["deflated_sharpe"] = round(deflated_sharpe(series[name][post], len(catalog) + extra_trials, var_trials), 3)
         row["gate"] = bool(row["pre"]["sharpe"] > 0 and row["post_sharpe_ci95"][0] > 0 and row["post_cost_x2_return_pct"] > 0)
     return {"n_rules": len(catalog), "rules": rows, "sqrt365": math.sqrt(365)}

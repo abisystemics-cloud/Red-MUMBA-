@@ -8,7 +8,6 @@ name: lab
 on:
   schedule:
     - cron: "25 0 * * *"
-    - cron: "40 2 * * 1"
   workflow_dispatch:
     inputs:
       mode: { description: "daily | weekly", default: "daily" }
@@ -41,9 +40,8 @@ jobs:
       - name: Mode
         id: m
         run: |
-          MODE="daily"
-          [ "${{ github.event_name }}" = "push" ] && MODE="weekly"
-          [ "${{ github.event.schedule }}" = "40 2 * * 1" ] && MODE="weekly"
+          # chaque nuit = passage complet (historique, ré-entraînement ML, évolution des règles, paper trading)
+          MODE="weekly"
           [ "${{ github.event_name }}" = "workflow_dispatch" ] && MODE="${{ inputs.mode }}"
           echo "mode=$MODE" >> "$GITHUB_OUTPUT"
           echo "month=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"

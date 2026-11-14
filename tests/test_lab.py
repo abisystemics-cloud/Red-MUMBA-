@@ -190,3 +190,31 @@ def test_bot_asks_claude_and_validates_answers():
     assert np.allclose(braked[-1], base[-1] / 2) and np.allclose(braked[:-1], base[:-1])   # Claude ne peut que freiner
     W = weights(p, spec("whales", hold=1, k=3))
     assert abs(W[-1].sum()) < 1e-9 and W[-1, p["coins"].index("C13")] > 0 and not W[:-1].any()
+
+
+def test_evolution_proposes_new_rules_and_only_adopts_robust_ones():
+    from lab import evolve
+    panel = _panel(T=900)
+    base = default_catalog()[:6]
+    state = {}
+    known = {s.name for s in base}
+    cands = evolve.propose(state, None, known, seed=1)
+    assert len(cands) == evolve.CFG["per_night"] and not ({c.name for c in cands} & known)
+    assert len({c.name for c in cands}) == len(cands)
+    split = panel["days"][450]
+    full = scorecard(panel, base + cands, 0.0005, split, panel["days"][800], extra_trials=0)
+    lines = evolve.select(state, full, cands, "2026-11-14")
+    ev = state["evolve"]
+    assert ev["trials"] == len(cands) and len(ev["born"]) <= evolve.CFG["max_new"] and lines
+    for b in ev["born"]:
+        assert full["rules"][b["name"]]["gate"] and b["dsr"] >= evolve.CFG["min_dsr"]
+    again = evolve.propose(state, full, known, seed=1)
+    assert not ({c.name for c in again} & {c.name for c in cands})
+    # une règle née ici puis suspendue est retirée ; les essais passés durcissent le Sharpe déflaté
+    ev["born"].append({"name": "x", "family": "carry", "params": {"carry": 5, "hold": 3, "k": 0}, "born": "2026-11-14", "dsr": 0.9})
+    state["status"] = {"x": {"state": "suspended"}}
+    evolve.select(state, full, [], "2026-11-15")
+    assert all(b["name"] != "x" for b in ev["born"])
+    harder = scorecard(panel, base, 0.0005, split, panel["days"][800], extra_trials=500)
+    easy = scorecard(panel, base, 0.0005, split, panel["days"][800])
+    assert all(harder["rules"][n]["deflated_sharpe"] <= easy["rules"][n]["deflated_sharpe"] for n in easy["rules"])
