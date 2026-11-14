@@ -474,5 +474,45 @@
    "k": 0,
    "model": "gbm"
   }
+ },
+ {
+  "name": "whales(hold=1,k=0)",
+  "family": "whales",
+  "params": {
+   "hold": 1,
+   "k": 0
+  }
+ },
+ {
+  "name": "whales(hold=1,k=3)",
+  "family": "whales",
+  "params": {
+   "hold": 1,
+   "k": 3
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=claude_risk,hold=7,k=0,mom=14,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "claude_risk",
+   "hold": 7,
+   "k": 0,
+   "mom": 14,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=claude_risk,hold=1,k=0,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "claude_risk",
+   "hold": 1,
+   "k": 0,
+   "mom": 14,
+   "w": 0.7
+  }
  }
 ]

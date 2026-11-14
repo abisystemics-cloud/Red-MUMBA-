@@ -1,0 +1,90 @@
+{
+ "generated_at": "2026-11-14T03:00:34Z",
+ "last_closed_day": "2026-11-13",
+ "from": "hl-swarm lab (programme, pas un humain)",
+ "champion": "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)",
+ "requests": [
+  {
+   "id": "smart_money",
+   "type": "smart_money",
+   "coins": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "BNB",
+    "XRP",
+    "DOGE",
+    "ADA",
+    "AVAX",
+    "LINK",
+    "LTC",
+    "DOT",
+    "ATOM",
+    "NEAR",
+    "APT",
+    "ARB",
+    "OP",
+    "SUI",
+    "INJ",
+    "TIA",
+    "SEI",
+    "AAVE",
+    "UNI",
+    "FIL",
+    "BCH",
+    "ETC",
+    "XLM",
+    "TRX",
+    "HBAR",
+    "ICP",
+    "RUNE"
+   ],
+   "question": "Pour chacun de ces marchés Hyperliquid, quel est le biais net (de -100 à +100, en % du notionnel) des traders les plus rentables (tiers de PnL les plus hauts) en ce moment ?",
+   "answer_schema": {
+    "bias": {
+     "<COIN>": "nombre entre -100 et 100"
+    },
+    "as_of": "date ISO",
+    "source": "texte court"
+   }
+  },
+  {
+   "id": "risk_check",
+   "type": "risk_check",
+   "question": "Y a-t-il eu dans les dernières 24 heures un événement grave pour les marchés crypto ou pour Hyperliquid (piratage ou faillite d'un exchange, panne ou exploit d'Hyperliquid, décrochage d'un stablecoin, choc réglementaire, escalade militaire majeure) ?",
+   "answer_schema": {
+    "level": "none | elevated | severe",
+    "summary": "2 phrases maximum",
+    "sources": [
+     "URL"
+    ]
+   }
+  },
+  {
+   "id": "keel_status",
+   "type": "keel_status",
+   "deployment": "dep_01m7b0gq4cxdfqe8capdvfdfkm",
+   "question": "Où en est le paper trading Keel (rendement, pire baisse, nombre de jours) ?",
+   "answer_schema": {
+    "return_pct": "nombre",
+    "max_dd_pct": "nombre",
+    "days": "entier",
+    "note": "texte court"
+   }
+  },
+  {
+   "id": "move_TIA",
+   "type": "explain_move",
+   "coin": "TIA",
+   "move_pct": -12.2,
+   "day": "2026-11-13",
+   "question": "Ce marché a bougé de plus de 12 % hier. Quelle en est la cause la plus probable ?",
+   "answer_schema": {
+    "summary": "2 phrases maximum",
+    "sources": [
+     "URL"
+    ]
+   }
+  }
+ ]
+}

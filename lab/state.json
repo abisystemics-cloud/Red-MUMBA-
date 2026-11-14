@@ -6,7 +6,9 @@
   "2026-11-13 — fiche de score recalculée sur 2020-01 → 2026-10 : 24 règles sur 39 passent la porte",
   "2026-11-13 — modèles ML ré-entraînés sur 62102 exemples",
   "2026-11-13 — fiche de score recalculée sur 2020-01 → 2026-10 : 30 règles sur 45 passent la porte",
-  "2026-11-14 — champion PROVISOIRE : blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) (meilleure borne basse de Sharpe au backtest, en attendant 28 jours de paper trading)"
+  "2026-11-14 — champion PROVISOIRE : blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) (meilleure borne basse de Sharpe au backtest, en attendant 28 jours de paper trading)",
+  "2026-11-14 — modèles ML ré-entraînés sur 62102 exemples",
+  "2026-11-14 — fiche de score recalculée sur 2020-01 → 2026-10 : 32 règles sur 49 passent la porte"
  ],
  "books": {
   "blend(carry=7,hold=1,k=0,mom=14,w=0.5)@1000": {
@@ -2056,7 +2058,7 @@
   "provisional": true
  },
  "ml": {
-  "trained": "2026-11-13",
+  "trained": "2026-11-14",
   "rows": 62102,
   "history": [
    "2020-01",
@@ -2065,23 +2067,23 @@
   "ridge_top": [
    [
     "vol30",
-    -0.061871804629649065
+    -0.06187180462964908
    ],
    [
     "carry7",
-    0.04541997924074076
+    0.04541997924074079
    ],
    [
     "mom7",
-    -0.027796621191824217
+    -0.02779662119182416
    ],
    [
     "mom14",
-    0.022554093953254317
+    0.022554093953254212
    ],
    [
     "carry3",
-    0.021815372008146906
+    0.02181537200814695
    ]
   ],
   "live": [
@@ -2109,8 +2111,14 @@
    "stable": "DefiLlama, 3273 jours",
    "cot": "CFTC, 448 semaines",
    "gpr": "indice GPR, 15281 jours",
-   "premium": "Coinbase vs Binance spot, 500 jours",
+   "premium": "Coinbase vs Binance spot, 501 jours",
    "fomc": "calendrier de la Fed (liste jusqu'à fin 2026)"
   }
+ },
+ "claude": {
+  "risk": {},
+  "smart_money": {},
+  "notes": [],
+  "last_log": "2026-11-14 — aucune réponse de Claude à lire"
  }
 }
