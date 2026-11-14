@@ -169,6 +169,8 @@ def main() -> int:
             full["rules"].update({b["name"]: sc["rules"][b["name"]] for b in ev["born"] if b["name"] in sc["rules"]})
         else:
             log += evolve.select(state, full, [], today)
+        for b in ev["born"]:
+            b["dsr"] = full["rules"].get(b["name"], {}).get("deflated_sharpe", b["dsr"])
         ev["runs"] = ev.get("runs", 0) + 1
         log.append(f"{today} — ÉVOLUTION : {ev['trials'] - ev0} règles explorées en {gens} générations, {len(short)} présentées à la "
                    f"validation, {len(ev['born'])} règles nées en service ({ev['trials']} explorées et {ev['validated']} présentées depuis le début)")
