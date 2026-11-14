@@ -1,5 +1,5 @@
 {
- "answered_at": "2026-11-14T02:50:00Z",
+ "answered_at": "2026-11-14T03:25:00Z",
  "answered_by": "Claude (session manuelle, connecteurs Coinversa Pulse, Keel, recherche web)",
  "answers": {
   "smart_money": {
@@ -48,6 +48,12 @@
    "max_dd_pct": 0.0,
    "days": 1,
    "note": "1 évaluation depuis le 13/11, 24 ordres exécutés, 6 ignorés sous le minimum de 10 $ ; prochaine évaluation le 14/11 à 12:00 UTC"
+  },
+  "move_TIA": {
+   "summary": "Aucune cause précise identifiée par la recherche web pour la baisse de TIA du 13/11 : pas d'annonce ni d'incident trouvé. Le jeton est en tendance baissière depuis début novembre, dans un secteur des blockchains de couche 1 en recul.",
+   "sources": [
+    "https://www.coinbase.com/en-fr/price/celestia"
+   ]
   }
  }
 }
