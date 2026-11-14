@@ -5,30 +5,36 @@
   "2026-11-13 — modèles ML ré-entraînés sur 62102 exemples",
   "2026-11-13 — fiche de score recalculée sur 2020-01 → 2026-10 : 24 règles sur 39 passent la porte",
   "2026-11-13 — modèles ML ré-entraînés sur 62102 exemples",
-  "2026-11-13 — fiche de score recalculée sur 2020-01 → 2026-10 : 30 règles sur 45 passent la porte"
+  "2026-11-13 — fiche de score recalculée sur 2020-01 → 2026-10 : 30 règles sur 45 passent la porte",
+  "2026-11-14 — champion PROVISOIRE : blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) (meilleure borne basse de Sharpe au backtest, en attendant 28 jours de paper trading)"
  ],
  "books": {
   "blend(carry=7,hold=1,k=0,mom=14,w=0.5)@1000": {
    "spec": "blend(carry=7,hold=1,k=0,mom=14,w=0.5)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0056647915983408,
    "weights": {
-    "BTC": -0.083333,
-    "XRP": -0.083333,
+    "ADA": 0.083333,
     "AVAX": 0.083333,
     "ATOM": 0.083333,
     "NEAR": -0.083333,
+    "OP": -0.083333,
     "INJ": 0.083333,
-    "SEI": -0.083333,
-    "AAVE": 0.083333,
+    "UNI": -0.083333,
     "FIL": -0.083333,
+    "XLM": -0.083333,
+    "TRX": 0.083333,
     "HBAR": -0.083333,
-    "ICP": 0.083333,
     "RUNE": 0.083333
    },
-   "history": [],
-   "orders": 12,
-   "skipped_orders": 0,
+   "history": [
+    [
+     "2026-11-13",
+     0.006323
+    ]
+   ],
+   "orders": 22,
+   "skipped_orders": 7,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=1,k=0,mom=14,w=0.5)@50": {
@@ -36,26 +42,36 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=1,k=3,mom=14,w=0.5)@1000": {
    "spec": "blend(carry=7,hold=1,k=3,mom=14,w=0.5)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0083128367237042,
    "weights": {
-    "XRP": -0.166667,
     "AVAX": 0.166667,
-    "ATOM": 0.166667,
     "NEAR": -0.166667,
+    "OP": -0.166667,
     "INJ": 0.166667,
-    "SEI": -0.166667
+    "FIL": -0.166667,
+    "TRX": 0.166667
    },
-   "history": [],
-   "orders": 6,
-   "skipped_orders": 0,
+   "history": [
+    [
+     "2026-11-13",
+     0.008975
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 3,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=1,k=3,mom=14,w=0.5)@50": {
@@ -63,15 +79,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 6,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=0,mom=14,w=0.5)@1000": {
    "spec": "blend(carry=7,hold=7,k=0,mom=14,w=0.5)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0062098208278953,
    "weights": {
     "BTC": -0.083333,
     "XRP": -0.083333,
@@ -86,9 +107,14 @@
     "ICP": 0.083333,
     "RUNE": 0.083333
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.006864
+    ]
+   ],
    "orders": 12,
-   "skipped_orders": 0,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=0,mom=14,w=0.5)@50": {
@@ -96,15 +122,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=3,mom=14,w=0.5)@1000": {
    "spec": "blend(carry=7,hold=7,k=3,mom=14,w=0.5)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0089686670130924,
    "weights": {
     "XRP": -0.166667,
     "AVAX": 0.166667,
@@ -113,9 +144,14 @@
     "INJ": 0.166667,
     "SEI": -0.166667
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.009625
+    ]
+   ],
    "orders": 6,
-   "skipped_orders": 0,
+   "skipped_orders": 6,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=3,mom=14,w=0.5)@50": {
@@ -123,32 +159,42 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 6,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=1,k=0,mom=14,w=0.7)@1000": {
    "spec": "blend(carry=7,hold=1,k=0,mom=14,w=0.7)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0023550013079585,
    "weights": {
-    "ETH": -0.083333,
-    "SOL": -0.083333,
+    "BNB": 0.083333,
     "XRP": -0.083333,
     "AVAX": 0.083333,
     "ATOM": 0.083333,
     "NEAR": -0.083333,
-    "ARB": 0.083333,
+    "OP": -0.083333,
     "INJ": 0.083333,
-    "SEI": -0.083333,
+    "UNI": -0.083333,
+    "FIL": -0.083333,
     "BCH": -0.083333,
-    "ICP": 0.083333,
-    "RUNE": 0.083333
+    "TRX": 0.083333,
+    "ICP": 0.083333
    },
-   "history": [],
-   "orders": 12,
-   "skipped_orders": 0,
+   "history": [
+    [
+     "2026-11-13",
+     0.003009
+    ]
+   ],
+   "orders": 22,
+   "skipped_orders": 7,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=1,k=0,mom=14,w=0.7)@50": {
@@ -156,26 +202,36 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=1,k=3,mom=14,w=0.7)@1000": {
    "spec": "blend(carry=7,hold=1,k=3,mom=14,w=0.7)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0083128367237042,
    "weights": {
-    "XRP": -0.166667,
     "AVAX": 0.166667,
-    "ATOM": 0.166667,
     "NEAR": -0.166667,
+    "OP": -0.166667,
     "INJ": 0.166667,
-    "SEI": -0.166667
+    "UNI": -0.166667,
+    "TRX": 0.166667
    },
-   "history": [],
-   "orders": 6,
-   "skipped_orders": 0,
+   "history": [
+    [
+     "2026-11-13",
+     0.008975
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 3,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=1,k=3,mom=14,w=0.7)@50": {
@@ -183,15 +239,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 6,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=0,mom=14,w=0.7)@1000": {
    "spec": "blend(carry=7,hold=7,k=0,mom=14,w=0.7)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0028982367664006,
    "weights": {
     "ETH": -0.083333,
     "SOL": -0.083333,
@@ -206,9 +267,14 @@
     "ICP": 0.083333,
     "RUNE": 0.083333
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.003551
+    ]
+   ],
    "orders": 12,
-   "skipped_orders": 0,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=0,mom=14,w=0.7)@50": {
@@ -216,15 +282,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=3,mom=14,w=0.7)@1000": {
    "spec": "blend(carry=7,hold=7,k=3,mom=14,w=0.7)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0089686670130924,
    "weights": {
     "XRP": -0.166667,
     "AVAX": 0.166667,
@@ -233,9 +304,14 @@
     "INJ": 0.166667,
     "SEI": -0.166667
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.009625
+    ]
+   ],
    "orders": 6,
-   "skipped_orders": 0,
+   "skipped_orders": 6,
    "started": "2026-11-12"
   },
   "blend(carry=7,hold=7,k=3,mom=14,w=0.7)@50": {
@@ -243,15 +319,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 6,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "carry(carry=3,hold=7,k=0)@1000": {
    "spec": "carry(carry=3,hold=7,k=0)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0079224178838047,
    "weights": {
     "DOGE": 0.083333,
     "AVAX": 0.083333,
@@ -266,9 +347,14 @@
     "HBAR": -0.083333,
     "ICP": -0.083333
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.008578
+    ]
+   ],
    "orders": 12,
-   "skipped_orders": 0,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "carry(carry=3,hold=7,k=0)@50": {
@@ -276,15 +362,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "carry(carry=3,hold=7,k=3)@1000": {
    "spec": "carry(carry=3,hold=7,k=3)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.016618555053758,
    "weights": {
     "DOGE": 0.166667,
     "AVAX": 0.166667,
@@ -293,9 +384,14 @@
     "INJ": 0.166667,
     "ICP": -0.166667
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.01728
+    ]
+   ],
    "orders": 6,
-   "skipped_orders": 0,
+   "skipped_orders": 6,
    "started": "2026-11-12"
   },
   "carry(carry=3,hold=7,k=3)@50": {
@@ -303,15 +399,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 6,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "carry(carry=7,hold=7,k=0)@1000": {
    "spec": "carry(carry=7,hold=7,k=0)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0087961821373004,
    "weights": {
     "BTC": -0.083333,
     "BNB": -0.083333,
@@ -326,9 +427,14 @@
     "HBAR": -0.083333,
     "RUNE": 0.083333
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.009452
+    ]
+   ],
    "orders": 12,
-   "skipped_orders": 0,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "carry(carry=7,hold=7,k=0)@50": {
@@ -336,15 +442,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "carry(carry=7,hold=7,k=3)@1000": {
    "spec": "carry(carry=7,hold=7,k=3)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.017425843656042,
    "weights": {
     "BTC": -0.166667,
     "ATOM": 0.166667,
@@ -353,9 +464,14 @@
     "HBAR": -0.166667,
     "RUNE": 0.166667
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.018088
+    ]
+   ],
    "orders": 6,
-   "skipped_orders": 0,
+   "skipped_orders": 6,
    "started": "2026-11-12"
   },
   "carry(carry=7,hold=7,k=3)@50": {
@@ -363,15 +479,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 6,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "carry(carry=14,hold=7,k=0)@1000": {
    "spec": "carry(carry=14,hold=7,k=0)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.00677510336952,
    "weights": {
     "BTC": -0.083333,
     "ADA": 0.083333,
@@ -386,9 +507,14 @@
     "HBAR": -0.083333,
     "RUNE": 0.083333
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.00743
+    ]
+   ],
    "orders": 12,
-   "skipped_orders": 0,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "carry(carry=14,hold=7,k=0)@50": {
@@ -396,15 +522,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "carry(carry=14,hold=7,k=3)@1000": {
    "spec": "carry(carry=14,hold=7,k=3)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0032248145269271,
    "weights": {
     "BTC": -0.166667,
     "ATOM": 0.166667,
@@ -413,9 +544,14 @@
     "HBAR": -0.166667,
     "RUNE": 0.166667
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.003877
+    ]
+   ],
    "orders": 6,
-   "skipped_orders": 0,
+   "skipped_orders": 6,
    "started": "2026-11-12"
   },
   "carry(carry=14,hold=7,k=3)@50": {
@@ -423,15 +559,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 6,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "xsmom(hold=7,k=0,mom=14)@1000": {
    "spec": "xsmom(hold=7,k=0,mom=14)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0024430421439696,
    "weights": {
     "SOL": -0.083333,
     "XRP": -0.083333,
@@ -446,9 +587,14 @@
     "TRX": -0.083333,
     "ICP": 0.083333
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.003095
+    ]
+   ],
    "orders": 12,
-   "skipped_orders": 0,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "xsmom(hold=7,k=0,mom=14)@50": {
@@ -456,15 +602,20 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "xsmom(hold=7,k=0,mom=28)@1000": {
    "spec": "xsmom(hold=7,k=0,mom=28)",
    "capital": 1000.0,
-   "equity": 0.99935,
+   "equity": 1.0040462968199675,
    "weights": {
     "BTC": 0.083333,
     "BNB": 0.083333,
@@ -479,9 +630,14 @@
     "ICP": 0.083333,
     "RUNE": 0.083333
    },
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.004699
+    ]
+   ],
    "orders": 12,
-   "skipped_orders": 0,
+   "skipped_orders": 12,
    "started": "2026-11-12"
   },
   "xsmom(hold=7,k=0,mom=28)@50": {
@@ -489,24 +645,31 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 12,
+   "skipped_orders": 24,
    "started": "2026-11-12"
   },
   "trend(hold=1,mom=7)@1000": {
    "spec": "trend(hold=1,mom=7)",
    "capital": 1000.0,
-   "equity": 0.9999133333333333,
+   "equity": 0.9928546603206144,
    "weights": {
-    "AVAX": 0.033333,
-    "ATOM": 0.033333,
-    "TIA": 0.033333,
     "ICP": 0.033333
    },
-   "history": [],
-   "orders": 4,
-   "skipped_orders": 0,
+   "history": [
+    [
+     "2026-11-13",
+     -0.00706
+    ]
+   ],
+   "orders": 7,
+   "skipped_orders": 1,
    "started": "2026-11-12"
   },
   "trend(hold=1,mom=7)@50": {
@@ -514,23 +677,31 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 4,
+   "skipped_orders": 5,
    "started": "2026-11-12"
   },
   "trend(hold=1,mom=14)@1000": {
    "spec": "trend(hold=1,mom=14)",
    "capital": 1000.0,
-   "equity": 0.999935,
+   "equity": 1.0011654099214655,
    "weights": {
-    "AVAX": 0.033333,
-    "INJ": 0.033333,
-    "ICP": 0.033333
+    "INJ": 0.033333
    },
-   "history": [],
-   "orders": 3,
-   "skipped_orders": 0,
+   "history": [
+    [
+     "2026-11-13",
+     0.001231
+    ]
+   ],
+   "orders": 5,
+   "skipped_orders": 1,
    "started": "2026-11-12"
   },
   "trend(hold=1,mom=14)@50": {
@@ -538,9 +709,14 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
-   "skipped_orders": 3,
+   "skipped_orders": 4,
    "started": "2026-11-12"
   },
   "trend(hold=1,mom=28)@1000": {
@@ -548,7 +724,12 @@
    "capital": 1000.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
    "skipped_orders": 0,
    "started": "2026-11-12"
@@ -558,13 +739,1090 @@
    "capital": 50.0,
    "equity": 1.0,
    "weights": {},
-   "history": [],
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
    "orders": 0,
    "skipped_orders": 0,
    "started": "2026-11-12"
+  },
+  "blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BTC": -0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "INJ": 0.041667,
+    "SEI": -0.041667,
+    "AAVE": 0.041667,
+    "FIL": -0.041667,
+    "HBAR": -0.041667,
+    "ICP": 0.041667,
+    "RUNE": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BTC": -0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "INJ": 0.041667,
+    "SEI": -0.041667,
+    "AAVE": 0.041667,
+    "FIL": -0.041667,
+    "HBAR": -0.041667,
+    "ICP": 0.041667,
+    "RUNE": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BTC": -0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "INJ": 0.041667,
+    "SEI": -0.041667,
+    "AAVE": 0.041667,
+    "FIL": -0.041667,
+    "HBAR": -0.041667,
+    "ICP": 0.041667,
+    "RUNE": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BTC": -0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "INJ": 0.041667,
+    "SEI": -0.041667,
+    "AAVE": 0.041667,
+    "FIL": -0.041667,
+    "HBAR": -0.041667,
+    "ICP": 0.041667,
+    "RUNE": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BTC": -0.083333,
+    "XRP": -0.083333,
+    "AVAX": 0.083333,
+    "ATOM": 0.083333,
+    "NEAR": -0.083333,
+    "INJ": 0.083333,
+    "SEI": -0.083333,
+    "AAVE": 0.083333,
+    "FIL": -0.083333,
+    "HBAR": -0.083333,
+    "ICP": 0.083333,
+    "RUNE": 0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BTC": -0.083333,
+    "XRP": -0.083333,
+    "AVAX": 0.083333,
+    "ATOM": 0.083333,
+    "NEAR": -0.083333,
+    "INJ": 0.083333,
+    "SEI": -0.083333,
+    "AAVE": 0.083333,
+    "FIL": -0.083333,
+    "HBAR": -0.083333,
+    "ICP": 0.083333,
+    "RUNE": 0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BTC": -0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "INJ": 0.041667,
+    "SEI": -0.041667,
+    "AAVE": 0.041667,
+    "FIL": -0.041667,
+    "HBAR": -0.041667,
+    "ICP": 0.041667,
+    "RUNE": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BTC": -0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "INJ": 0.041667,
+    "SEI": -0.041667,
+    "AAVE": 0.041667,
+    "FIL": -0.041667,
+    "HBAR": -0.041667,
+    "ICP": 0.041667,
+    "RUNE": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BTC": -0.083333,
+    "XRP": -0.083333,
+    "AVAX": 0.083333,
+    "ATOM": 0.083333,
+    "NEAR": -0.083333,
+    "INJ": 0.083333,
+    "SEI": -0.083333,
+    "AAVE": 0.083333,
+    "FIL": -0.083333,
+    "HBAR": -0.083333,
+    "ICP": 0.083333,
+    "RUNE": 0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5)@1000": {
+   "spec": "blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BTC": -0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "INJ": 0.041667,
+    "SEI": -0.041667,
+    "AAVE": 0.041667,
+    "FIL": -0.041667,
+    "HBAR": -0.041667,
+    "ICP": 0.041667,
+    "RUNE": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5)@50": {
+   "spec": "blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BNB": 0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "OP": -0.041667,
+    "INJ": 0.041667,
+    "UNI": -0.041667,
+    "FIL": -0.041667,
+    "BCH": -0.041667,
+    "TRX": 0.041667,
+    "ICP": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BNB": 0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "OP": -0.041667,
+    "INJ": 0.041667,
+    "UNI": -0.041667,
+    "FIL": -0.041667,
+    "BCH": -0.041667,
+    "TRX": 0.041667,
+    "ICP": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BNB": 0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "OP": -0.041667,
+    "INJ": 0.041667,
+    "UNI": -0.041667,
+    "FIL": -0.041667,
+    "BCH": -0.041667,
+    "TRX": 0.041667,
+    "ICP": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BNB": 0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "OP": -0.041667,
+    "INJ": 0.041667,
+    "UNI": -0.041667,
+    "FIL": -0.041667,
+    "BCH": -0.041667,
+    "TRX": 0.041667,
+    "ICP": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BNB": 0.083333,
+    "XRP": -0.083333,
+    "AVAX": 0.083333,
+    "ATOM": 0.083333,
+    "NEAR": -0.083333,
+    "OP": -0.083333,
+    "INJ": 0.083333,
+    "UNI": -0.083333,
+    "FIL": -0.083333,
+    "BCH": -0.083333,
+    "TRX": 0.083333,
+    "ICP": 0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BNB": 0.083333,
+    "XRP": -0.083333,
+    "AVAX": 0.083333,
+    "ATOM": 0.083333,
+    "NEAR": -0.083333,
+    "OP": -0.083333,
+    "INJ": 0.083333,
+    "UNI": -0.083333,
+    "FIL": -0.083333,
+    "BCH": -0.083333,
+    "TRX": 0.083333,
+    "ICP": 0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BNB": 0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "OP": -0.041667,
+    "INJ": 0.041667,
+    "UNI": -0.041667,
+    "FIL": -0.041667,
+    "BCH": -0.041667,
+    "TRX": 0.041667,
+    "ICP": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BNB": 0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "OP": -0.041667,
+    "INJ": 0.041667,
+    "UNI": -0.041667,
+    "FIL": -0.041667,
+    "BCH": -0.041667,
+    "TRX": 0.041667,
+    "ICP": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BNB": 0.083333,
+    "XRP": -0.083333,
+    "AVAX": 0.083333,
+    "ATOM": 0.083333,
+    "NEAR": -0.083333,
+    "OP": -0.083333,
+    "INJ": 0.083333,
+    "UNI": -0.083333,
+    "FIL": -0.083333,
+    "BCH": -0.083333,
+    "TRX": 0.083333,
+    "ICP": 0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7)@1000": {
+   "spec": "blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 1000.0,
+   "equity": 0.999675,
+   "weights": {
+    "BNB": 0.041667,
+    "XRP": -0.041667,
+    "AVAX": 0.041667,
+    "ATOM": 0.041667,
+    "NEAR": -0.041667,
+    "OP": -0.041667,
+    "INJ": 0.041667,
+    "UNI": -0.041667,
+    "FIL": -0.041667,
+    "BCH": -0.041667,
+    "TRX": 0.041667,
+    "ICP": 0.041667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.000325
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7)@50": {
+   "spec": "blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "trend(gate=nasdaq,hold=1,mom=14)@1000": {
+   "spec": "trend(gate=nasdaq,hold=1,mom=14)",
+   "capital": 1000.0,
+   "equity": 0.9999891666666667,
+   "weights": {
+    "INJ": 0.016667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -1.1e-05
+    ]
+   ],
+   "orders": 1,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "trend(gate=nasdaq,hold=1,mom=14)@50": {
+   "spec": "trend(gate=nasdaq,hold=1,mom=14)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 1,
+   "started": "2026-11-13"
+  },
+  "trend(gate=premium,hold=1,mom=14)@1000": {
+   "spec": "trend(gate=premium,hold=1,mom=14)",
+   "capital": 1000.0,
+   "equity": 0.9999891666666667,
+   "weights": {
+    "INJ": 0.016667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -1.1e-05
+    ]
+   ],
+   "orders": 1,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "trend(gate=premium,hold=1,mom=14)@50": {
+   "spec": "trend(gate=premium,hold=1,mom=14)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 1,
+   "started": "2026-11-13"
+  },
+  "trend(gate=risk_on,hold=1,mom=14)@1000": {
+   "spec": "trend(gate=risk_on,hold=1,mom=14)",
+   "capital": 1000.0,
+   "equity": 0.9999891666666667,
+   "weights": {
+    "INJ": 0.016667
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -1.1e-05
+    ]
+   ],
+   "orders": 1,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "trend(gate=risk_on,hold=1,mom=14)@50": {
+   "spec": "trend(gate=risk_on,hold=1,mom=14)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 1,
+   "started": "2026-11-13"
+  },
+  "premium(hold=1)@1000": {
+   "spec": "premium(hold=1)",
+   "capital": 1000.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "premium(hold=1)@50": {
+   "spec": "premium(hold=1)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "ml(hold=7,k=0,model=ridge)@1000": {
+   "spec": "ml(hold=7,k=0,model=ridge)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BTC": 0.083333,
+    "SOL": 0.083333,
+    "DOGE": 0.083333,
+    "AVAX": 0.083333,
+    "NEAR": -0.083333,
+    "APT": -0.083333,
+    "OP": -0.083333,
+    "TIA": -0.083333,
+    "SEI": -0.083333,
+    "FIL": -0.083333,
+    "BCH": 0.083333,
+    "TRX": 0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "ml(hold=7,k=0,model=ridge)@50": {
+   "spec": "ml(hold=7,k=0,model=ridge)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
+  },
+  "ml(hold=7,k=0,model=gbm)@1000": {
+   "spec": "ml(hold=7,k=0,model=gbm)",
+   "capital": 1000.0,
+   "equity": 0.99935,
+   "weights": {
+    "BTC": 0.083333,
+    "SOL": 0.083333,
+    "BNB": 0.083333,
+    "DOGE": 0.083333,
+    "DOT": 0.083333,
+    "ATOM": -0.083333,
+    "OP": -0.083333,
+    "INJ": 0.083333,
+    "TIA": -0.083333,
+    "ETC": -0.083333,
+    "XLM": -0.083333,
+    "RUNE": -0.083333
+   },
+   "history": [
+    [
+     "2026-11-13",
+     -0.00065
+    ]
+   ],
+   "orders": 12,
+   "skipped_orders": 0,
+   "started": "2026-11-13"
+  },
+  "ml(hold=7,k=0,model=gbm)@50": {
+   "spec": "ml(hold=7,k=0,model=gbm)",
+   "capital": 50.0,
+   "equity": 1.0,
+   "weights": {},
+   "history": [
+    [
+     "2026-11-13",
+     0.0
+    ]
+   ],
+   "orders": 0,
+   "skipped_orders": 12,
+   "started": "2026-11-13"
   }
  },
- "last_day": 1794441600000.0,
+ "last_day": 1794528000000.0,
  "status": {
   "blend(carry=7,hold=1,k=0,mom=14,w=0.5)": {
    "state": "paper",
@@ -660,11 +1918,141 @@
    "state": "paper",
    "sprt": "continue",
    "gate": false
+  },
+  "blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": true
+  },
+  "trend(gate=nasdaq,hold=1,mom=14)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": false
+  },
+  "trend(gate=premium,hold=1,mom=14)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": false
+  },
+  "trend(gate=risk_on,hold=1,mom=14)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": false
+  },
+  "premium(hold=1)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": false
+  },
+  "ml(hold=7,k=0,model=ridge)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": false
+  },
+  "ml(hold=7,k=0,model=gbm)": {
+   "state": "paper",
+   "sprt": "continue",
+   "gate": false
   }
  },
  "champion": {
-  "name": "blend(carry=7,hold=1,k=0,mom=14,w=0.7)",
-  "since": "2026-11-13",
+  "name": "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)",
+  "since": "2026-11-14",
   "provisional": true
  },
  "ml": {
@@ -709,16 +2097,16 @@
    "cot": false,
    "gpr": true,
    "fomc": true,
-   "news_tone": null,
+   "news_tone": false,
    "geo_news": true,
    "fng": false
   },
   "info": {
-   "news_tone": "indisponible (TypeError)",
-   "geo_news": "GDELT, 469 jours",
-   "fng": "alternative.me, 3204 jours",
+   "news_tone": "GDELT, 468 jours",
+   "geo_news": "GDELT, 468 jours",
+   "fng": "alternative.me, 3205 jours",
    "nasdaq": "yahoo, 2126 jours",
-   "stable": "DefiLlama, 3272 jours",
+   "stable": "DefiLlama, 3273 jours",
    "cot": "CFTC, 448 semaines",
    "gpr": "indice GPR, 15281 jours",
    "premium": "Coinbase vs Binance spot, 500 jours",
