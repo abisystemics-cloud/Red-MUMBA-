@@ -1,6 +1,6 @@
 # Laboratoire hl-swarm — rapport
 
-Généré le 2026-11-14 03:00 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-13
+Généré le 2026-11-14 03:13 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-13
 
 Simulation uniquement : aucun ordre réel.
 
@@ -22,13 +22,16 @@ Simulation uniquement : aucun ordre réel.
 | Risque géopolitique calme | vert | indice GPR, 15281 jours |
 | Hors fenêtre de décision de la Fed | vert | calendrier de la Fed (liste jusqu'à fin 2026) |
 | Ton de la presse mondiale sur les cryptos en amélioration | rouge | GDELT, 468 jours |
-| Presse mondiale : tensions géopolitiques calmes | vert | GDELT, 468 jours |
+| Presse mondiale : tensions géopolitiques calmes | indisponible | indisponible (RuntimeError) |
 | Indice Fear & Greed au-dessus de sa moyenne 30 j | rouge | alternative.me, 3205 jours |
 
 ## Échanges avec Claude (connecteurs)
 
-Dernière lecture : 2026-11-14 — aucune réponse de Claude à lire.
+Dernière lecture : 2026-11-14 — réponses de Claude du 2026-11-14T02:50Z lues : gros traders (30 marchés), risque none, Keel.
 
+- Risque signalé pour le 2026-11-13 : **none** — Aucun événement grave confirmé dans les dernières 24 heures d'après la recherche web. Le dernier fait notable (soupçon de piratage d'un exchange) date du 30 octobre. 
+- Paper trading Keel au 2026-11-13 : +0.20 % en 1 jours, pire baisse 0.00 %. 1 évaluation depuis le 13/11, 24 ordres exécutés, 6 ignorés sous le minimum de 10 $ ; prochaine évaluation le 14/11 à 12:00 UTC
+- Gros traders au 2026-11-13 : les plus acheteurs BCH +18, ETC +17, ADA +16 ; les plus vendeurs ICP -51, OP -72, SEI -82
 
 ## Machine learning
 
