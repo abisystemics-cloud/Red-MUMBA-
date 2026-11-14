@@ -1,0 +1,53 @@
+{
+ "answered_at": "2026-11-14T02:50:00Z",
+ "answered_by": "Claude (session manuelle, connecteurs Coinversa Pulse, Keel, recherche web)",
+ "answers": {
+  "smart_money": {
+   "bias": {
+    "BTC": -16.3,
+    "ETH": -7.5,
+    "SOL": -23.5,
+    "BNB": 6.8,
+    "XRP": -15.4,
+    "DOGE": -22.3,
+    "ADA": 16.5,
+    "AVAX": -37.4,
+    "LINK": -11.2,
+    "LTC": -11.4,
+    "SUI": -30.5,
+    "AAVE": 3.0,
+    "DOT": 11.0,
+    "ATOM": -36.7,
+    "NEAR": -20.0,
+    "APT": -16.8,
+    "ARB": -20.4,
+    "OP": -71.5,
+    "INJ": -29.5,
+    "TIA": -37.6,
+    "SEI": -82.4,
+    "UNI": -14.8,
+    "FIL": 14.3,
+    "BCH": 18.1,
+    "ETC": 17.0,
+    "XLM": -26.4,
+    "TRX": 4.3,
+    "HBAR": -9.2,
+    "ICP": -50.6,
+    "RUNE": -24.4
+   },
+   "as_of": "2026-11-14T02:45Z",
+   "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money, biais net pondéré par le notionnel x100"
+  },
+  "risk_check": {
+   "level": "none",
+   "summary": "Aucun événement grave confirmé dans les dernières 24 heures d'après la recherche web. Le dernier fait notable (soupçon de piratage d'un exchange) date du 30 octobre.",
+   "sources": []
+  },
+  "keel_status": {
+   "return_pct": 0.2,
+   "max_dd_pct": 0.0,
+   "days": 1,
+   "note": "1 évaluation depuis le 13/11, 24 ordres exécutés, 6 ignorés sous le minimum de 10 $ ; prochaine évaluation le 14/11 à 12:00 UTC"
+  }
+ }
+}
