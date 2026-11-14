@@ -1,58 +1,62 @@
 {
- "answered_at": "2026-11-14T03:25:00Z",
- "answered_by": "Claude (session manuelle, connecteurs Coinversa Pulse, Keel, recherche web)",
+ "answered_at": "2026-11-14T23:42:17Z",
  "answers": {
   "smart_money": {
    "bias": {
-    "BTC": -16.3,
-    "ETH": -7.5,
-    "SOL": -23.5,
-    "BNB": 6.8,
-    "XRP": -15.4,
-    "DOGE": -22.3,
-    "ADA": 16.5,
-    "AVAX": -37.4,
-    "LINK": -11.2,
-    "LTC": -11.4,
-    "SUI": -30.5,
-    "AAVE": 3.0,
-    "DOT": 11.0,
-    "ATOM": -36.7,
-    "NEAR": -20.0,
-    "APT": -16.8,
-    "ARB": -20.4,
-    "OP": -71.5,
-    "INJ": -29.5,
-    "TIA": -37.6,
-    "SEI": -82.4,
-    "UNI": -14.8,
-    "FIL": 14.3,
-    "BCH": 18.1,
-    "ETC": 17.0,
-    "XLM": -26.4,
-    "TRX": 4.3,
-    "HBAR": -9.2,
-    "ICP": -50.6,
-    "RUNE": -24.4
+    "BTC": -17.4,
+    "ETH": -9.9,
+    "SOL": -37.0,
+    "BNB": -3.1,
+    "XRP": 8.2,
+    "DOGE": -16.3,
+    "ADA": 11.6,
+    "AVAX": -14.1,
+    "LINK": 3.8,
+    "LTC": -11.7,
+    "DOT": 21.9,
+    "ATOM": -36.6,
+    "NEAR": -10.5,
+    "APT": -2.0,
+    "ARB": 11.9,
+    "OP": -47.0,
+    "SUI": -28.6,
+    "INJ": -23.9,
+    "TIA": -23.1,
+    "SEI": -52.3,
+    "AAVE": 7.1,
+    "UNI": 21.9,
+    "FIL": 15.8,
+    "BCH": 17.9,
+    "ETC": 17.6,
+    "XLM": -15.4,
+    "TRX": 21.0,
+    "HBAR": -1.7,
+    "ICP": -55.6,
+    "RUNE": -27.7
    },
-   "as_of": "2026-11-14T02:45Z",
-   "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money, biais net pondéré par le notionnel x100"
+   "as_of": "2026-11-14T23:41:00Z",
+   "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money"
   },
   "risk_check": {
    "level": "none",
-   "summary": "Aucun événement grave confirmé dans les dernières 24 heures d'après la recherche web. Le dernier fait notable (soupçon de piratage d'un exchange) date du 30 octobre.",
-   "sources": []
+   "summary": "Aucun événement grave nouveau confirmé dans les dernières 24 heures : ni piratage ou faillite d'exchange, ni panne ou exploit d'Hyperliquid, ni décrochage de stablecoin, ni escalade militaire (Reuters : Washington pourrait renoncer à de nouvelles frappes contre l'Iran). Le marché crypto reste en repli généralisé (bitcoin vers 67 000 $) et le piratage de Binance date du 29 octobre.",
+   "sources": [
+    "https://www.reuters.com/world/middle-east/trump-tells-advisers-he-may-hold-off-iran-attacks-barring-new-provocations-2026-11-14/",
+    "https://www.theblock.co/newsletters/the-daily/2026-11-14-meta-prediction-market-app-doj-binance-hack-more-crypto-news-440304",
+    "https://crypto.news/coinbase-india-inr-withdrawals-bank-outage/"
+   ]
   },
   "keel_status": {
-   "return_pct": 0.2,
+   "return_pct": 1.56,
    "max_dd_pct": 0.0,
-   "days": 1,
-   "note": "1 évaluation depuis le 13/11, 24 ordres exécutés, 6 ignorés sous le minimum de 10 $ ; prochaine évaluation le 14/11 à 12:00 UTC"
+   "days": 2,
+   "note": "2 évaluations depuis le 13/11, 37 ordres exécutés, 17 sur 54 ignorés sous le minimum de 10 $ (dont 2 sorties : PUMP, WLD) ; prochaine évaluation le 15/11 à 12:00 UTC"
   },
   "move_TIA": {
-   "summary": "Aucune cause précise identifiée par la recherche web pour la baisse de TIA du 13/11 : pas d'annonce ni d'incident trouvé. Le jeton est en tendance baissière depuis début novembre, dans un secteur des blockchains de couche 1 en recul.",
+   "summary": "Aucune nouvelle propre à Celestia : la baisse du 13/11 accompagne le repli général du marché crypto (bitcoin en forte baisse, sentiment de peur extrême). Le jeton restait en tendance baissière sous toutes ses moyennes mobiles.",
    "sources": [
-    "https://www.coinbase.com/en-fr/price/celestia"
+    "https://coinmarketcap.com/top-stories/6af75f3f0ada0c77afaf1484/",
+    "https://tradersunion.com/news/cryptocurrency-news/show/4240045-celestia-drops-11-63percent-today/"
    ]
   }
  }
