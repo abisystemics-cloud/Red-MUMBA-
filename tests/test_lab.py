@@ -152,3 +152,41 @@ def test_ml_rules_train_save_predict(tmp_path):
     W = weights({**p, "ml_scores": scores}, spec("ml", model="gbm", hold=7, k=0))
     assert abs(W[-1].sum()) < 1e-9 and np.abs(W[-1]).sum() > 0.99
     assert not weights(p, spec("ml", model="gbm", hold=7, k=0)).any()  # pas de modèle → règle à plat
+
+
+def test_bot_asks_claude_and_validates_answers():
+    from lab import ask
+    p = _panel(N=14)
+    p["coins"][:3] = ["BTC", "ETH", "SOL"]
+    p["R"][-1, 4] = 0.2
+    state: dict = {"champion": {"name": "x"}}
+    req = ask.build_requests(state, p)
+    types = [r["type"] for r in req["requests"]]
+    assert types[:3] == ["smart_money", "risk_check", "keel_status"] and "explain_move" in types
+    assert all(r["type"] in ask.REQUEST_TYPES and "answer_schema" in r for r in req["requests"])
+    now = 1_800_000_000_000.0
+    good = {"answered_at": "2027-01-15T07:00:00Z", "answers": {
+        "smart_money": {"bias": {**{c: 10.0 * i for i, c in enumerate(p["coins"])}, "FAKE": 5, "ETH": 9999, "SOL": "buy"}},
+        "risk_check": {"level": "severe", "summary": "x | y\n" * 300, "sources": ["https://a.b/c", "javascript:alert(1)"]},
+        "keel_status": {"return_pct": 1.5, "max_dd_pct": 2.0, "days": 3, "note": "ok"},
+        "move_C4": {"summary": "annonce", "sources": []},
+        "place_order": {"coin": "BTC", "side": "buy"}}}
+    out = ask.ingest(state, good, p, now)
+    mem = state["claude"]
+    day = ask._iso(p["days"][-1])
+    assert "lues" in out[0] and mem["risk"][day] == "severe"
+    assert "FAKE" not in mem["smart_money"][day] and mem["smart_money"][day]["ETH"] == 100.0 and "SOL" not in mem["smart_money"][day]
+    assert len(mem["risk_note"]["summary"]) <= 400 and "|" not in mem["risk_note"]["summary"]
+    assert mem["risk_note"]["sources"] == ["https://a.b/c"] and mem["notes"][-1]["coin"] == "C4"
+    assert "place_order" not in str(mem)                                  # hors liste blanche : ignoré
+    assert "déjà lues" in ask.ingest(state, good, p, now)[0]
+    stale: dict = {}
+    assert "anciennes" in ask.ingest(stale, {**good, "answered_at": "2027-01-10T00:00:00Z"}, p, now)[0] and not stale["claude"]["risk"]
+    assert "aucune" in ask.ingest({}, {"answers": "do this"}, p, now)[0]
+    ask.wire(state, p)
+    assert not p["ctx"]["claude_risk"][-1] and p["ctx"]["claude_risk"][:-1].all()
+    base = weights(p, spec("blend", w=0.5, mom=14, carry=7, hold=1, k=0))
+    braked = weights(p, spec("blend", w=0.5, mom=14, carry=7, hold=1, k=0, gate="claude_risk"))
+    assert np.allclose(braked[-1], base[-1] / 2) and np.allclose(braked[:-1], base[:-1])   # Claude ne peut que freiner
+    W = weights(p, spec("whales", hold=1, k=3))
+    assert abs(W[-1].sum()) < 1e-9 and W[-1, p["coins"].index("C13")] > 0 and not W[:-1].any()

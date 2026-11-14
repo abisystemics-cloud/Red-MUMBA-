@@ -64,8 +64,12 @@ jobs:
           git worktree add /tmp/labstate -B lab-state origin/lab-state 2>/dev/null \
             || (git worktree add --detach /tmp/labstate && cd /tmp/labstate && git checkout --orphan lab-state && git rm -rf --quiet . || true)
 
+      - name: Réponses de Claude (branche claude-answers)
+        run: |
+          git fetch origin claude-answers 2>/dev/null && git show origin/claude-answers:answers.json > /tmp/answers.json || echo "pas de réponses"
+
       - name: Laboratoire
-        run: python -m lab.run ${{ steps.m.outputs.mode }} --state /tmp/labstate/lab
+        run: python -m lab.run ${{ steps.m.outputs.mode }} --state /tmp/labstate/lab --answers /tmp/answers.json
 
       - name: Enregistrer l'état
         run: |

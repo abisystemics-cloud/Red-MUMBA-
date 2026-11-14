@@ -16,7 +16,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from lab import context, governor, hl_data, ml, paper, research
+from lab import ask, context, governor, hl_data, ml, paper, research
 from lab.catalog import default_catalog
 from scripts.bar_research import Costs
 
@@ -52,6 +52,22 @@ def report(state: dict, score: dict | None, panel_info: str) -> str:
         md += [f"| {context.LABELS[k]} | {'vert' if c['flags'].get(k) else 'rouge' if c['flags'].get(k) is False else 'indisponible'} | "
                f"{c['info'].get(k, '')} |" for k in context.KEYS]
         md.append("")
+    cl = state.get("claude")
+    if cl:
+        md += ["## Échanges avec Claude (connecteurs)", "", "Dernière lecture : " + cl.get("last_log", "aucune réponse reçue pour l'instant") + ".", ""]
+        rn = cl.get("risk_note")
+        if rn:
+            md.append(f"- Risque signalé pour le {rn['day']} : **{rn['level']}** — {rn['summary']} " + " ".join(f"[source]({u})" for u in rn["sources"]))
+        if cl.get("keel"):
+            k = cl["keel"]
+            md.append(f"- Paper trading Keel au {k['day']} : {k['return_pct']:+.2f} % en {k['days']} jours, pire baisse {k['max_dd_pct']:.2f} %. {k['note']}")
+        if cl.get("smart_money"):
+            d, row = sorted(cl["smart_money"].items())[-1]
+            top = sorted(row.items(), key=lambda x: -x[1])
+            md.append(f"- Gros traders au {d} : les plus acheteurs {', '.join(f'{c} {v:+.0f}' for c, v in top[:3])} ; "
+                      f"les plus vendeurs {', '.join(f'{c} {v:+.0f}' for c, v in top[-3:])}")
+        md += [f"- {n['day']} · {n['coin']} : {n['summary']} " + " ".join(f"[source]({u})" for u in n["sources"]) for n in cl.get("notes", [])[-5:]]
+        md.append("")
     m = state.get("ml")
     if m:
         md += ["## Machine learning", "", f"Dernier entraînement le {m['trained']} sur l'historique {m['history'][0]} → {m['history'][1]} "
@@ -85,6 +101,7 @@ def main() -> int:
     p.add_argument("--state", default="state/lab")
     p.add_argument("--cache", default="data/bars")
     p.add_argument("--history-from", default="2020-01")
+    p.add_argument("--answers", default=None, help="fichier answers.json déposé par Claude (branche claude-answers)")
     a = p.parse_args()
     sdir = Path(a.state)
     state = load(sdir / "state.json", {})
@@ -129,9 +146,20 @@ def main() -> int:
     panel["ml_scores"] = {k: sc for k in ml.MODELS if (sc := ml.predict(k, sdir, panel)) is not None}
     if "ml" in state:
         state["ml"]["live"] = sorted(panel["ml_scores"])
+    answers = None
+    if a.answers and Path(a.answers).exists():
+        try:
+            answers = json.loads(Path(a.answers).read_text())
+        except ValueError:
+            answers = None
+    for line in ask.ingest(state, answers, panel, time.time() * 1000):
+        print(line, flush=True)
+        state["claude"]["last_log"] = f"{today} — {line}"
+    ask.wire(state, panel)
     for line in paper.step_books(state, panel, catalog, cost):
         print(line, flush=True)
     log += governor.decide(state, score, paper.book_stats, today)
+    save(sdir / "requests.json", ask.build_requests(state, panel))
     save(sdir / "state.json", state)
     info = f"{len(panel['coins'])} marchés Hyperliquid, dernier jour clôturé {paper.iso(panel['days'][-1])}"
     (sdir / "report.md").write_text(report(state, score, info))

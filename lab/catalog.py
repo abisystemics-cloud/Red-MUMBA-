@@ -11,11 +11,16 @@ Familles :
 - trend : chaque marché en hausse sur L jours est acheté (long seulement) ;
 - premium : BTC, ETH et SOL achetés tant que la prime Coinbase est positive (demande
   institutionnelle américaine) ;
+- whales : long les marchés où les traders les plus rentables d'Hyperliquid sont le plus
+  acheteurs, short ceux où ils sont le plus vendeurs — donnée fournie chaque jour par
+  Claude via le connecteur Coinversa (voir lab/ask.py) ; pas d'historique, donc pas de
+  backtest : cette famille ne peut faire ses preuves qu'en simulation ;
 - ml : long/short sur les scores d'un modèle de machine learning ré-entraîné chaque
   semaine (`ridge` ou `gbm`, voir lab/ml.py).
 `gate` (facultatif) branche une règle sur le contexte : exposition pleine quand le feu
 est vert, divisée par deux quand il est rouge. Feux : nasdaq, stable, premium, cot, gpr,
-fomc, news_tone, geo_news, fng (voir lab/context.py) et risk_on (au moins la moitié des cinq premiers au vert).
+fomc, news_tone, geo_news, fng (voir lab/context.py), claude_risk (réponse quotidienne
+de Claude, voir lab/ask.py) et risk_on (au moins la moitié des cinq premiers au vert).
 `k` = nombre de marchés par côté (0 = 20 % de l'univers) ; `hold` = jours entre deux
 rééquilibrages, calés sur le calendrier (jour epoch % hold) pour que backtest et temps
 réel tombent sur les mêmes dates.
@@ -61,6 +66,9 @@ def default_catalog() -> list[Spec]:
     cat += [spec("premium", hold=1)]
     # règles apprises par machine learning (ré-entraînées chaque lundi)
     cat += [spec("ml", model=m, hold=7, k=0) for m in ("ridge", "gbm")]
+    # règles nourries par les réponses de Claude (connecteurs) : voir lab/ask.py
+    cat += [spec("whales", hold=1, k=k) for k in (0, 3)]
+    cat += [spec("blend", w=w, mom=14, carry=7, hold=h, k=0, gate="claude_risk") for (w, h) in ((0.5, 7), (0.7, 1))]
     return cat
 
 
@@ -87,6 +95,9 @@ def signal(panel: dict, s: Spec) -> np.ndarray:
         return carry_signal(C, F, int(s.p("carry")))
     if s.family in ("xsmom", "trend"):
         return mom_signal(C, int(s.p("mom")))
+    if s.family == "whales":
+        sc = (panel.get("ext") or {}).get("smart_money")
+        return np.full(C.shape, np.nan) if sc is None else sc
     if s.family == "ml":
         sc = (panel.get("ml_scores") or {}).get(s.p("model"))
         return np.full(C.shape, np.nan) if sc is None else sc
