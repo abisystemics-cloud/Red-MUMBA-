@@ -40,8 +40,8 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).
   Le bot valide les réponses comme des données non fiables (bornes, 36 h max). Usages : rapport, feu `claude_risk` (ne peut que
   diviser l'exposition par deux), famille `whales` en simulation. Première réponse déposée à la main le 14/11 (30 marchés,
-  risque `none`, Keel +0,2 %). La création de la tâche programmée quotidienne a été refusée par la règle de permission de la
-  session Claude : c'est au propriétaire de la créer ou de l'autoriser ; ne pas contourner. En attendant, pas de réponse = neutre.
+  risque `none`, Keel +0,2 %). Tâche programmée quotidienne créée le 14/11 au soir à la
+  demande du propriétaire (`trig_01SDt7RqfiqUqJZH8HAEDHyt`, 23:40 UTC, sans notification). Pas de réponse = neutre.
 - Les connecteurs de Claude (Keel, Coinversa, Bigdata.com, Firecrawl, PostHog…) appartiennent à la session Claude, pas au bot :
   le bot ne peut appeler que des API (gratuites aujourd'hui ; Coinversa/Perplexity/Firecrawl exigeraient des clés en secrets GitHub).
 - **Pas encore fait** : brancher le champion du laboratoire sur l'agent d'exécution du bot (`agents/`), qui contient toujours
