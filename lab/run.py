@@ -154,26 +154,29 @@ def main() -> int:
         ev = evolve._state(state)
         ev0, val0 = ev["trials"], ev["validated"]
         full = research.scorecard(hist, base + known, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=val0)
-        pool, gens = {}, 0
+        pool, gens = evolve.load_pool(state), 0
         while True:
             cands = evolve.propose(state, full, names, seed=ev["trials"] + gens)
             evolve.explore(state, hist, cands, cost, ms(SPLIT), pool)
             gens += 1
             if time.time() >= deadline or not cands:
                 break
-        short = evolve.shortlist(pool)
+        # un seul examen par jour (UTC), quel que soit le nombre de passages : la validation reste rare
+        short = [] if evolve.examined_today(state, today) else evolve.shortlist(pool)
         if short:
             sc = research.scorecard(hist, short, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=len(base) + len(known) + val0,
                                     var_trials=full["var_trials"])
             log += evolve.select(state, sc, short, today)
             full["rules"].update({b["name"]: sc["rules"][b["name"]] for b in ev["born"] if b["name"] in sc["rules"]})
+            pool = {}
         else:
             log += evolve.select(state, full, [], today)
+        evolve.save_pool(state, pool)
         for b in ev["born"]:
             b["dsr"] = full["rules"].get(b["name"], {}).get("deflated_sharpe", b["dsr"])
         ev["runs"] = ev.get("runs", 0) + 1
         log.append(f"{today} — ÉVOLUTION : {ev['trials'] - ev0} règles explorées en {gens} générations, {len(short)} présentées à la "
-                   f"validation, {len(ev['born'])} règles nées en service ({ev['trials']} explorées et {ev['validated']} présentées depuis le début)")
+                   f"validation ({len(ev['pool'])} en attente du prochain examen), {len(ev['born'])} règles nées en service ({ev['trials']} explorées et {ev['validated']} présentées depuis le début)")
         catalog = base + evolve.born_specs(state)
         keep = {s.name for s in catalog}
         score = {**full, "rules": {n: r for n, r in full["rules"].items() if n in keep}, "n_rules": len(catalog),

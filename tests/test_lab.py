@@ -220,6 +220,10 @@ def test_evolution_explores_on_train_and_validates_only_a_shortlist():
     assert ev["validated"] == len(short) and len(ev["born"]) <= evolve.CFG["max_new"]
     for b in ev["born"]:
         assert sc["rules"][b["name"]]["gate"] and b["dsr"] >= evolve.CFG["min_dsr"]
+    assert evolve.examined_today(state, "2026-11-14") and not evolve.examined_today(state, "2026-11-15")
+    evolve.save_pool(state, pool)
+    back = evolve.load_pool(state)
+    assert set(back) == set(pool) and all(back[k][1].name == pool[k][1].name for k in pool)
     again = evolve.propose(state, None, known, seed=1)
     assert not ({c.name for c in again} & {c.name for c in cands})
     # une règle née ici puis suspendue est retirée ; les présentations passées durcissent le Sharpe déflaté

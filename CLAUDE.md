@@ -52,6 +52,10 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   Corrigé : l'exploration (illimitée) ne note les candidates que sur l'apprentissage (< 2024, frais ×2) ; seules les 6 meilleures
   de types différents par passage (Sharpe apprentissage ≥ 0,8) sont présentées à la validation ; le Sharpe déflaté compte les
   règles présentées (`state.evolve.validated`, reparti de 16), plus le catalogue. Ne pas revenir à l'ancienne méthode.
+- **Dépôt rendu PUBLIC par le propriétaire le 14/11 au soir** (historique vérifié : aucun secret, aucune adresse personnelle ;
+  rester vigilant, tout ce qui est poussé est désormais visible de tous). Minutes GitHub gratuites → boucle CONTINUE :
+  `lab/loop.json` = 45 min d'exploration par passage, relance immédiate, sans plafond utile. L'examen de validation reste
+  limité à UNE fois par jour UTC (6 candidates au plus, prises dans `state.evolve.pool` qui accumule les meilleures entre deux examens).
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
 - **Canal bot → Claude (14/11)** : le bot écrit ses demandes dans `lab-state:lab/requests.json` (4 types en liste blanche,
   `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).

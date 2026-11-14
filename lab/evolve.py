@@ -5,8 +5,9 @@ mentir à soi-même.
 1. EXPLORER (autant qu'on veut) — des milliers de candidates par passage : mutations des
    meilleures règles connues et tirages au hasard dans la bibliothèque de signaux. Elles
    ne sont jugées QUE sur la période d'apprentissage (avant 2024), frais doublés.
-2. PRÉSENTER À L'EXAMEN (très peu) — seules les `validate_per_run` meilleures du passage,
-   de types différents, sont confrontées à la période de validation (depuis 2024) avec
+2. PRÉSENTER À L'EXAMEN (très peu) — UNE fois par jour, seules les `validate_per_run`
+   meilleures de toutes les explorations depuis le dernier examen (gardées dans
+   `state.evolve.pool`), de types différents, sont confrontées à la période de validation (depuis 2024) avec
    la fiche de score complète. Une candidate n'est adoptée que si elle passe la porte ET
    si son Sharpe déflaté atteint `min_dsr`. Le Sharpe déflaté compte toutes les règles
    déjà présentées à l'examen (compteur `validated`) : plus on en présente, plus la
@@ -107,11 +108,33 @@ def explore(state: dict, panel: dict, cands: list[Spec], cost: float, split_ms: 
         r = pnl[pre]
         sd = float(r.std(ddof=1)) if len(r) > 2 else 0.0
         sh = float(r.mean() / sd * math.sqrt(365)) if sd > 0 else 0.0
-        sig = (c.family,) + tuple(c.p(k, None) for k in ("a", "b", "sig", "model"))
+        sig = _sig(c)
         if sh > pool.get(sig, (-9.0, None))[0]:
             pool[sig] = (sh, c)
     ev["trials"] += len(cands)
     ev["seen"] = ([x for x in ev["seen"] if len(x) == 8] + [_h(c.name) for c in cands])[-60000:]
+
+
+def _sig(c: Spec) -> tuple:
+    return (c.family,) + tuple(c.p(k, None) for k in ("a", "b", "sig", "model"))
+
+
+def load_pool(state: dict) -> dict:
+    """Les meilleures candidates des passages précédents, en attente de l'examen quotidien."""
+    out = {}
+    for e in _state(state).get("pool", []):
+        c = _make(e["family"], e["params"])
+        out[_sig(c)] = (e["pre"], c)
+    return out
+
+
+def save_pool(state: dict, pool: dict, keep: int = 40) -> None:
+    best = sorted(pool.values(), key=lambda x: -x[0])[:keep]
+    _state(state)["pool"] = [{"pre": round(sh, 3), "family": c.family, "params": dict(c.params)} for sh, c in best]
+
+
+def examined_today(state: dict, today: str) -> bool:
+    return any(g["day"] == today and g["tested"] for g in _state(state)["log"])
 
 
 def shortlist(pool: dict, cfg: dict | None = None) -> list[Spec]:
@@ -146,6 +169,8 @@ def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | 
         ev["born"].remove(worst)
         lines.append(f"{today} — ÉVOLUTION : {worst['name']} cède sa place (la plus faible des règles nées ici)")
     best = max((rules[c.name]["deflated_sharpe"] for c in cands), default=0.0)
+    if not cands:
+        return lines
     ev["log"] = (ev["log"] + [{"day": today, "tested": len(cands), "adopted": len(ok), "best_dsr": best,
                                "passed_gate": sum(rules[c.name]["gate"] for c in cands),
                                "names": [f"{c.name} → porte {'oui' if rules[c.name]['gate'] else 'non'}, déflaté {rules[c.name]['deflated_sharpe']}"
