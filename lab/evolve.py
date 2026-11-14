@@ -9,7 +9,7 @@ Aucune IA ici : c'est une recherche évolutive ordinaire.
    depuis le début (compteur `trials`) : plus le laboratoire essaie, plus la barre
    monte. C'est le garde-fou contre le sur-apprentissage (à force d'essayer, on finit
    toujours par trouver une règle chanceuse).
-4. APPRENDRE À MARCHER — `max_new` adoptions par nuit au plus ; une règle adoptée
+4. APPRENDRE À MARCHER — `max_new` adoptions par JOUR au plus (même en boucle continue) ; une règle adoptée
    n'est pas « bonne » : elle entre en paper trading et doit y faire ses preuves.
 5. OUBLIER — une règle née ici et suspendue par le gouverneur est retirée ; au-delà de
    `max_born` règles, les plus faibles cèdent leur place.
@@ -85,7 +85,8 @@ def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | 
         ev["born"].remove(b)
         lines.append(f"{today} — ÉVOLUTION : {b['name']} retirée (suspendue en paper trading)")
     ok = sorted((c for c in cands if rules[c.name]["gate"] and rules[c.name]["deflated_sharpe"] >= cfg["min_dsr"]),
-                key=lambda c: -rules[c.name]["deflated_sharpe"])[:cfg["max_new"]]
+                key=lambda c: -rules[c.name]["deflated_sharpe"])
+    ok = ok[:max(cfg["max_new"] - sum(g["adopted"] for g in ev["log"] if g["day"] == today), 0)]
     for c in ok:
         r = rules[c.name]
         ev["born"].append({"name": c.name, "family": c.family, "params": dict(c.params), "born": today, "dsr": r["deflated_sharpe"]})
@@ -100,7 +101,5 @@ def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | 
         lines.append(f"{today} — ÉVOLUTION : {worst['name']} cède sa place (la plus faible des règles nées ici)")
     best = max((rules[c.name]["deflated_sharpe"] for c in cands), default=0.0)
     ev["log"] = (ev["log"] + [{"day": today, "tested": len(cands), "adopted": len(ok), "best_dsr": best,
-                               "passed_gate": sum(rules[c.name]["gate"] for c in cands)}])[-90:]
-    if not ok:
-        lines.append(f"{today} — ÉVOLUTION : {len(cands)} règles essayées, aucune adoptée (meilleur Sharpe déflaté {best}, seuil {cfg['min_dsr']})")
+                               "passed_gate": sum(rules[c.name]["gate"] for c in cands)}])[-400:]
     return lines

@@ -203,9 +203,9 @@ def test_evolution_proposes_new_rules_and_only_adopts_robust_ones():
     assert len({c.name for c in cands}) == len(cands)
     split = panel["days"][450]
     full = scorecard(panel, base + cands, 0.0005, split, panel["days"][800], extra_trials=0)
-    lines = evolve.select(state, full, cands, "2026-11-14")
+    evolve.select(state, full, cands, "2026-11-14")
     ev = state["evolve"]
-    assert ev["trials"] == len(cands) and len(ev["born"]) <= evolve.CFG["max_new"] and lines
+    assert ev["trials"] == len(cands) and len(ev["born"]) <= evolve.CFG["max_new"]
     for b in ev["born"]:
         assert full["rules"][b["name"]]["gate"] and b["dsr"] >= evolve.CFG["min_dsr"]
     again = evolve.propose(state, full, known, seed=1)

@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: lab
@@ -73,3 +74,19 @@ jobs:
         run: |
           cd /tmp/labstate && git add -A
           git diff --cached --quiet || (git commit -q -m "lab ${{ steps.m.outputs.mode }} $(date -u +%Y-%m-%dT%H:%MZ)" && git push origin lab-state)
+
+      # Boucle d'entraînement : tant que lab/loop.json dit "enabled": true, le laboratoire se relance lui-même,
+      # dans la limite de "max_runs_per_day" passages par jour (dépôt privé = 2 000 minutes GitHub gratuites par mois).
+      # Pour l'arrêter : passer "enabled" à false sur main (il reste alors le passage nocturne).
+      - name: Relancer (boucle)
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch -q origin main lab-state
+          CFG="$(git show origin/main:lab/loop.json)"
+          MAX="$(echo "$CFG" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("max_runs_per_day", 1))')"
+          DONE="$(git log origin/lab-state --since="$(date -u +%Y-%m-%dT00:00:00Z)" --oneline | wc -l)"
+          if echo "$CFG" | grep -q '"enabled": true' && [ "$DONE" -lt "$MAX" ]; then
+            gh workflow run lab.yml --ref main -f mode=weekly
+          fi

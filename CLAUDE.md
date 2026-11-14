@@ -35,6 +35,11 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   meilleures + hasard, familles blend/carry/xsmom/ml), adoptées en paper trading seulement si porte + Sharpe déflaté ≥ 0,6
   calculé sur TOUS les essais cumulés (`state.evolve.trials`), 2 adoptions par nuit au plus, 24 règles nées au plus, retrait
   des règles suspendues. Les données propres (≥ 2026-07) ne servent jamais à sélectionner.
+- **Boucle d'entraînement (14/11, soir)** : `lab/loop.json` (`enabled`, `minutes`, `max_runs_per_day`). Tant que `enabled` est
+  vrai, chaque passage enchaîne les générations de règles pendant `minutes` minutes puis se relance lui-même, dans la limite de
+  `max_runs_per_day` passages par jour. Le dépôt est PRIVÉ : 2 000 minutes GitHub Actions gratuites par mois (≈ 570 déjà
+  consommées au 14/11) — d'où 2 passages de ~40 min par jour ; une boucle vraiment continue exigerait un dépôt public (minutes
+  illimitées) ou un serveur : décision du propriétaire. ARRÊT sur demande du propriétaire : mettre `enabled` à false sur main.
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
 - **Canal bot → Claude (14/11)** : le bot écrit ses demandes dans `lab-state:lab/requests.json` (4 types en liste blanche,
   `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).
