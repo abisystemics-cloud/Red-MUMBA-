@@ -16,7 +16,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from lab import ask, context, evolve, governor, hl_data, ml, paper, research
+from lab import ask, context, evolve, governor, hl_data, ml, paper, research, signals
 from lab.catalog import default_catalog
 from scripts.bar_research import Costs
 
@@ -124,8 +124,9 @@ def main() -> int:
         from scripts.tsmom_robustness import ms
         end = datetime.now(timezone.utc)
         last_full = f"{end.year - (end.month == 1):04d}-{(end.month - 2) % 12 + 1:02d}"   # dernier mois complet
-        coins, _raw, days, C, F, R, _b = build_panel(Path(a.cache), a.history_from, last_full)
+        coins, raw, days, C, F, R, _b = build_panel(Path(a.cache), a.history_from, last_full)
         hist = {"coins": coins, "days": days, "C": C, "F": F, "R": R}
+        hist["H"], hist["L"], hist["V"] = signals.daily_hlv(raw, coins, days)
         hist["ctx"], _ = context.build_context(days, Path(a.cache), live=False)
         hist["ml_scores"], rows, ridge_top = {}, 0, []
         for kind in ml.MODELS:

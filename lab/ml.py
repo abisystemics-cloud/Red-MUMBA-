@@ -18,17 +18,22 @@ from pathlib import Path
 
 import numpy as np
 
+from lab import signals
 from lab.context import KEYS as CTX_KEYS
 from scripts.ml_research import FEATURES, HORIZON, make_features, make_target, walk_forward_scores, year_of
 
 MODELS = ("ridge", "gbm")
-FEATURE_NAMES = list(FEATURES) + [f"ctx_{k}" for k in CTX_KEYS]
+EXTRA = (("brk", 21), ("z", 10), ("vwapd", 14), ("vsurge", 7), ("spring", 14), ("maxret", 14), ("fchg", 7), ("illiq", 14))
+FEATURE_NAMES = list(FEATURES) + [f"{n}{k}" for n, k in EXTRA] + [f"ctx_{k}" for k in CTX_KEYS]
 
 
 def features(panel: dict) -> np.ndarray:
     C, F, R = panel["C"], panel["F"], panel["R"]
     b = panel["coins"].index("BTC") if "BTC" in panel["coins"] else 0
     X = make_features(C, F, R, b)
+    # signaux de la bibliothèque (cassures, VWAP, Wyckoff, volume…) : rang du jour, 0,5 si indisponible
+    E = np.stack([np.nan_to_num(signals.rank(panel, n, k), nan=0.0) + 0.5 for n, k in EXTRA], axis=2)
+    X = np.concatenate([X, np.where(np.isfinite(C)[:, :, None], E, np.nan)], axis=2)
     T, N, _ = X.shape
     ctx = panel.get("ctx") or {}
     cols = []

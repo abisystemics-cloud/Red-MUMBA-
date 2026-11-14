@@ -33,7 +33,7 @@ def fetch_panel(coins: list[str], lookback_days: int = 75, now_ms: int | None = 
     start = last_closed - (lookback_days - 1) * DAY_MS
     days = np.arange(start, last_closed + 1, DAY_MS, dtype=np.float64)
     T = len(days)
-    kept, cols_c, cols_f = [], [], []
+    kept, cols_c, cols_f, cols_h, cols_l, cols_v = [], [], [], [], [], []
     for coin in coins:
         try:
             candles = post({"type": "candleSnapshot", "req": {"coin": coin, "interval": "1d",
@@ -43,11 +43,13 @@ def fetch_panel(coins: list[str], lookback_days: int = 75, now_ms: int | None = 
         time.sleep(pause_s)
         if not candles:
             continue
-        c = np.full(T, np.nan)
+        c, h, lo, v = (np.full(T, np.nan) for _ in range(4))
         for k in candles:
             i = int((int(k["t"]) - start) // DAY_MS)
             if 0 <= i < T and int(k["t"]) % DAY_MS == 0:
                 c[i] = float(k["c"])
+                h[i], lo[i] = float(k.get("h", k["c"])), float(k.get("l", k["c"]))
+                v[i] = float(k.get("v", 1.0)) * c[i]
         if np.isfinite(c).sum() < 30 or not np.isfinite(c[-1]):
             continue
         f = np.zeros(T)
@@ -70,9 +72,13 @@ def fetch_panel(coins: list[str], lookback_days: int = 75, now_ms: int | None = 
         kept.append(coin)
         cols_c.append(c)
         cols_f.append(f)
+        cols_h.append(h)
+        cols_l.append(lo)
+        cols_v.append(v)
     if not kept:
         raise RuntimeError("aucun marché récupéré depuis Hyperliquid")
     C, F = np.column_stack(cols_c), np.column_stack(cols_f)
     R = np.full(C.shape, np.nan)
     R[1:] = C[1:] / C[:-1] - 1
-    return {"coins": kept, "days": days, "C": C, "F": F, "R": R, "source": "hyperliquid"}
+    return {"coins": kept, "days": days, "C": C, "F": F, "R": R, "source": "hyperliquid",
+            "H": np.column_stack(cols_h), "L": np.column_stack(cols_l), "V": np.column_stack(cols_v)}

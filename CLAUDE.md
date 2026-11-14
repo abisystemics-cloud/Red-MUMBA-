@@ -40,6 +40,13 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   `max_runs_per_day` passages par jour. Le dépôt est PRIVÉ : 2 000 minutes GitHub Actions gratuites par mois (≈ 570 déjà
   consommées au 14/11) — d'où 2 passages de ~40 min par jour ; une boucle vraiment continue exigerait un dépôt public (minutes
   illimitées) ou un serveur : décision du propriétaire. ARRÊT sur demande du propriétaire : mettre `enabled` à false sur main.
+- **Bibliothèque de signaux (14/11, soir, à la demande du propriétaire : « il doit tout tester »)** : `lab/signals.py`, 12 signaux
+  journaliers × 9 fenêtres (mom, riskmom, brk = cassures, z = Bollinger, vwapd = écart au VWAP, vsurge = volume, spring = Wyckoff,
+  vol, maxret, illiq, carry, fchg), calculés sur clôture + plus-haut/plus-bas/volume (Binance en historique, Hyperliquid en réel).
+  Deux familles nouvelles : `mix` (deux signaux quelconques, chacun à l'endroit ou à l'envers) et `ts` (un signal marché par
+  marché) ; 11 graines au catalogue (60 règles) ; l'évolution explore surtout `mix` (~56 millions de combinaisons) ; le ML reçoit
+  8 signaux de plus. Premier passage 14/11 : 22 496 règles essayées (familles d'origine), 2 adoptées. Toujours journalier :
+  les règles intrajournalières (15 min / 1 h) restent hors laboratoire (elles perdaient toutes après frais aux tests du 12–13/11).
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
 - **Canal bot → Claude (14/11)** : le bot écrit ses demandes dans `lab-state:lab/requests.json` (4 types en liste blanche,
   `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).

@@ -21,7 +21,7 @@ def test_catalog_names_unique_and_weights_sane():
     for s in cat:
         W = weights(p, s)
         assert np.isfinite(W).all() and np.abs(W).sum(axis=1).max() <= 1 + 1e-9
-        if s.family not in ("trend", "premium"):
+        if s.family not in ("trend", "premium", "ts"):
             assert abs(W[-1].sum()) < 1e-9  # long/short : exposition nette nulle
     weekly = weights(p, spec("carry", carry=7, hold=7, k=3))
     idx = (p["days"] // DAY_MS).astype(int)
@@ -218,3 +218,26 @@ def test_evolution_proposes_new_rules_and_only_adopts_robust_ones():
     harder = scorecard(panel, base, 0.0005, split, panel["days"][800], extra_trials=500)
     easy = scorecard(panel, base, 0.0005, split, panel["days"][800])
     assert all(harder["rules"][n]["deflated_sharpe"] <= easy["rules"][n]["deflated_sharpe"] for n in easy["rules"])
+
+
+def test_signal_library_has_no_lookahead_and_feeds_new_families():
+    from lab import evolve, signals
+    p = _panel(T=160)
+    rng = np.random.default_rng(3)
+    p["H"], p["L"] = p["C"] * (1 + rng.random(p["C"].shape) * 0.03), p["C"] * (1 - rng.random(p["C"].shape) * 0.03)
+    p["V"] = rng.random(p["C"].shape) * 1e6 + 1e5
+    cut = {k: (v[:120] if isinstance(v, np.ndarray) and len(v) == 160 else v) for k, v in p.items()}
+    for name in signals.SIGS:
+        for n in (2, 14, 42):
+            full, part = signals.get(p, name, n), signals.get(cut, name, n)
+            assert full.shape == p["C"].shape
+            np.testing.assert_allclose(full[:120], part, equal_nan=True, err_msg=f"{name}{n} regarde vers l'avenir")
+            assert np.isfinite(full[100:]).any(), f"{name}{n} toujours vide"
+            r = signals.rank(p, name, n)
+            assert np.nanmin(r) >= -0.5 and np.nanmax(r) <= 0.5
+    for s in (spec("mix", a="spring", la=14, sa=1, b="vwapd", lb=7, sb=-1, w=0.4, hold=2, k=3, gate="nasdaq"),
+              spec("ts", sig="brk", l=21, s=1, hold=1)):
+        W = weights(p, s)
+        assert np.isfinite(W).all() and np.abs(W).sum(axis=1).max() <= 1.0 + 1e-9 and np.abs(W[100:]).sum() > 0
+    fams = {c.family for seed in range(5) for c in evolve.propose({}, None, set(), seed=seed)}
+    assert {"mix", "ts"} <= fams

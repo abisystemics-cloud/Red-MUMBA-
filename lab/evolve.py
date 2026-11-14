@@ -20,13 +20,24 @@ from __future__ import annotations
 
 import numpy as np
 
-from lab.catalog import GATES, Spec, spec
+import zlib
 
-CFG = {"per_night": 16, "max_new": 2, "max_born": 24, "min_dsr": 0.6, "random_share": 0.3}
+from lab.catalog import GATES, Spec, spec
+from lab.signals import LB, SIGS, TS_SIGS
+
+CFG = {"per_night": 16, "max_new": 2, "max_born": 24, "min_dsr": 0.6, "random_share": 0.5}
 GRID = {"w": (0.3, 0.4, 0.5, 0.6, 0.7, 0.8), "mom": (5, 7, 10, 14, 21, 28, 42), "carry": (2, 3, 5, 7, 10, 14, 21),
-        "hold": (1, 2, 3, 5, 7, 14), "k": (0, 2, 3, 4, 5), "gate": (None,) + GATES, "model": ("ridge", "gbm")}
+        "hold": (1, 2, 3, 5, 7, 14), "k": (0, 2, 3, 4, 5), "gate": (None,) + GATES, "model": ("ridge", "gbm"),
+        "a": SIGS, "b": SIGS, "sig": TS_SIGS, "la": LB, "lb": LB, "l": LB, "sa": (1, -1), "sb": (1, -1), "s": (1, -1)}
+CATEGORICAL = ("gate", "model", "a", "b", "sig", "sa", "sb", "s")
 FAMILIES = {"blend": ("w", "mom", "carry", "hold", "k", "gate"), "carry": ("carry", "hold", "k", "gate"),
-            "xsmom": ("mom", "hold", "k", "gate"), "ml": ("model", "hold", "k", "gate")}
+            "xsmom": ("mom", "hold", "k", "gate"), "ml": ("model", "hold", "k", "gate"),
+            "mix": ("a", "la", "sa", "b", "lb", "sb", "w", "hold", "k", "gate"), "ts": ("sig", "l", "s", "hold", "gate")}
+DRAW = ("mix",) * 6 + ("ts",) * 2 + ("blend", "carry", "xsmom", "ml")   # le hasard explore surtout la bibliothèque de signaux
+
+
+def _h(name: str) -> str:
+    return f"{zlib.crc32(name.encode()):08x}"
 
 
 def _make(family: str, params: dict) -> Spec:
@@ -38,7 +49,7 @@ def born_specs(state: dict) -> list[Spec]:
 
 
 def _random(rng) -> Spec:
-    fam = list(FAMILIES)[int(rng.integers(len(FAMILIES)))]
+    fam = DRAW[int(rng.integers(len(DRAW)))]
     return _make(fam, {k: GRID[k][int(rng.integers(len(GRID[k])))] for k in FAMILIES[fam]})
 
 
@@ -46,7 +57,7 @@ def _mutate(rng, family: str, params: dict) -> Spec:
     p = {k: params.get(k) for k in FAMILIES[family]}
     for key in rng.choice(FAMILIES[family], size=int(rng.integers(1, 3)), replace=False):
         grid = GRID[key]
-        if key in ("gate", "model") or p[key] not in grid:
+        if key in CATEGORICAL or p[key] not in grid:
             p[key] = grid[int(rng.integers(len(grid)))]
         else:
             i = grid.index(p[key]) + int(rng.choice((-1, 1)))
@@ -62,13 +73,13 @@ def propose(state: dict, score: dict | None, known: set[str], seed: int, cfg: di
     rules = (score or {}).get("rules", {})
     parents = [(r["family"], r["params"]) for _, r in sorted(rules.items(), key=lambda x: -x[1]["post_sharpe_ci95"][0])
                if r["gate"] and r["family"] in FAMILIES and r["params"].get("gate") != "claude_risk"][:12]
-    taken, out = known | set(ev["seen"]), []
+    taken, out = {_h(n) for n in known} | set(ev["seen"]), []
     for _ in range(cfg["per_night"] * 20):
         if len(out) >= cfg["per_night"]:
             break
         c = _mutate(rng, *parents[int(rng.integers(len(parents)))]) if parents and rng.random() > cfg["random_share"] else _random(rng)
-        if c.name not in taken:
-            taken.add(c.name)
+        if _h(c.name) not in taken:
+            taken.add(_h(c.name))
             out.append(c)
     return out
 
@@ -79,7 +90,7 @@ def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | 
     ev = state.setdefault("evolve", {"trials": 0, "born": [], "seen": [], "log": []})
     rules, lines = score["rules"], []
     ev["trials"] += len(cands)
-    ev["seen"] = (ev["seen"] + [c.name for c in cands])[-5000:]
+    ev["seen"] = ([x for x in ev["seen"] if len(x) == 8] + [_h(c.name) for c in cands])[-60000:]
     status = state.get("status", {})
     for b in [b for b in ev["born"] if status.get(b["name"], {}).get("state") == "suspended"]:
         ev["born"].remove(b)

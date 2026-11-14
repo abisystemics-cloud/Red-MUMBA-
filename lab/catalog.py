@@ -17,6 +17,10 @@ Familles :
   backtest : cette famille ne peut faire ses preuves qu'en simulation ;
 - ml : long/short sur les scores d'un modèle de machine learning ré-entraîné chaque
   semaine (`ridge` ou `gbm`, voir lab/ml.py).
+- mix : mélange de DEUX signaux quelconques de la bibliothèque lab/signals.py (cassures,
+  VWAP, Wyckoff, volume, volatilité, funding…), chacun à l'endroit ou à l'envers,
+  long/short ; c'est le terrain de jeu principal de l'évolution (lab/evolve.py) ;
+- ts : un signal joué marché par marché (acheté s'il est positif, vendu s'il est négatif).
 `gate` (facultatif) branche une règle sur le contexte : exposition pleine quand le feu
 est vert, divisée par deux quand il est rouge. Feux : nasdaq, stable, premium, cot, gpr,
 fomc, news_tone, geo_news, fng (voir lab/context.py), claude_risk (réponse quotidienne
@@ -31,6 +35,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from lab import signals
 from scripts.quant_research import carry_signal, mom_signal, rank01, xs_weights
 
 DAY_MS = 86_400_000
@@ -69,6 +74,11 @@ def default_catalog() -> list[Spec]:
     # règles nourries par les réponses de Claude (connecteurs) : voir lab/ask.py
     cat += [spec("whales", hold=1, k=k) for k in (0, 3)]
     cat += [spec("blend", w=w, mom=14, carry=7, hold=h, k=0, gate="claude_risk") for (w, h) in ((0.5, 7), (0.7, 1))]
+    # signaux de la bibliothèque (cassures, VWAP, Wyckoff, volume…) : graines pour l'évolution
+    cat += [spec("ts", sig=g, l=n, s=sg, hold=1) for (g, n, sg) in (("spring", 14, 1), ("vwapd", 14, 1), ("vwapd", 14, -1), ("brk", 21, 1), ("z", 10, -1))]
+    cat += [spec("mix", a=a, la=la, sa=sa, b=b, lb=lb, sb=sb, w=0.5, hold=h, k=0)
+            for (a, la, sa, b, lb, sb, h) in (("z", 10, -1, "carry", 7, 1, 1), ("brk", 21, 1, "carry", 7, 1, 7), ("vsurge", 7, 1, "mom", 14, 1, 1),
+                                              ("spring", 14, 1, "carry", 7, 1, 1), ("vol", 28, -1, "mom", 14, 1, 7), ("maxret", 14, -1, "carry", 7, 1, 7))]
     return cat
 
 
@@ -95,6 +105,12 @@ def signal(panel: dict, s: Spec) -> np.ndarray:
         return carry_signal(C, F, int(s.p("carry")))
     if s.family in ("xsmom", "trend"):
         return mom_signal(C, int(s.p("mom")))
+    if s.family == "mix":
+        w = s.p("w")
+        return (w * s.p("sa", 1) * signals.rank(panel, s.p("a"), s.p("la")) +
+                (1 - w) * s.p("sb", 1) * signals.rank(panel, s.p("b"), s.p("lb")))
+    if s.family == "ts":
+        return s.p("s", 1) * signals.get(panel, s.p("sig"), s.p("l"))
     if s.family == "whales":
         sc = (panel.get("ext") or {}).get("smart_money")
         return np.full(C.shape, np.nan) if sc is None else sc
@@ -126,6 +142,9 @@ def weights(panel: dict, s: Spec) -> np.ndarray:
             if s.family == "trend":
                 ok = np.isfinite(sig[t])
                 cur = np.where(ok & (np.nan_to_num(sig[t]) > 0), 1.0 / max(int(ok.sum()), 1), 0.0) if ok.sum() >= 3 else np.zeros(N)
+            elif s.family == "ts":
+                ok = np.isfinite(sig[t])
+                cur = np.where(ok, np.sign(np.nan_to_num(sig[t])), 0.0) / max(int(ok.sum()), 1) if ok.sum() >= 3 else np.zeros(N)
             else:
                 cur = xs_weights(sig[t], k_fixed=int(s.p("k")))
             started = started or bool(np.isfinite(sig[t]).any())
