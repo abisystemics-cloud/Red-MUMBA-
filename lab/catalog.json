@@ -516,6 +516,146 @@
   }
  },
  {
+  "name": "ts(hold=1,l=14,s=1,sig=spring)",
+  "family": "ts",
+  "params": {
+   "hold": 1,
+   "l": 14,
+   "s": 1,
+   "sig": "spring"
+  }
+ },
+ {
+  "name": "ts(hold=1,l=14,s=1,sig=vwapd)",
+  "family": "ts",
+  "params": {
+   "hold": 1,
+   "l": 14,
+   "s": 1,
+   "sig": "vwapd"
+  }
+ },
+ {
+  "name": "ts(hold=1,l=14,s=-1,sig=vwapd)",
+  "family": "ts",
+  "params": {
+   "hold": 1,
+   "l": 14,
+   "s": -1,
+   "sig": "vwapd"
+  }
+ },
+ {
+  "name": "ts(hold=1,l=21,s=1,sig=brk)",
+  "family": "ts",
+  "params": {
+   "hold": 1,
+   "l": 21,
+   "s": 1,
+   "sig": "brk"
+  }
+ },
+ {
+  "name": "ts(hold=1,l=10,s=-1,sig=z)",
+  "family": "ts",
+  "params": {
+   "hold": 1,
+   "l": 10,
+   "s": -1,
+   "sig": "z"
+  }
+ },
+ {
+  "name": "mix(a=z,b=carry,hold=1,k=0,la=10,lb=7,sa=-1,sb=1,w=0.5)",
+  "family": "mix",
+  "params": {
+   "a": "z",
+   "b": "carry",
+   "hold": 1,
+   "k": 0,
+   "la": 10,
+   "lb": 7,
+   "sa": -1,
+   "sb": 1,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "mix(a=brk,b=carry,hold=7,k=0,la=21,lb=7,sa=1,sb=1,w=0.5)",
+  "family": "mix",
+  "params": {
+   "a": "brk",
+   "b": "carry",
+   "hold": 7,
+   "k": 0,
+   "la": 21,
+   "lb": 7,
+   "sa": 1,
+   "sb": 1,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "mix(a=vsurge,b=mom,hold=1,k=0,la=7,lb=14,sa=1,sb=1,w=0.5)",
+  "family": "mix",
+  "params": {
+   "a": "vsurge",
+   "b": "mom",
+   "hold": 1,
+   "k": 0,
+   "la": 7,
+   "lb": 14,
+   "sa": 1,
+   "sb": 1,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "mix(a=spring,b=carry,hold=1,k=0,la=14,lb=7,sa=1,sb=1,w=0.5)",
+  "family": "mix",
+  "params": {
+   "a": "spring",
+   "b": "carry",
+   "hold": 1,
+   "k": 0,
+   "la": 14,
+   "lb": 7,
+   "sa": 1,
+   "sb": 1,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "mix(a=vol,b=mom,hold=7,k=0,la=28,lb=14,sa=-1,sb=1,w=0.5)",
+  "family": "mix",
+  "params": {
+   "a": "vol",
+   "b": "mom",
+   "hold": 7,
+   "k": 0,
+   "la": 28,
+   "lb": 14,
+   "sa": -1,
+   "sb": 1,
+   "w": 0.5
+  }
+ },
+ {
+  "name": "mix(a=maxret,b=carry,hold=7,k=0,la=14,lb=7,sa=-1,sb=1,w=0.5)",
+  "family": "mix",
+  "params": {
+   "a": "maxret",
+   "b": "carry",
+   "hold": 7,
+   "k": 0,
+   "la": 14,
+   "lb": 7,
+   "sa": -1,
+   "sb": 1,
+   "w": 0.5
+  }
+ },
+ {
   "name": "blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7)",
   "family": "blend",
   "params": {
