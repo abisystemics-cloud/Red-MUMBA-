@@ -5,11 +5,11 @@ hl-swarm (projet « Red MUMBA ») : bot de trading autonome à 7 agents pour les
 Le propriétaire ne veut écrire aucune ligne de code : Claude code, teste, pousse et explique en français.
 Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` (règles d'intervention).
 
-## État (mis à jour le 13/11/2026)
+## État (mis à jour le 14/11/2026)
 - **Orientation décidée par le propriétaire (13/11)** : il ne cherche pas « la » stratégie mais un système complet —
   règles, données, exécution, recherche — autonome, auto-apprenant, sans LLM dans les décisions ; Claude supervise au début.
 - **Laboratoire autonome en service** (`lab/`, workflow `.github/workflows/lab.yml`, simulation uniquement) :
-  - `lab/catalog.py` : catalogue de 45 règles (familles blend / carry / xsmom / trend + règles `gate=` branchées sur le
+  - `lab/catalog.py` : catalogue de 49 règles (dont `whales` et le frein `gate=claude_risk`, voir canal bot → Claude ; 45 règles avant le 14/11) (familles blend / carry / xsmom / trend + règles `gate=` branchées sur le
     contexte, règle `premium`, règles `ml`) — ajouter une idée = ajouter une famille ;
   - `lab/context.py` : six feux de contexte journaliers avec délais de publication (Nasdaq > SMA100, stablecoins en hausse 30 j,
     prime Coinbase 7 j, gérants d'actifs CME en hausse 4 sem., risque géopolitique calme, hors fenêtre FOMC — la liste FOMC
@@ -28,6 +28,12 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   - Passage du 13/11/2026 (45 règles) : 30 passent la porte (39 règles : 24), dont les mélanges avec feux de contexte en tête ; `premium`, `ml` et `trend` ne la passent pas (ML : Sharpe < 2024 négatif, ≥ 2024 0,7–0,8). Premier passage (19 règles) : 10 passaient ; champion provisoire `blend(carry=7,hold=1,k=0,mom=14,w=0.7)` ;
     avec 50 $ les règles à 6+6 et 3+3 positions n'exécutent rien (ordres < 10 $).
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
+- **Canal bot → Claude (14/11)** : le bot écrit ses demandes dans `lab-state:lab/requests.json` (4 types en liste blanche,
+  `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).
+  Le bot valide les réponses comme des données non fiables (bornes, 36 h max). Usages : rapport, feu `claude_risk` (ne peut que
+  diviser l'exposition par deux), famille `whales` en simulation. Première réponse déposée à la main le 14/11 (30 marchés,
+  risque `none`, Keel +0,2 %). La création de la tâche programmée quotidienne a été refusée par la règle de permission de la
+  session Claude : c'est au propriétaire de la créer ou de l'autoriser ; ne pas contourner. En attendant, pas de réponse = neutre.
 - Les connecteurs de Claude (Keel, Coinversa, Bigdata.com, Firecrawl, PostHog…) appartiennent à la session Claude, pas au bot :
   le bot ne peut appeler que des API (gratuites aujourd'hui ; Coinversa/Perplexity/Firecrawl exigeraient des clés en secrets GitHub).
 - **Pas encore fait** : brancher le champion du laboratoire sur l'agent d'exécution du bot (`agents/`), qui contient toujours
