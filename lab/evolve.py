@@ -1,31 +1,37 @@
-"""Évolution : le laboratoire invente lui-même de nouvelles règles, nuit après nuit.
+"""Évolution : le laboratoire invente lui-même de nouvelles règles, passage après passage.
 
-Aucune IA ici : c'est une recherche évolutive ordinaire.
-1. PROPOSER — chaque nuit, `per_night` candidates : des mutations (un ou deux paramètres
-   déplacés d'un cran) des meilleures règles connues, plus quelques tirages au hasard.
-2. ÉVALUER — exactement la même fiche de score que le catalogue (lab/research.py).
-3. SÉLECTIONNER — une candidate n'est adoptée que si elle passe la porte ET si son
-   Sharpe déflaté atteint `min_dsr`. Le Sharpe déflaté compte TOUS les essais faits
-   depuis le début (compteur `trials`) : plus le laboratoire essaie, plus la barre
-   monte. C'est le garde-fou contre le sur-apprentissage (à force d'essayer, on finit
-   toujours par trouver une règle chanceuse).
-4. APPRENDRE À MARCHER — `max_new` adoptions par JOUR au plus (même en boucle continue) ; une règle adoptée
-   n'est pas « bonne » : elle entre en paper trading et doit y faire ses preuves.
-5. OUBLIER — une règle née ici et suspendue par le gouverneur est retirée ; au-delà de
+Aucune IA ici : c'est une recherche évolutive ordinaire, en deux étages pour ne pas se
+mentir à soi-même.
+1. EXPLORER (autant qu'on veut) — des milliers de candidates par passage : mutations des
+   meilleures règles connues et tirages au hasard dans la bibliothèque de signaux. Elles
+   ne sont jugées QUE sur la période d'apprentissage (avant 2024), frais doublés.
+2. PRÉSENTER À L'EXAMEN (très peu) — seules les `validate_per_run` meilleures du passage,
+   de types différents, sont confrontées à la période de validation (depuis 2024) avec
+   la fiche de score complète. Une candidate n'est adoptée que si elle passe la porte ET
+   si son Sharpe déflaté atteint `min_dsr`. Le Sharpe déflaté compte toutes les règles
+   déjà présentées à l'examen (compteur `validated`) : plus on en présente, plus la
+   barre monte. Explorer est gratuit ; regarder la validation se paie.
+   (Le 14/11/2026, la première version confrontait chaque candidate à la validation :
+   après 73 000 essais le Sharpe déflaté de toutes les règles était tombé à ~0,02 —
+   plus rien ne pouvait être distingué de la chance. D'où les deux étages.)
+3. APPRENDRE À MARCHER — `max_new` adoptions par JOUR au plus ; une règle adoptée n'est
+   pas « bonne » : elle entre en paper trading et doit y faire ses preuves.
+4. OUBLIER — une règle née ici et suspendue par le gouverneur est retirée ; au-delà de
    `max_born` règles, les plus faibles cèdent leur place.
-Les données « propres » (≥ 2026-07) ne servent JAMAIS à sélectionner : elles restent
-un contrôle honnête.
+Les données « propres » (≥ 2026-07) ne servent JAMAIS à sélectionner.
 """
 from __future__ import annotations
 
-import numpy as np
-
+import math
 import zlib
+
+import numpy as np
 
 from lab.catalog import GATES, Spec, spec
 from lab.signals import LB, SIGS, TS_SIGS
 
-CFG = {"per_night": 16, "max_new": 2, "max_born": 24, "min_dsr": 0.6, "random_share": 0.5}
+CFG = {"per_night": 16, "max_new": 2, "max_born": 24, "min_dsr": 0.6, "random_share": 0.5, "validate_per_run": 6,
+       "min_pre_sharpe": 0.8}
 GRID = {"w": (0.3, 0.4, 0.5, 0.6, 0.7, 0.8), "mom": (5, 7, 10, 14, 21, 28, 42), "carry": (2, 3, 5, 7, 10, 14, 21),
         "hold": (1, 2, 3, 5, 7, 14), "k": (0, 2, 3, 4, 5), "gate": (None,) + GATES, "model": ("ridge", "gbm"),
         "a": SIGS, "b": SIGS, "sig": TS_SIGS, "la": LB, "lb": LB, "l": LB, "sa": (1, -1), "sb": (1, -1), "s": (1, -1)}
@@ -68,11 +74,11 @@ def _mutate(rng, family: str, params: dict) -> Spec:
 def propose(state: dict, score: dict | None, known: set[str], seed: int, cfg: dict | None = None) -> list[Spec]:
     """Les candidates de la nuit : jamais une règle déjà connue ni déjà essayée."""
     cfg = {**CFG, **(cfg or {})}
-    ev = state.setdefault("evolve", {"trials": 0, "born": [], "seen": [], "log": []})
+    ev = _state(state)
     rng = np.random.default_rng(seed)
     rules = (score or {}).get("rules", {})
-    parents = [(r["family"], r["params"]) for _, r in sorted(rules.items(), key=lambda x: -x[1]["post_sharpe_ci95"][0])
-               if r["gate"] and r["family"] in FAMILIES and r["params"].get("gate") != "claude_risk"][:12]
+    parents = [(r["family"], r["params"]) for _, r in sorted(rules.items(), key=lambda x: -x[1]["pre"]["sharpe"])
+               if r["pre"]["sharpe"] > 0 and r["family"] in FAMILIES and r["params"].get("gate") != "claude_risk"][:12]
     taken, out = {_h(n) for n in known} | set(ev["seen"]), []
     for _ in range(cfg["per_night"] * 20):
         if len(out) >= cfg["per_night"]:
@@ -84,13 +90,42 @@ def propose(state: dict, score: dict | None, known: set[str], seed: int, cfg: di
     return out
 
 
-def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | None = None) -> list[str]:
-    """Adopte, retire, tient le compte des essais. → lignes pour le journal."""
-    cfg = {**CFG, **(cfg or {})}
+def _state(state: dict) -> dict:
     ev = state.setdefault("evolve", {"trials": 0, "born": [], "seen": [], "log": []})
-    rules, lines = score["rules"], []
+    ev.setdefault("validated", 16 if ev["trials"] else 0)   # 14/11 : les 2 premières adoptions venaient d'un lot de 16
+    return ev
+
+
+def explore(state: dict, panel: dict, cands: list[Spec], cost: float, split_ms: float, pool: dict) -> None:
+    """Étage 1 : note chaque candidate sur l'apprentissage seul (frais doublés) ; `pool` garde la meilleure de chaque type."""
+    from lab.catalog import weights
+    from scripts.quant_research import backtest
+    ev = _state(state)
+    pre = np.asarray(panel["days"]) < split_ms
+    for c in cands:
+        pnl, _, _ = backtest(weights(panel, c), panel["R"], panel["F"], 2 * cost)
+        r = pnl[pre]
+        sd = float(r.std(ddof=1)) if len(r) > 2 else 0.0
+        sh = float(r.mean() / sd * math.sqrt(365)) if sd > 0 else 0.0
+        sig = (c.family,) + tuple(c.p(k, None) for k in ("a", "b", "sig", "model"))
+        if sh > pool.get(sig, (-9.0, None))[0]:
+            pool[sig] = (sh, c)
     ev["trials"] += len(cands)
     ev["seen"] = ([x for x in ev["seen"] if len(x) == 8] + [_h(c.name) for c in cands])[-60000:]
+
+
+def shortlist(pool: dict, cfg: dict | None = None) -> list[Spec]:
+    cfg = {**CFG, **(cfg or {})}
+    best = sorted(pool.values(), key=lambda x: -x[0])[:cfg["validate_per_run"]]
+    return [c for sh, c in best if sh >= cfg["min_pre_sharpe"]]
+
+
+def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | None = None) -> list[str]:
+    """Étage 2 : `cands` = les rares candidates présentées à la validation. Adopte, retire, tient les comptes."""
+    cfg = {**CFG, **(cfg or {})}
+    ev = _state(state)
+    rules, lines = score["rules"], []
+    ev["validated"] += len(cands)
     status = state.get("status", {})
     for b in [b for b in ev["born"] if status.get(b["name"], {}).get("state") == "suspended"]:
         ev["born"].remove(b)
@@ -102,7 +137,7 @@ def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | 
         r = rules[c.name]
         ev["born"].append({"name": c.name, "family": c.family, "params": dict(c.params), "born": today, "dsr": r["deflated_sharpe"]})
         lines.append(f"{today} — ÉVOLUTION : nouvelle règle {c.name} adoptée en paper trading (Sharpe ≥ 2024 {r['post']['sharpe']}, "
-                     f"déflaté {r['deflated_sharpe']} sur {ev['trials']} essais)")
+                     f"déflaté {r['deflated_sharpe']} sur {ev['validated']} règles présentées à la validation)")
     for b in ev["born"]:
         if b["name"] in rules:
             b["dsr"] = rules[b["name"]]["deflated_sharpe"]
@@ -112,5 +147,7 @@ def select(state: dict, score: dict, cands: list[Spec], today: str, cfg: dict | 
         lines.append(f"{today} — ÉVOLUTION : {worst['name']} cède sa place (la plus faible des règles nées ici)")
     best = max((rules[c.name]["deflated_sharpe"] for c in cands), default=0.0)
     ev["log"] = (ev["log"] + [{"day": today, "tested": len(cands), "adopted": len(ok), "best_dsr": best,
-                               "passed_gate": sum(rules[c.name]["gate"] for c in cands)}])[-400:]
+                               "passed_gate": sum(rules[c.name]["gate"] for c in cands),
+                               "names": [f"{c.name} → porte {'oui' if rules[c.name]['gate'] else 'non'}, déflaté {rules[c.name]['deflated_sharpe']}"
+                                         for c in cands]}])[-120:]
     return lines

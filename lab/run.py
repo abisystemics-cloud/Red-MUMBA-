@@ -76,10 +76,13 @@ def report(state: dict, score: dict | None, panel_info: str) -> str:
             md += ["Ce que la régression a appris (poids les plus forts) : " + ", ".join(f"{k} {v:+.3f}" for k, v in m["ridge_top"]) + ".", ""]
     ev = state.get("evolve")
     if ev:
+        last = ev["log"][-1] if ev.get("log") else {}
         md += ["## Évolution (règles inventées par le laboratoire)", "",
-               f"{ev['trials']} règles essayées depuis le début en {ev.get('runs', 0)} passages, {len(ev['born'])} en service. "
-               f"Meilleur Sharpe déflaté vu aujourd'hui parmi les candidates : "
-               f"{max((g['best_dsr'] for g in ev.get('log', []) if g['day'] == ev['log'][-1]['day']), default=0) if ev.get('log') else 0}.", ""]
+               f"{ev['trials']} règles explorées depuis le début en {ev.get('runs', 0)} passages (jugées sur l'apprentissage seul), "
+               f"{ev.get('validated', 0)} présentées à la validation, {len(ev['born'])} en service.", ""]
+        if last.get("names"):
+            md += [f"Présentées à la validation au dernier passage ({last['day']}) :", ""] + [f"- {n}" for n in last["names"]] + [""]
+        md += ["Règles nées ici, en paper trading :", ""]
         md += [f"- {b['name']} — née le {b['born']}, Sharpe déflaté {b['dsr']}" for b in ev["born"]] + [""]
     md += ["## Livres de paper trading", "",
            "| règle | capital $ | jours | rendement % | pire baisse % | Sharpe | ordres | ordres ignorés (< 10 $) | état | test séquentiel | porte backtest |",
@@ -141,36 +144,38 @@ def main() -> int:
                 log.append(f"{today} — entraînement {kind} impossible : {type(e).__name__}: {e}")
         state["ml"] = {"trained": today, "rows": rows, "history": [a.history_from, last_full], "ridge_top": ridge_top}
         log.append(f"{today} — modèles ML ré-entraînés sur {rows} exemples")
-        # le laboratoire propose ses propres règles, les évalue avec le catalogue, n'adopte que les plus solides ;
-        # en mode boucle (lab/loop.json), il enchaîne les générations jusqu'à épuiser son budget de temps
+        # Évolution en deux étages (voir lab/evolve.py) : explorer sur l'apprentissage, ne présenter que les meilleures
+        # à la validation. En mode boucle (lab/loop.json) l'exploration dure `minutes` minutes ; sinon une génération.
         base = default_catalog()
         loop = load(Path(__file__).with_name("loop.json"), {})
         deadline = time.time() + 60 * float(loop.get("minutes", 0)) * bool(loop.get("enabled"))
-        ev0 = state.get("evolve", {}).get("trials", 0)
         known = evolve.born_specs(state)
-        cands = evolve.propose(state, score, {s.name for s in base + known}, seed=int(end.strftime("%Y%m%d")) + ev0)
-        full = research.scorecard(hist, base + known + cands, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=ev0)
-        log += evolve.select(state, full, cands, today)
-        gens = 1
-        while time.time() < deadline:
-            known = evolve.born_specs(state)
-            tried = state["evolve"]["trials"]
-            cands = evolve.propose(state, full, {s.name for s in base + known}, seed=tried)
-            if not cands:
-                break
-            sc = research.scorecard(hist, cands, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=len(base) + len(known) + tried,
-                                    var_trials=full["var_trials"])
-            log += evolve.select(state, sc, cands, today)
-            full["rules"].update({b["name"]: sc["rules"][b["name"]] for b in state["evolve"]["born"] if b["name"] in sc["rules"]})
+        names = {s.name for s in base + known}
+        ev = evolve._state(state)
+        ev0, val0 = ev["trials"], ev["validated"]
+        full = research.scorecard(hist, base + known, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=val0)
+        pool, gens = {}, 0
+        while True:
+            cands = evolve.propose(state, full, names, seed=ev["trials"] + gens)
+            evolve.explore(state, hist, cands, cost, ms(SPLIT), pool)
             gens += 1
-        ev = state["evolve"]
+            if time.time() >= deadline or not cands:
+                break
+        short = evolve.shortlist(pool)
+        if short:
+            sc = research.scorecard(hist, short, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=len(base) + len(known) + val0,
+                                    var_trials=full["var_trials"])
+            log += evolve.select(state, sc, short, today)
+            full["rules"].update({b["name"]: sc["rules"][b["name"]] for b in ev["born"] if b["name"] in sc["rules"]})
+        else:
+            log += evolve.select(state, full, [], today)
         ev["runs"] = ev.get("runs", 0) + 1
-        log.append(f"{today} — ÉVOLUTION : {ev['trials'] - ev0} règles essayées en {gens} générations, {len(ev['born'])} règles nées en service, "
-                   f"{ev['trials']} essais depuis le début")
+        log.append(f"{today} — ÉVOLUTION : {ev['trials'] - ev0} règles explorées en {gens} générations, {len(short)} présentées à la "
+                   f"validation, {len(ev['born'])} règles nées en service ({ev['trials']} explorées et {ev['validated']} présentées depuis le début)")
         catalog = base + evolve.born_specs(state)
         keep = {s.name for s in catalog}
         score = {**full, "rules": {n: r for n, r in full["rules"].items() if n in keep}, "n_rules": len(catalog),
-                 "n_trials": len(base) + ev["trials"]}
+                 "n_trials": len(base) + ev["validated"]}
         save(sdir / "catalog.json", [{"name": s.name, "family": s.family, "params": dict(s.params)} for s in catalog])
         score["history"] = [a.history_from, last_full]
         save(sdir / "scorecard.json", score)

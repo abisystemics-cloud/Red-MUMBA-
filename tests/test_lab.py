@@ -192,28 +192,40 @@ def test_bot_asks_claude_and_validates_answers():
     assert abs(W[-1].sum()) < 1e-9 and W[-1, p["coins"].index("C13")] > 0 and not W[:-1].any()
 
 
-def test_evolution_proposes_new_rules_and_only_adopts_robust_ones():
+def test_evolution_explores_on_train_and_validates_only_a_shortlist():
     from lab import evolve
     panel = _panel(T=900)
     base = default_catalog()[:6]
     state = {}
     known = {s.name for s in base}
+    split = panel["days"][450]
     cands = evolve.propose(state, None, known, seed=1)
     assert len(cands) == evolve.CFG["per_night"] and not ({c.name for c in cands} & known)
     assert len({c.name for c in cands}) == len(cands)
-    split = panel["days"][450]
-    full = scorecard(panel, base + cands, 0.0005, split, panel["days"][800], extra_trials=0)
-    evolve.select(state, full, cands, "2026-11-14")
+    pool = {}
+    evolve.explore(state, panel, cands, 0.0005, split, pool)
     ev = state["evolve"]
-    assert ev["trials"] == len(cands) and len(ev["born"]) <= evolve.CFG["max_new"]
+    assert ev["trials"] == len(cands) and ev["validated"] == 0 and 0 < len(pool) <= len(cands)
+    # l'étage 1 ne regarde pas la validation : changer les rendements après la coupure ne change aucune note
+    q = {**panel, "R": panel["R"].copy()}
+    q["R"][450:] *= -3
+    pool2 = {}
+    evolve.explore({}, q, cands, 0.0005, split, pool2)
+    assert {k: v[0] for k, v in pool.items()} == {k: v[0] for k, v in pool2.items()}
+    short = evolve.shortlist(pool, {"min_pre_sharpe": -9})
+    assert 0 < len(short) <= evolve.CFG["validate_per_run"]
+    assert not evolve.shortlist({("x",): (0.1, cands[0])})          # trop faible sur l'apprentissage : pas présentée
+    sc = scorecard(panel, short, 0.0005, split, panel["days"][800], extra_trials=len(base), var_trials=1e-6)
+    evolve.select(state, sc, short, "2026-11-14")
+    assert ev["validated"] == len(short) and len(ev["born"]) <= evolve.CFG["max_new"]
     for b in ev["born"]:
-        assert full["rules"][b["name"]]["gate"] and b["dsr"] >= evolve.CFG["min_dsr"]
-    again = evolve.propose(state, full, known, seed=1)
+        assert sc["rules"][b["name"]]["gate"] and b["dsr"] >= evolve.CFG["min_dsr"]
+    again = evolve.propose(state, None, known, seed=1)
     assert not ({c.name for c in again} & {c.name for c in cands})
-    # une règle née ici puis suspendue est retirée ; les essais passés durcissent le Sharpe déflaté
+    # une règle née ici puis suspendue est retirée ; les présentations passées durcissent le Sharpe déflaté
     ev["born"].append({"name": "x", "family": "carry", "params": {"carry": 5, "hold": 3, "k": 0}, "born": "2026-11-14", "dsr": 0.9})
     state["status"] = {"x": {"state": "suspended"}}
-    evolve.select(state, full, [], "2026-11-15")
+    evolve.select(state, sc, [], "2026-11-15")
     assert all(b["name"] != "x" for b in ev["born"])
     harder = scorecard(panel, base, 0.0005, split, panel["days"][800], extra_trials=500)
     easy = scorecard(panel, base, 0.0005, split, panel["days"][800])

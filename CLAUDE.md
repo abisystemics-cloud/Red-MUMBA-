@@ -47,6 +47,11 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   marché) ; 11 graines au catalogue (60 règles) ; l'évolution explore surtout `mix` (~56 millions de combinaisons) ; le ML reçoit
   8 signaux de plus. Premier passage 14/11 : 22 496 règles essayées (familles d'origine), 2 adoptées. Toujours journalier :
   les règles intrajournalières (15 min / 1 h) restent hors laboratoire (elles perdaient toutes après frais aux tests du 12–13/11).
+- **Évolution en deux étages (14/11, nuit)** : après 73 264 essais tous confrontés à la validation, le Sharpe déflaté de TOUTES
+  les règles était tombé à ~0,02 (plus rien n'était distinguable de la chance ; aucune des 50 768 règles `mix`/`ts` adoptée).
+  Corrigé : l'exploration (illimitée) ne note les candidates que sur l'apprentissage (< 2024, frais ×2) ; seules les 6 meilleures
+  de types différents par passage (Sharpe apprentissage ≥ 0,8) sont présentées à la validation ; le Sharpe déflaté compte les
+  règles présentées (`state.evolve.validated`, reparti de 16), plus le catalogue. Ne pas revenir à l'ancienne méthode.
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
 - **Canal bot → Claude (14/11)** : le bot écrit ses demandes dans `lab-state:lab/requests.json` (4 types en liste blanche,
   `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).
