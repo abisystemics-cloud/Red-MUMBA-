@@ -8,7 +8,11 @@
   "2026-11-13 — fiche de score recalculée sur 2020-01 → 2026-10 : 30 règles sur 45 passent la porte",
   "2026-11-14 — champion PROVISOIRE : blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) (meilleure borne basse de Sharpe au backtest, en attendant 28 jours de paper trading)",
   "2026-11-14 — modèles ML ré-entraînés sur 62102 exemples",
-  "2026-11-14 — fiche de score recalculée sur 2020-01 → 2026-10 : 32 règles sur 49 passent la porte"
+  "2026-11-14 — fiche de score recalculée sur 2020-01 → 2026-10 : 32 règles sur 49 passent la porte",
+  "2026-11-14 — modèles ML ré-entraînés sur 62102 exemples",
+  "2026-11-14 — ÉVOLUTION : nouvelle règle blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7) adoptée en paper trading (Sharpe ≥ 2024 1.59, déflaté 0.738 sur 16 essais)",
+  "2026-11-14 — ÉVOLUTION : nouvelle règle blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5) adoptée en paper trading (Sharpe ≥ 2024 1.5, déflaté 0.683 sur 16 essais)",
+  "2026-11-14 — fiche de score recalculée sur 2020-01 → 2026-10 : 34 règles sur 51 passent la porte"
  ],
  "books": {
   "blend(carry=7,hold=1,k=0,mom=14,w=0.5)@1000": {
@@ -2067,23 +2071,23 @@
   "ridge_top": [
    [
     "vol30",
-    -0.06187180462964908
+    -0.061871804629649044
    ],
    [
     "carry7",
-    0.04541997924074079
+    0.04541997924074101
    ],
    [
     "mom7",
-    -0.02779662119182416
+    -0.027796621191824238
    ],
    [
     "mom14",
-    0.022554093953254212
+    0.02255409395325429
    ],
    [
     "carry3",
-    0.02181537200814695
+    0.021815372008146816
    ]
   ],
   "live": [
@@ -2100,12 +2104,12 @@
    "gpr": true,
    "fomc": true,
    "news_tone": false,
-   "geo_news": null,
+   "geo_news": true,
    "fng": false
   },
   "info": {
    "news_tone": "GDELT, 468 jours",
-   "geo_news": "indisponible (RuntimeError)",
+   "geo_news": "GDELT, 468 jours",
    "fng": "alternative.me, 3205 jours",
    "nasdaq": "yahoo, 2126 jours",
    "stable": "DefiLlama, 3273 jours",
@@ -2153,8 +2157,17 @@
     "RUNE": -24.4
    }
   },
-  "notes": [],
-  "last_log": "2026-11-14 — réponses de Claude du 2026-11-14T02:50Z lues : gros traders (30 marchés), risque none, Keel",
+  "notes": [
+   {
+    "day": "2026-11-13",
+    "coin": "TIA",
+    "summary": "Aucune cause précise identifiée par la recherche web pour la baisse de TIA du 13/11 : pas d'annonce ni d'incident trouvé. Le jeton est en tendance baissière depuis début novembre, dans un secteur des blockchains de couche 1 en recul.",
+    "sources": [
+     "https://www.coinbase.com/en-fr/price/celestia"
+    ]
+   }
+  ],
+  "last_log": "2026-11-14 — réponses de Claude du 2026-11-14T03:25Z lues : gros traders (30 marchés), risque none, Keel, mouvement TIA",
   "risk_note": {
    "day": "2026-11-13",
    "level": "none",
@@ -2168,6 +2181,66 @@
    "days": 1,
    "note": "1 évaluation depuis le 13/11, 24 ordres exécutés, 6 ignorés sous le minimum de 10 $ ; prochaine évaluation le 14/11 à 12:00 UTC"
   },
-  "last_answer": "2026-11-14T02:50Z"
+  "last_answer": "2026-11-14T03:25Z"
+ },
+ "evolve": {
+  "trials": 16,
+  "born": [
+   {
+    "name": "blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7)",
+    "family": "blend",
+    "params": {
+     "carry": 10,
+     "gate": "risk_on",
+     "hold": 1,
+     "k": 0,
+     "mom": 14,
+     "w": 0.7
+    },
+    "born": "2026-11-14",
+    "dsr": 0.738
+   },
+   {
+    "name": "blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5)",
+    "family": "blend",
+    "params": {
+     "carry": 7,
+     "gate": "premium",
+     "hold": 5,
+     "k": 0,
+     "mom": 10,
+     "w": 0.5
+    },
+    "born": "2026-11-14",
+    "dsr": 0.683
+   }
+  ],
+  "seen": [
+   "blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.4)",
+   "xsmom(gate=nasdaq,hold=5,k=5,mom=28)",
+   "ml(gate=premium,hold=14,k=4,model=gbm)",
+   "ml(gate=gpr,hold=2,k=3,model=gbm)",
+   "carry(carry=5,gate=nasdaq,hold=7,k=2)",
+   "blend(carry=7,gate=risk_on,hold=7,k=2,mom=14,w=0.5)",
+   "blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7)",
+   "blend(carry=7,gate=nasdaq,hold=14,k=2,mom=14,w=0.5)",
+   "xsmom(gate=nasdaq,hold=2,k=3,mom=28)",
+   "xsmom(gate=gpr,hold=3,k=3,mom=7)",
+   "ml(gate=stable,hold=3,k=4,model=gbm)",
+   "ml(hold=14,k=3,model=ridge)",
+   "xsmom(gate=gpr,hold=2,k=2,mom=21)",
+   "blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5)",
+   "blend(carry=7,gate=nasdaq,hold=1,k=0,mom=21,w=0.7)",
+   "carry(carry=14,gate=geo_news,hold=7,k=2)"
+  ],
+  "log": [
+   {
+    "day": "2026-11-14",
+    "tested": 16,
+    "adopted": 2,
+    "best_dsr": 0.738,
+    "passed_gate": 4
+   }
+  ]
  }
 }

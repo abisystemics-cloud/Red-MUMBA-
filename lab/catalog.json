@@ -514,5 +514,29 @@
    "mom": 14,
    "w": 0.7
   }
+ },
+ {
+  "name": "blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7)",
+  "family": "blend",
+  "params": {
+   "carry": 10,
+   "gate": "risk_on",
+   "hold": 1,
+   "k": 0,
+   "mom": 14,
+   "w": 0.7
+  }
+ },
+ {
+  "name": "blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5)",
+  "family": "blend",
+  "params": {
+   "carry": 7,
+   "gate": "premium",
+   "hold": 5,
+   "k": 0,
+   "mom": 10,
+   "w": 0.5
+  }
  }
 ]
