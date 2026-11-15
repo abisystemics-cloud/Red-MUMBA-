@@ -1,6 +1,6 @@
 # Laboratoire hl-swarm — rapport
 
-Généré le 2026-11-15 06:50 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-14
+Généré le 2026-11-15 08:00 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-14
 
 Simulation uniquement : aucun ordre réel.
 
@@ -22,7 +22,7 @@ Simulation uniquement : aucun ordre réel.
 | Risque géopolitique calme | vert | indice GPR, 15281 jours |
 | Hors fenêtre de décision de la Fed | vert | calendrier de la Fed (liste jusqu'à fin 2026) |
 | Ton de la presse mondiale sur les cryptos en amélioration | rouge | GDELT, 469 jours |
-| Presse mondiale : tensions géopolitiques calmes | vert | GDELT, 469 jours |
+| Presse mondiale : tensions géopolitiques calmes | indisponible | indisponible (RuntimeError) |
 | Indice Fear & Greed au-dessus de sa moyenne 30 j | rouge | alternative.me, 3206 jours |
 
 ## Échanges avec Claude (connecteurs)
@@ -43,7 +43,9 @@ Ce que la régression a appris (poids les plus forts) : carry7 +0.051, brk21 +0.
 
 ## Évolution (règles inventées par le laboratoire)
 
-1541968 règles explorées depuis le début en 11 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
+1901152 règles explorées depuis le début en 12 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
+
+Balayage exhaustif : 359185 combinaisons sur 92490684 essayées (0.4 %).
 
 Présentées à la validation au dernier passage (2026-11-15) :
 
@@ -257,9 +259,6 @@ Règles nées ici, en paper trading :
 
 ## Journal des décisions (les 40 dernières)
 
-- 2026-11-14 — champion PROVISOIRE : blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) (meilleure borne basse de Sharpe au backtest, en attendant 28 jours de paper trading)
-- 2026-11-14 — modèles ML ré-entraînés sur 62102 exemples
-- 2026-11-14 — fiche de score recalculée sur 2020-01 → 2026-10 : 32 règles sur 49 passent la porte
 - 2026-11-14 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-14 — ÉVOLUTION : nouvelle règle blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7) adoptée en paper trading (Sharpe ≥ 2024 1.59, déflaté 0.738 sur 16 essais)
 - 2026-11-14 — ÉVOLUTION : nouvelle règle blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5) adoptée en paper trading (Sharpe ≥ 2024 1.5, déflaté 0.683 sur 16 essais)
@@ -296,4 +295,7 @@ Règles nées ici, en paper trading :
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-15 — ÉVOLUTION : 133536 règles explorées en 8346 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (1541968 explorées et 28 présentées depuis le début)
+- 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
+- 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
+- 2026-11-15 — ÉVOLUTION : 359184 règles explorées en 22449 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (1901152 explorées et 28 présentées depuis le début)
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
