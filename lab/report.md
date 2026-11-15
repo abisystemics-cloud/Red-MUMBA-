@@ -1,6 +1,6 @@
 # Laboratoire hl-swarm — rapport
 
-Généré le 2026-11-15 03:34 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-14
+Généré le 2026-11-15 04:37 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-14
 
 Simulation uniquement : aucun ordre réel.
 
@@ -43,7 +43,7 @@ Ce que la régression a appris (poids les plus forts) : carry7 +0.051, brk21 +0.
 
 ## Évolution (règles inventées par le laboratoire)
 
-1030816 règles explorées depuis le début en 8 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
+1270432 règles explorées depuis le début en 9 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
 
 Présentées à la validation au dernier passage (2026-11-15) :
 
@@ -293,4 +293,7 @@ Règles nées ici, en paper trading :
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-15 — ÉVOLUTION : 223248 règles explorées en 13953 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (1030816 explorées et 28 présentées depuis le début)
+- 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
+- 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
+- 2026-11-15 — ÉVOLUTION : 239616 règles explorées en 14976 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (1270432 explorées et 28 présentées depuis le début)
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
