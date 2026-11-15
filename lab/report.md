@@ -1,6 +1,6 @@
 # Laboratoire hl-swarm — rapport
 
-Généré le 2026-11-15 19:25 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-14
+Généré le 2026-11-15 20:30 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-14
 
 Simulation uniquement : aucun ordre réel.
 
@@ -22,7 +22,7 @@ Simulation uniquement : aucun ordre réel.
 | Risque géopolitique calme | vert | indice GPR, 15281 jours |
 | Hors fenêtre de décision de la Fed | vert | calendrier de la Fed (liste jusqu'à fin 2026) |
 | Ton de la presse mondiale sur les cryptos en amélioration | rouge | GDELT, 470 jours |
-| Presse mondiale : tensions géopolitiques calmes | indisponible | indisponible (RuntimeError) |
+| Presse mondiale : tensions géopolitiques calmes | vert | GDELT, 470 jours |
 | Indice Fear & Greed au-dessus de sa moyenne 30 j | rouge | alternative.me, 3206 jours |
 
 ## Échanges avec Claude (connecteurs)
@@ -43,9 +43,9 @@ Ce que la régression a appris (poids les plus forts) : carry7 +0.051, brk21 +0.
 
 ## Évolution (règles inventées par le laboratoire)
 
-5409888 règles explorées depuis le début en 22 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
+5664928 règles explorées depuis le début en 23 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
 
-Balayage exhaustif : 3867923 combinaisons sur 92490684 essayées (4.2 %).
+Balayage exhaustif : 4122963 combinaisons sur 92490684 essayées (4.5 %).
 
 Présentées à la validation au dernier passage (2026-11-15) :
 
@@ -261,9 +261,6 @@ Règles nées ici, en paper trading :
 
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
-- 2026-11-15 — ÉVOLUTION : 138000 règles explorées en 8625 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (1408432 explorées et 28 présentées depuis le début)
-- 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
-- 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-15 — ÉVOLUTION : 133536 règles explorées en 8346 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (1541968 explorées et 28 présentées depuis le début)
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
@@ -298,4 +295,7 @@ Règles nées ici, en paper trading :
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-15 — ÉVOLUTION : 255088 règles explorées en 15943 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (5409888 explorées et 28 présentées depuis le début)
+- 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
+- 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
+- 2026-11-15 — ÉVOLUTION : 255040 règles explorées en 15940 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (5664928 explorées et 28 présentées depuis le début)
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
