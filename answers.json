@@ -1,62 +1,78 @@
 {
- "answered_at": "2026-11-14T23:42:17Z",
+ "answered_at": "2026-11-15T23:42:45Z",
  "answers": {
   "smart_money": {
    "bias": {
-    "BTC": -17.4,
-    "ETH": -9.9,
-    "SOL": -37.0,
-    "BNB": -3.1,
-    "XRP": 8.2,
-    "DOGE": -16.3,
-    "ADA": 11.6,
-    "AVAX": -14.1,
-    "LINK": 3.8,
-    "LTC": -11.7,
-    "DOT": 21.9,
-    "ATOM": -36.6,
-    "NEAR": -10.5,
-    "APT": -2.0,
-    "ARB": 11.9,
-    "OP": -47.0,
-    "SUI": -28.6,
-    "INJ": -23.9,
-    "TIA": -23.1,
-    "SEI": -52.3,
-    "AAVE": 7.1,
-    "UNI": 21.9,
-    "FIL": 15.8,
-    "BCH": 17.9,
-    "ETC": 17.6,
-    "XLM": -15.4,
-    "TRX": 21.0,
-    "HBAR": -1.7,
-    "ICP": -55.6,
-    "RUNE": -27.7
+    "BTC": -20.8,
+    "ETH": -9.1,
+    "SOL": -41.8,
+    "BNB": -14.6,
+    "XRP": -6.4,
+    "DOGE": -28.0,
+    "ADA": 14.8,
+    "AVAX": -12.2,
+    "LINK": 3.6,
+    "LTC": 0.7,
+    "DOT": 19.3,
+    "ATOM": -38.5,
+    "NEAR": -15.5,
+    "APT": -1.5,
+    "ARB": 0.2,
+    "OP": -51.6,
+    "SUI": -36.3,
+    "INJ": -29.7,
+    "TIA": -31.3,
+    "SEI": -52.7,
+    "AAVE": 11.5,
+    "UNI": 12.5,
+    "FIL": 23.3,
+    "BCH": 7.4,
+    "ETC": 16.7,
+    "XLM": -28.1,
+    "TRX": 11.7,
+    "HBAR": -21.0,
+    "ICP": -42.2,
+    "RUNE": -29.5
    },
-   "as_of": "2026-11-14T23:41:00Z",
+   "as_of": "2026-11-15T23:41:56Z",
    "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money"
   },
   "risk_check": {
-   "level": "none",
-   "summary": "Aucun événement grave nouveau confirmé dans les dernières 24 heures : ni piratage ou faillite d'exchange, ni panne ou exploit d'Hyperliquid, ni décrochage de stablecoin, ni escalade militaire (Reuters : Washington pourrait renoncer à de nouvelles frappes contre l'Iran). Le marché crypto reste en repli généralisé (bitcoin vers 67 000 $) et le piratage de Binance date du 29 octobre.",
+   "level": "elevated",
+   "summary": "Le 15 novembre, l'Iran a lancé des drones contre une base américaine à Bahreïn après des mois d'accalmie (les États-Unis disent en avoir intercepté deux, sans dégât), que le Financial Times qualifie d'escalade des hostilités dans le Golfe. Le bitcoin est tombé vers 62 000 $, plus bas de trois mois, avec plus de 2 milliards de dollars de liquidations ; pas de piratage ou faillite d'exchange majeur, de panne d'Hyperliquid ni de décrochage de stablecoin signalé (fuite de données clients chez Coinone et exploit limité de Kava Lend, environ 2 millions de dollars).",
    "sources": [
-    "https://www.reuters.com/world/middle-east/trump-tells-advisers-he-may-hold-off-iran-attacks-barring-new-provocations-2026-11-14/",
-    "https://www.theblock.co/newsletters/the-daily/2026-11-14-meta-prediction-market-app-doj-binance-hack-more-crypto-news-440304",
-    "https://crypto.news/coinbase-india-inr-withdrawals-bank-outage/"
+    "https://www.theguardian.com/world/2026/nov/15/iran-launches-drone-attacks-against-us-military-base-in-bahrain",
+    "https://www.ft.com/content/fc7ccc23-c051-49e6-85e5-8d8ba0a83ef9",
+    "https://www.washingtonpost.com/world/2026/11/15/iran-targets-bahrain-twice-after-months-quiet-claiming-retaliation-against-us/",
+    "https://finance.yahoo.com/markets/crypto/articles/bitcoin-fall-62-000-sparks-092429244.html",
+    "https://crypto.news/coinone-data-breach-customer-support-hack/"
    ]
   },
   "keel_status": {
-   "return_pct": 1.56,
-   "max_dd_pct": 0.0,
-   "days": 2,
-   "note": "2 évaluations depuis le 13/11, 37 ordres exécutés, 17 sur 54 ignorés sous le minimum de 10 $ (dont 2 sorties : PUMP, WLD) ; prochaine évaluation le 15/11 à 12:00 UTC"
+   "return_pct": 0.59,
+   "max_dd_pct": 0.65,
+   "days": 3,
+   "note": "Paper Keel en marche, 3 évaluations (dernière le 15/11 12:00 UTC), 43 ordres exécutés ; 32 des 75 derniers ordres ignorés car sous le minimum de 10 $, dont 9 sorties."
   },
-  "move_TIA": {
-   "summary": "Aucune nouvelle propre à Celestia : la baisse du 13/11 accompagne le repli général du marché crypto (bitcoin en forte baisse, sentiment de peur extrême). Le jeton restait en tendance baissière sous toutes ses moyennes mobiles.",
+  "move_APT": {
+   "summary": "Aucun catalyseur propre à Aptos n'a été trouvé (ni annonce, ni incident réseau, ni décision réglementaire). La baisse s'inscrit dans le repli général du marché du 14 novembre, le bitcoin touchant un plus bas de trois mois vers 62 000 $ sur fond de liquidations.",
    "sources": [
-    "https://coinmarketcap.com/top-stories/6af75f3f0ada0c77afaf1484/",
-    "https://tradersunion.com/news/cryptocurrency-news/show/4240045-celestia-drops-11-63percent-today/"
+    "https://www.diariobitcoin.com/analisis/aptos-apt-cae-1546-el-14-de-noviembre-de-2026-y-queda-bajo-presion-tecnica/",
+    "https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst"
+   ]
+  },
+  "move_INJ": {
+   "summary": "Aucune cause propre à Injective n'a été trouvée : la baisse d'environ 15 % a eu lieu pendant le vote sur la mise à jour Veyra, pourtant bien soutenue par la communauté. Elle suit le repli général du marché crypto du 14 novembre et une pression vendeuse déjà installée depuis plusieurs jours.",
+   "sources": [
+    "https://tradersunion.com/news/cryptocurrency-news/show/4250138-injective-slides-15-18percent-today-to/",
+    "https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst"
+   ]
+  },
+  "move_UNI": {
+   "summary": "Pas de cause propre à Uniswap : selon CoinMarketCap, la baisse d'environ 15 % vient du repli général du marché (bitcoin sous 68 000 $, inflation américaine plus forte que prévu, dollar et taux en hausse). Elle a été amplifiée par la perte de la zone technique des 6 $ et un positionnement baissier des traders.",
+   "sources": [
+    "https://coinmarketcap.com/top-stories/6af7ddf10ada0c77afaf9379/",
+    "https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst"
    ]
   }
  }
