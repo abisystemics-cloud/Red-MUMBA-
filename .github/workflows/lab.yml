@@ -87,6 +87,8 @@ jobs:
           CFG="$(git show origin/main:lab/loop.json)"
           MAX="$(echo "$CFG" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("max_runs_per_day", 1))')"
           DONE="$(git log origin/lab-state --since="$(date -u +%Y-%m-%dT00:00:00Z)" --oneline | wc -l)"
-          if echo "$CFG" | grep -q '"enabled": true' && [ "$DONE" -lt "$MAX" ]; then
+          FINI="$(git show origin/lab-state:lab/state.json | python3 -c 'import json,sys; print(1 if json.load(sys.stdin).get("evolve", {}).get("done") else 0)')"
+          # balayage terminé = plus rien à explorer : la boucle s'arrête, il reste le passage nocturne
+          if echo "$CFG" | grep -q '"enabled": true' && [ "$DONE" -lt "$MAX" ] && [ "$FINI" = "0" ]; then
             gh workflow run lab.yml --ref main -f mode=weekly
           fi

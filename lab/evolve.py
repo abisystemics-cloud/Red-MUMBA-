@@ -2,8 +2,11 @@
 
 Aucune IA ici : c'est une recherche évolutive ordinaire, en deux étages pour ne pas se
 mentir à soi-même.
-1. EXPLORER (autant qu'on veut) — des milliers de candidates par passage : mutations des
-   meilleures règles connues et tirages au hasard dans la bibliothèque de signaux. Elles
+1. EXPLORER (autant qu'on veut) — des milliers de candidates par passage. En boucle
+   continue c'est un BALAYAGE EXHAUSTIF (`sweep`) : chaque combinaison de la grille
+   (`TOTAL` ≈ 92 millions) est essayée une fois et une seule, dans un ordre mélangé ;
+   `state.evolve.cursor` dit où on en est, `done` quand tout est fait. Hors boucle :
+   mutations des meilleures règles et tirages au hasard (`propose`). Elles
    ne sont jugées QUE sur la période d'apprentissage (avant 2024), frais doublés.
 2. PRÉSENTER À L'EXAMEN (très peu) — UNE fois par jour, seules les `validate_per_run`
    meilleures de toutes les explorations depuis le dernier examen (gardées dans
@@ -88,6 +91,40 @@ def propose(state: dict, score: dict | None, known: set[str], seed: int, cfg: di
         if _h(c.name) not in taken:
             taken.add(_h(c.name))
             out.append(c)
+    return out
+
+
+ORDER = ("mix", "blend", "ts", "carry", "xsmom", "ml")
+SIZES = {f: math.prod(len(GRID[k]) for k in FAMILIES[f]) for f in ORDER}
+TOTAL = sum(SIZES.values())
+STRIDE = 15_485_863            # nombre premier : i → i × STRIDE mod TOTAL visite chaque combinaison une seule fois, dans le désordre
+assert math.gcd(STRIDE, TOTAL) == 1
+
+
+def nth(i: int) -> Spec:
+    """La i-ème combinaison de la grille complète (toutes familles confondues)."""
+    j = (i * STRIDE) % TOTAL
+    for f in ORDER:
+        if j < SIZES[f]:
+            params = {}
+            for k in FAMILIES[f]:
+                j, r = divmod(j, len(GRID[k]))
+                params[k] = GRID[k][r]
+            return _make(f, params)
+        j -= SIZES[f]
+    raise IndexError(i)
+
+
+def sweep(state: dict, known: set[str], n: int = 16) -> list[Spec]:
+    """Balayage exhaustif : les n combinaisons suivantes, jamais deux fois la même. [] quand TOUT a été essayé."""
+    ev = _state(state)
+    cur, out = ev.get("cursor", 0), []
+    while cur < TOTAL and len(out) < n:
+        c = nth(cur)
+        cur += 1
+        if c.name not in known:
+            out.append(c)
+    ev["cursor"] = cur
     return out
 
 

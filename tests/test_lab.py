@@ -257,3 +257,24 @@ def test_signal_library_has_no_lookahead_and_feeds_new_families():
         assert np.isfinite(W).all() and np.abs(W).sum(axis=1).max() <= 1.0 + 1e-9 and np.abs(W[100:]).sum() > 0
     fams = {c.family for seed in range(5) for c in evolve.propose({}, None, set(), seed=seed)}
     assert {"mix", "ts"} <= fams
+
+
+def test_exhaustive_sweep_visits_every_combination_once():
+    from lab import evolve
+    assert evolve.TOTAL == sum(evolve.SIZES.values()) > 90_000_000
+    names = {evolve.nth(i).name for i in range(3000)}
+    assert len(names) == 3000 and len({evolve.nth(i).family for i in range(3000)}) >= 2
+    # sur une petite grille : tout est visité exactement une fois, puis le balayage rend la main
+    small = {"TOTAL": evolve.TOTAL, "SIZES": dict(evolve.SIZES), "ORDER": evolve.ORDER, "STRIDE": evolve.STRIDE}
+    try:
+        evolve.ORDER, evolve.SIZES = ("ts", "ml"), {"ts": evolve.SIZES["ts"], "ml": evolve.SIZES["ml"]}
+        evolve.TOTAL, evolve.STRIDE = sum(evolve.SIZES.values()), 7919
+        state, seen = {}, []
+        while True:
+            got = evolve.sweep(state, set(), n=500)
+            if not got:
+                break
+            seen += [c.name for c in got]
+        assert len(seen) == len(set(seen)) == evolve.TOTAL and state["evolve"]["cursor"] == evolve.TOTAL
+    finally:
+        evolve.TOTAL, evolve.SIZES, evolve.ORDER, evolve.STRIDE = small["TOTAL"], small["SIZES"], small["ORDER"], small["STRIDE"]

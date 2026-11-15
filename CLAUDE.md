@@ -56,6 +56,12 @@ Lire d'abord `README.md` (architecture, backtest, go/no-go) et `SUPERVISION.md` 
   rester vigilant, tout ce qui est poussé est désormais visible de tous). Minutes GitHub gratuites → boucle CONTINUE :
   `lab/loop.json` = 45 min d'exploration par passage, relance immédiate, sans plafond utile. L'examen de validation reste
   limité à UNE fois par jour UTC (6 candidates au plus, prises dans `state.evolve.pool` qui accumule les meilleures entre deux examens).
+- **Consigne du propriétaire (15/11) : « patienter jusqu'à ce qu'il ait tout essayé, après tu fais ce que tu veux ».** La boucle
+  fait donc un BALAYAGE EXHAUSTIF de la grille (`evolve.sweep`, ~92,5 millions de combinaisons, curseur `state.evolve.cursor`,
+  ~4 millions par jour → environ trois semaines, fin vers le 8 décembre 2026). Ne rien changer à la grille ni à la méthode avant
+  `state.evolve.done` (sinon « tout » change de sens) ; ne corriger que les pannes. À la fin la boucle s'arrête seule ; Claude a
+  alors carte blanche pour la suite (pistes notées : exclure le piège `illiq`, historique des gros traders Coinversa, règles
+  intrajournalières), toujours en simulation et sans argent réel.
 - Paper trading Keel en parallèle (voir journal plus bas) : dep_01m7b0gq4cxdfqe8capdvfdfkm.
 - **Canal bot → Claude (14/11)** : le bot écrit ses demandes dans `lab-state:lab/requests.json` (4 types en liste blanche,
   `lab/ask.py`) ; Claude répond avec ses connecteurs dans `claude-answers:answers.json` (consigne : `lab/CLAUDE_TASK.md`).

@@ -80,6 +80,9 @@ def report(state: dict, score: dict | None, panel_info: str) -> str:
         md += ["## Évolution (règles inventées par le laboratoire)", "",
                f"{ev['trials']} règles explorées depuis le début en {ev.get('runs', 0)} passages (jugées sur l'apprentissage seul), "
                f"{ev.get('validated', 0)} présentées à la validation, {len(ev['born'])} en service.", ""]
+        if "cursor" in ev:
+            md += [f"Balayage exhaustif : {ev['cursor']} combinaisons sur {evolve.TOTAL} essayées "
+                   f"({100 * ev['cursor'] / evolve.TOTAL:.1f} %)" + (f" — TERMINÉ le {ev['done']}." if ev.get("done") else "."), ""]
         if last.get("names"):
             md += [f"Présentées à la validation au dernier passage ({last['day']}) :", ""] + [f"- {n}" for n in last["names"]] + [""]
         md += ["Règles nées ici, en paper trading :", ""]
@@ -156,7 +159,8 @@ def main() -> int:
         full = research.scorecard(hist, base + known, cost, ms(SPLIT), ms(CLEAN_FROM), extra_trials=val0)
         pool, gens = evolve.load_pool(state), 0
         while True:
-            cands = evolve.propose(state, full, names, seed=ev["trials"] + gens)
+            cands = (evolve.sweep(state, names) if loop.get("enabled") and not ev.get("done")
+                     else evolve.propose(state, full, names, seed=ev["trials"] + gens))
             evolve.explore(state, hist, cands, cost, ms(SPLIT), pool)
             gens += 1
             if time.time() >= deadline or not cands:
@@ -175,6 +179,9 @@ def main() -> int:
         for b in ev["born"]:
             b["dsr"] = full["rules"].get(b["name"], {}).get("deflated_sharpe", b["dsr"])
         ev["runs"] = ev.get("runs", 0) + 1
+        if ev.get("cursor", 0) >= evolve.TOTAL and not ev.get("done"):
+            ev["done"] = today
+            log.append(f"{today} — ÉVOLUTION : BALAYAGE TERMINÉ — les {evolve.TOTAL} combinaisons de la grille ont toutes été essayées")
         log.append(f"{today} — ÉVOLUTION : {ev['trials'] - ev0} règles explorées en {gens} générations, {len(short)} présentées à la "
                    f"validation ({len(ev['pool'])} en attente du prochain examen), {len(ev['born'])} règles nées en service ({ev['trials']} explorées et {ev['validated']} présentées depuis le début)")
         catalog = base + evolve.born_specs(state)
