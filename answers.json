@@ -1,79 +1,59 @@
 {
- "answered_at": "2026-11-15T23:42:45Z",
+ "answered_at": "2026-11-16T23:42:27Z",
  "answers": {
   "smart_money": {
    "bias": {
-    "BTC": -20.8,
-    "ETH": -9.1,
-    "SOL": -41.8,
-    "BNB": -14.6,
-    "XRP": -6.4,
-    "DOGE": -28.0,
-    "ADA": 14.8,
-    "AVAX": -12.2,
-    "LINK": 3.6,
-    "LTC": 0.7,
-    "DOT": 19.3,
-    "ATOM": -38.5,
-    "NEAR": -15.5,
-    "APT": -1.5,
-    "ARB": 0.2,
-    "OP": -51.6,
-    "SUI": -36.3,
-    "INJ": -29.7,
-    "TIA": -31.3,
-    "SEI": -52.7,
-    "AAVE": 11.5,
-    "UNI": 12.5,
-    "FIL": 23.3,
-    "BCH": 7.4,
-    "ETC": 16.7,
-    "XLM": -28.1,
-    "TRX": 11.7,
-    "HBAR": -21.0,
-    "ICP": -42.2,
-    "RUNE": -29.5
+    "BTC": -20.3,
+    "ETH": -13.0,
+    "SOL": -37.9,
+    "BNB": -14.8,
+    "XRP": -9.1,
+    "DOGE": -24.7,
+    "ADA": 13.7,
+    "AVAX": -6.4,
+    "LINK": 4.5,
+    "LTC": -2.8,
+    "DOT": 15.3,
+    "ATOM": -27.2,
+    "NEAR": -20.2,
+    "APT": -5.4,
+    "ARB": -11.7,
+    "OP": -54.3,
+    "SUI": -35.5,
+    "INJ": -15.9,
+    "TIA": -33.9,
+    "SEI": -58.7,
+    "AAVE": 12.7,
+    "UNI": 9.7,
+    "FIL": 15.9,
+    "BCH": 3.6,
+    "ETC": 17.5,
+    "XLM": -34.5,
+    "TRX": 9.1,
+    "HBAR": -23.8,
+    "ICP": -8.0,
+    "RUNE": -37.6
    },
-   "as_of": "2026-11-15T23:41:56Z",
+   "as_of": "2026-11-16T23:41:40Z",
    "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money"
   },
   "risk_check": {
    "level": "elevated",
-   "summary": "Le 15 novembre, l'Iran a lancé des drones contre une base américaine à Bahreïn après des mois d'accalmie (les États-Unis disent en avoir intercepté deux, sans dégât), que le Financial Times qualifie d'escalade des hostilités dans le Golfe. Le bitcoin est tombé vers 62 000 $, plus bas de trois mois, avec plus de 2 milliards de dollars de liquidations ; pas de piratage ou faillite d'exchange majeur, de panne d'Hyperliquid ni de décrochage de stablecoin signalé (fuite de données clients chez Coinone et exploit limité de Kava Lend, environ 2 millions de dollars).",
+   "summary": "Les tensions Iran–États-Unis dans le Golfe restent vives : après les tirs de drones iraniens des 15–16 novembre contre un radar américain à Bahreïn (interceptés), le Conseil de coopération du Golfe dénonce une « provocation flagrante », des frappes américaines sur la côte sud de l'Iran sont rapportées et un troisième porte-avions américain est arrivé dans la région. Côté crypto, la plateforme de perps Lighter a suspendu les retraits le 16 novembre après un vol d'environ 10,4 millions de dollars via une clé API divulguée (protocole non touché) ; aucune panne ou exploit d'Hyperliquid, aucun décrochage de stablecoin signalé, et le bitcoin se stabilise vers 64 000 $ après la chute des jours précédents.",
    "sources": [
-    "https://www.theguardian.com/world/2026/nov/15/iran-launches-drone-attacks-against-us-military-base-in-bahrain",
-    "https://www.ft.com/content/fc7ccc23-c051-49e6-85e5-8d8ba0a83ef9",
-    "https://www.washingtonpost.com/world/2026/11/15/iran-targets-bahrain-twice-after-months-quiet-claiming-retaliation-against-us/",
-    "https://finance.yahoo.com/markets/crypto/articles/bitcoin-fall-62-000-sparks-092429244.html",
-    "https://crypto.news/coinone-data-breach-customer-support-hack/"
+    "https://www.thenationalnews.com/news/gulf/2026/11/16/iran-attacks-bahrain-in-blatant-challenge-to-peace-push/",
+    "https://www.military.com/iran-targets-us-military-base-in-2nd-bahrain-drone-attack-in-3-days",
+    "https://insights.niacouncil.org/p/iran-and-us-exchange-new-strikes",
+    "https://www.thenationalnews.com/news/us/2026/11/16/uss-theodore-roosevelt-middle-east-centcom/",
+    "https://www.coindesk.com/tech/2026/11/16/lighter-suspends-all-withdrawals-after-usd10-4-million-crypto-exploit",
+    "https://www.fool.com/coverage/stock-market-today/2026/11/16/crypto-market-today-nov-16-bitcoin-searches-for-stability-after-usd230-billion-crypto-sell-off/"
    ]
   },
   "keel_status": {
-   "return_pct": 0.59,
-   "max_dd_pct": 0.65,
-   "days": 3,
-   "note": "Paper Keel en marche, 3 évaluations (dernière le 15/11 12:00 UTC), 43 ordres exécutés ; 32 des 75 derniers ordres ignorés car sous le minimum de 10 $, dont 9 sorties."
-  },
-  "move_APT": {
-   "summary": "Aucun catalyseur propre à Aptos n'a été trouvé (ni annonce, ni incident réseau, ni décision réglementaire). La baisse s'inscrit dans le repli général du marché du 14 novembre, le bitcoin touchant un plus bas de trois mois vers 62 000 $ sur fond de liquidations.",
-   "sources": [
-    "https://www.diariobitcoin.com/analisis/aptos-apt-cae-1546-el-14-de-noviembre-de-2026-y-queda-bajo-presion-tecnica/",
-    "https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst"
-   ]
-  },
-  "move_INJ": {
-   "summary": "Aucune cause propre à Injective n'a été trouvée : la baisse d'environ 15 % a eu lieu pendant le vote sur la mise à jour Veyra, pourtant bien soutenue par la communauté. Elle suit le repli général du marché crypto du 14 novembre et une pression vendeuse déjà installée depuis plusieurs jours.",
-   "sources": [
-    "https://tradersunion.com/news/cryptocurrency-news/show/4250138-injective-slides-15-18percent-today-to/",
-    "https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst"
-   ]
-  },
-  "move_UNI": {
-   "summary": "Pas de cause propre à Uniswap : selon CoinMarketCap, la baisse d'environ 15 % vient du repli général du marché (bitcoin sous 68 000 $, inflation américaine plus forte que prévu, dollar et taux en hausse). Elle a été amplifiée par la perte de la zone technique des 6 $ et un positionnement baissier des traders.",
-   "sources": [
-    "https://coinmarketcap.com/top-stories/6af7ddf10ada0c77afaf9379/",
-    "https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst"
-   ]
+   "return_pct": 0.6,
+   "max_dd_pct": 0.7,
+   "days": 4,
+   "note": "Paper Keel en marche, 4 évaluations (dernière le 16/11 12:00 UTC), 51 ordres exécutés, valeur du compte 1 006,56 $ ; 45 des 96 derniers ordres ignorés car sous le minimum de 10 $, dont 14 sorties (position WLD bloquée sous le minimum)."
   }
  }
 }
