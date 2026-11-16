@@ -1,6 +1,6 @@
 # Laboratoire hl-swarm — rapport
 
-Généré le 2026-11-15 23:49 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-14
+Généré le 2026-11-16 01:00 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-15
 
 Simulation uniquement : aucun ordre réel.
 
@@ -21,19 +21,22 @@ Simulation uniquement : aucun ordre réel.
 | Gérants d'actifs CME en hausse (4 sem.) | rouge | CFTC, 448 semaines |
 | Risque géopolitique calme | vert | indice GPR, 15281 jours |
 | Hors fenêtre de décision de la Fed | vert | calendrier de la Fed (liste jusqu'à fin 2026) |
-| Ton de la presse mondiale sur les cryptos en amélioration | rouge | GDELT, 470 jours |
-| Presse mondiale : tensions géopolitiques calmes | vert | GDELT, 470 jours |
-| Indice Fear & Greed au-dessus de sa moyenne 30 j | rouge | alternative.me, 3206 jours |
+| Ton de la presse mondiale sur les cryptos en amélioration | rouge | GDELT, 469 jours |
+| Presse mondiale : tensions géopolitiques calmes | indisponible | indisponible (RuntimeError) |
+| Indice Fear & Greed au-dessus de sa moyenne 30 j | rouge | alternative.me, 3207 jours |
 
 ## Échanges avec Claude (connecteurs)
 
-Dernière lecture : 2026-11-15 — réponses de Claude du 2026-11-14T23:42Z déjà lues.
+Dernière lecture : 2026-11-15 — réponses de Claude du 2026-11-15T23:42Z lues : gros traders (30 marchés), risque elevated, Keel, mouvement APT, mouvement INJ, mouvement UNI.
 
-- Risque signalé pour le 2026-11-14 : **none** — Aucun événement grave nouveau confirmé dans les dernières 24 heures : ni piratage ou faillite d'exchange, ni panne ou exploit d'Hyperliquid, ni décrochage de stablecoin, ni escalade militaire (Reuters : Washington pourrait renoncer à de nouvelles frappes contre l'Iran). Le marché crypto reste en repli généralisé (bitcoin vers 67 000 $) et le piratage de Binance date du 29 octobre. [source](https://www.reuters.com/world/middle-east/trump-tells-advisers-he-may-hold-off-iran-attacks-barring-new-provocations-2026-11-14/) [source](https://www.theblock.co/newsletters/the-daily/2026-11-14-meta-prediction-market-app-doj-binance-hack-more-crypto-news-440304) [source](https://crypto.news/coinbase-india-inr-withdrawals-bank-outage/)
-- Paper trading Keel au 2026-11-14 : +1.56 % en 2 jours, pire baisse 0.00 %. 2 évaluations depuis le 13/11, 37 ordres exécutés, 17 sur 54 ignorés sous le minimum de 10 $ (dont 2 sorties : PUMP, WLD) ; prochaine évaluation le 15/11 à 12:00 UTC
-- Gros traders au 2026-11-14 : les plus acheteurs DOT +22, UNI +22, TRX +21 ; les plus vendeurs OP -47, SEI -52, ICP -56
+- Risque signalé pour le 2026-11-15 : **elevated** — Le 15 novembre, l'Iran a lancé des drones contre une base américaine à Bahreïn après des mois d'accalmie (les États-Unis disent en avoir intercepté deux, sans dégât), que le Financial Times qualifie d'escalade des hostilités dans le Golfe. Le bitcoin est tombé vers 62 000 $, plus bas de trois mois, avec plus de 2 milliards de dollars de liquidations ; pas de piratage ou faillite d'exchange majeur, [source](https://www.theguardian.com/world/2026/nov/15/iran-launches-drone-attacks-against-us-military-base-in-bahrain) [source](https://www.ft.com/content/fc7ccc23-c051-49e6-85e5-8d8ba0a83ef9) [source](https://www.washingtonpost.com/world/2026/11/15/iran-targets-bahrain-twice-after-months-quiet-claiming-retaliation-against-us/) [source](https://finance.yahoo.com/markets/crypto/articles/bitcoin-fall-62-000-sparks-092429244.html) [source](https://crypto.news/coinone-data-breach-customer-support-hack/)
+- Paper trading Keel au 2026-11-15 : +0.59 % en 3 jours, pire baisse 0.65 %. Paper Keel en marche, 3 évaluations (dernière le 15/11 12:00 UTC), 43 ordres exécutés ; 32 des 75 derniers ordres ignorés car sous le minimum de 10 $, dont 9 sorties.
+- Gros traders au 2026-11-15 : les plus acheteurs FIL +23, DOT +19, ETC +17 ; les plus vendeurs ICP -42, OP -52, SEI -53
 - 2026-11-13 · TIA : Aucune cause précise identifiée par la recherche web pour la baisse de TIA du 13/11 : pas d'annonce ni d'incident trouvé. Le jeton est en tendance baissière depuis début novembre, dans un secteur des blockchains de couche 1 en recul. [source](https://www.coinbase.com/en-fr/price/celestia)
 - 2026-11-14 · TIA : Aucune nouvelle propre à Celestia : la baisse du 13/11 accompagne le repli général du marché crypto (bitcoin en forte baisse, sentiment de peur extrême). Le jeton restait en tendance baissière sous toutes ses moyennes mobiles. [source](https://coinmarketcap.com/top-stories/6af75f3f0ada0c77afaf1484/) [source](https://tradersunion.com/news/cryptocurrency-news/show/4240045-celestia-drops-11-63percent-today/)
+- 2026-11-15 · APT : Aucun catalyseur propre à Aptos n'a été trouvé (ni annonce, ni incident réseau, ni décision réglementaire). La baisse s'inscrit dans le repli général du marché du 14 novembre, le bitcoin touchant un plus bas de trois mois vers 62 000 $ sur fond de liquidations. [source](https://www.diariobitcoin.com/analisis/aptos-apt-cae-1546-el-14-de-noviembre-de-2026-y-queda-bajo-presion-tecnica/) [source](https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst)
+- 2026-11-15 · INJ : Aucune cause propre à Injective n'a été trouvée : la baisse d'environ 15 % a eu lieu pendant le vote sur la mise à jour Veyra, pourtant bien soutenue par la communauté. Elle suit le repli général du marché crypto du 14 novembre et une pression vendeuse déjà installée depuis plusieurs jours. [source](https://tradersunion.com/news/cryptocurrency-news/show/4250138-injective-slides-15-18percent-today-to/) [source](https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst)
+- 2026-11-15 · UNI : Pas de cause propre à Uniswap : selon CoinMarketCap, la baisse d'environ 15 % vient du repli général du marché (bitcoin sous 68 000 $, inflation américaine plus forte que prévu, dollar et taux en hausse). Elle a été amplifiée par la perte de la zone technique des 6 $ et un positionnement baissier des traders. [source](https://coinmarketcap.com/top-stories/6af7ddf10ada0c77afaf9379/) [source](https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst)
 
 ## Machine learning
 
@@ -43,9 +46,9 @@ Ce que la régression a appris (poids les plus forts) : carry7 +0.051, brk21 +0.
 
 ## Évolution (règles inventées par le laboratoire)
 
-6693024 règles explorées depuis le début en 26 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
+7177088 règles explorées depuis le début en 27 passages (jugées sur l'apprentissage seul), 28 présentées à la validation, 2 en service.
 
-Balayage exhaustif : 5151059 combinaisons sur 92490684 essayées (5.6 %).
+Balayage exhaustif : 5635124 combinaisons sur 92490684 essayées (6.1 %).
 
 Présentées à la validation au dernier passage (2026-11-15) :
 
@@ -65,130 +68,130 @@ Règles nées ici, en paper trading :
 
 | règle | capital $ | jours | rendement % | pire baisse % | Sharpe | ordres | ordres ignorés (< 10 $) | état | test séquentiel | porte backtest |
 |---|---|---|---|---|---|---|---|---|---|---|
-| blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 1000 | 1 | -0.03 | 0.03 | – | 12 | 0 | paper | continue | oui |
-| blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | oui |
-| blend(carry=7,gate=claude_risk,hold=1,k=0,mom=14,w=0.7) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | oui |
-| blend(carry=7,gate=claude_risk,hold=1,k=0,mom=14,w=0.7) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | oui |
-| blend(carry=7,gate=claude_risk,hold=7,k=0,mom=14,w=0.5) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | oui |
-| blend(carry=7,gate=claude_risk,hold=7,k=0,mom=14,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | oui |
-| blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.49 | 0.03 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.29 | 0.29 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.49 | 0.03 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.29 | 0.29 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.97 | 0.07 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.58 | 0.58 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.97 | 0.07 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.58 | 0.58 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.97 | 0.07 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.58 | 0.58 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.49 | 0.03 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.29 | 0.29 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.49 | 0.03 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.29 | 0.29 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.49 | 0.03 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5) | 1000 | 1 | -0.03 | 0.03 | – | 12 | 0 | paper | continue | oui |
-| blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | oui |
-| blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.29 | 0.29 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.49 | 0.03 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.29 | 0.29 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 0.49 | 0.03 | – | 16 | 10 | paper | continue | oui |
-| blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.29 | 0.29 | – | 12 | 12 | paper | continue | oui |
-| blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
-| blend(carry=7,hold=1,k=0,mom=14,w=0.5) | 1000 | 2 | 1.59 | 0.0 | – | 24 | 18 | paper | continue | oui |
-| blend(carry=7,hold=1,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
-| blend(carry=7,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | 1.34 | 0.0 | – | 26 | 17 | paper | continue | oui |
-| blend(carry=7,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
-| blend(carry=7,hold=1,k=3,mom=14,w=0.5) | 1000 | 2 | 2.23 | 0.0 | – | 14 | 8 | paper | continue | oui |
-| blend(carry=7,hold=1,k=3,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | oui |
-| blend(carry=7,hold=1,k=3,mom=14,w=0.7) | 1000 | 2 | 2.55 | 0.0 | – | 16 | 7 | paper | continue | non |
-| blend(carry=7,hold=1,k=3,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | non |
-| blend(carry=7,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | 0.16 | 0.52 | – | 12 | 24 | paper | continue | oui |
-| blend(carry=7,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
-| blend(carry=7,hold=7,k=0,mom=14,w=0.7) | 1000 | 2 | -0.34 | 0.7 | – | 12 | 24 | paper | continue | oui |
-| blend(carry=7,hold=7,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
-| blend(carry=7,hold=7,k=3,mom=14,w=0.5) | 1000 | 2 | 0.28 | 0.67 | – | 6 | 12 | paper | continue | non |
-| blend(carry=7,hold=7,k=3,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | non |
-| blend(carry=7,hold=7,k=3,mom=14,w=0.7) | 1000 | 2 | 0.28 | 0.67 | – | 6 | 12 | paper | continue | oui |
-| blend(carry=7,hold=7,k=3,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | oui |
-| carry(carry=14,hold=7,k=0) | 1000 | 2 | 1.26 | 0.0 | – | 12 | 24 | paper | continue | oui |
-| carry(carry=14,hold=7,k=0) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
-| carry(carry=14,hold=7,k=3) | 1000 | 2 | 2.57 | 0.0 | – | 6 | 12 | paper | continue | non |
-| carry(carry=14,hold=7,k=3) | 50 | 2 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | non |
-| carry(carry=3,hold=7,k=0) | 1000 | 2 | 2.01 | 0.0 | – | 12 | 24 | paper | continue | oui |
-| carry(carry=3,hold=7,k=0) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
-| carry(carry=3,hold=7,k=3) | 1000 | 2 | 1.51 | 0.22 | – | 6 | 12 | paper | continue | non |
-| carry(carry=3,hold=7,k=3) | 50 | 2 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | non |
-| carry(carry=7,hold=7,k=0) | 1000 | 2 | 0.13 | 0.8 | – | 12 | 24 | paper | continue | oui |
-| carry(carry=7,hold=7,k=0) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
-| carry(carry=7,hold=7,k=3) | 1000 | 2 | 1.44 | 0.36 | – | 6 | 12 | paper | continue | oui |
-| carry(carry=7,hold=7,k=3) | 50 | 2 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | oui |
-| mix(a=brk,b=carry,hold=7,k=0,la=21,lb=7,sa=1,sb=1,w=0.5) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | oui |
-| mix(a=brk,b=carry,hold=7,k=0,la=21,lb=7,sa=1,sb=1,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | oui |
-| mix(a=maxret,b=carry,hold=7,k=0,la=14,lb=7,sa=-1,sb=1,w=0.5) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | oui |
-| mix(a=maxret,b=carry,hold=7,k=0,la=14,lb=7,sa=-1,sb=1,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | oui |
-| mix(a=spring,b=carry,hold=1,k=0,la=14,lb=7,sa=1,sb=1,w=0.5) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | non |
-| mix(a=spring,b=carry,hold=1,k=0,la=14,lb=7,sa=1,sb=1,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | non |
-| mix(a=vol,b=mom,hold=7,k=0,la=28,lb=14,sa=-1,sb=1,w=0.5) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | non |
-| mix(a=vol,b=mom,hold=7,k=0,la=28,lb=14,sa=-1,sb=1,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | non |
-| mix(a=vsurge,b=mom,hold=1,k=0,la=7,lb=14,sa=1,sb=1,w=0.5) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | non |
-| mix(a=vsurge,b=mom,hold=1,k=0,la=7,lb=14,sa=1,sb=1,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | non |
-| mix(a=z,b=carry,hold=1,k=0,la=10,lb=7,sa=-1,sb=1,w=0.5) | 1000 | 1 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | non |
-| mix(a=z,b=carry,hold=1,k=0,la=10,lb=7,sa=-1,sb=1,w=0.5) | 50 | 1 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | non |
-| ml(hold=7,k=0,model=gbm) | 1000 | 2 | -0.76 | 0.76 | – | 25 | 5 | paper | continue | non |
-| ml(hold=7,k=0,model=gbm) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
-| ml(hold=7,k=0,model=ridge) | 1000 | 2 | 2.01 | 0.07 | – | 22 | 7 | paper | continue | non |
-| ml(hold=7,k=0,model=ridge) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
-| premium(hold=1) | 1000 | 2 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| premium(hold=1) | 50 | 2 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| trend(gate=nasdaq,hold=1,mom=14) | 1000 | 2 | -0.26 | 0.26 | – | 3 | 0 | paper | continue | non |
-| trend(gate=nasdaq,hold=1,mom=14) | 50 | 2 | 0.0 | 0.0 | – | 0 | 2 | paper | continue | non |
-| trend(gate=premium,hold=1,mom=14) | 1000 | 2 | -0.26 | 0.26 | – | 3 | 0 | paper | continue | non |
-| trend(gate=premium,hold=1,mom=14) | 50 | 2 | 0.0 | 0.0 | – | 0 | 2 | paper | continue | non |
-| trend(gate=risk_on,hold=1,mom=14) | 1000 | 2 | -0.26 | 0.26 | – | 3 | 0 | paper | continue | non |
-| trend(gate=risk_on,hold=1,mom=14) | 50 | 2 | 0.0 | 0.0 | – | 0 | 2 | paper | continue | non |
-| trend(hold=1,mom=14) | 1000 | 2 | -0.4 | 0.52 | – | 7 | 1 | paper | continue | non |
-| trend(hold=1,mom=14) | 50 | 2 | 0.0 | 0.0 | – | 0 | 5 | paper | continue | non |
-| trend(hold=1,mom=28) | 1000 | 2 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| trend(hold=1,mom=28) | 50 | 2 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| trend(hold=1,mom=7) | 1000 | 2 | -1.14 | 1.14 | – | 8 | 1 | paper | continue | non |
-| trend(hold=1,mom=7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 5 | paper | continue | non |
-| ts(hold=1,l=10,s=-1,sig=z) | 1000 | 1 | -0.07 | 0.07 | – | 30 | 0 | paper | continue | non |
-| ts(hold=1,l=10,s=-1,sig=z) | 50 | 1 | 0.0 | 0.0 | – | 0 | 30 | paper | continue | non |
-| ts(hold=1,l=14,s=-1,sig=vwapd) | 1000 | 1 | -0.07 | 0.07 | – | 30 | 0 | paper | continue | non |
-| ts(hold=1,l=14,s=-1,sig=vwapd) | 50 | 1 | 0.0 | 0.0 | – | 0 | 30 | paper | continue | non |
-| ts(hold=1,l=14,s=1,sig=spring) | 1000 | 1 | -0.04 | 0.04 | – | 18 | 0 | paper | continue | non |
-| ts(hold=1,l=14,s=1,sig=spring) | 50 | 1 | 0.0 | 0.0 | – | 0 | 18 | paper | continue | non |
-| ts(hold=1,l=14,s=1,sig=vwapd) | 1000 | 1 | -0.07 | 0.07 | – | 30 | 0 | paper | continue | non |
-| ts(hold=1,l=14,s=1,sig=vwapd) | 50 | 1 | 0.0 | 0.0 | – | 0 | 30 | paper | continue | non |
-| ts(hold=1,l=21,s=1,sig=brk) | 1000 | 1 | -0.07 | 0.07 | – | 30 | 0 | paper | continue | non |
-| ts(hold=1,l=21,s=1,sig=brk) | 50 | 1 | 0.0 | 0.0 | – | 0 | 30 | paper | continue | non |
-| whales(hold=1,k=0) | 1000 | 1 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| whales(hold=1,k=0) | 50 | 1 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| whales(hold=1,k=3) | 1000 | 1 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| whales(hold=1,k=3) | 50 | 1 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
-| xsmom(hold=7,k=0,mom=14) | 1000 | 2 | -1.59 | 1.9 | – | 12 | 24 | paper | continue | non |
-| xsmom(hold=7,k=0,mom=14) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | non |
-| xsmom(hold=7,k=0,mom=28) | 1000 | 2 | 2.63 | 0.0 | – | 12 | 24 | paper | continue | non |
-| xsmom(hold=7,k=0,mom=28) | 50 | 2 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | non |
+| blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | -0.45 | 0.45 | – | 14 | 11 | paper | continue | oui |
+| blend(carry=10,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| blend(carry=7,gate=claude_risk,hold=1,k=0,mom=14,w=0.7) | 1000 | 2 | -0.56 | 0.56 | – | 25 | 0 | paper | continue | oui |
+| blend(carry=7,gate=claude_risk,hold=1,k=0,mom=14,w=0.7) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| blend(carry=7,gate=claude_risk,hold=7,k=0,mom=14,w=0.5) | 1000 | 2 | -0.08 | 0.08 | – | 24 | 0 | paper | continue | oui |
+| blend(carry=7,gate=claude_risk,hold=7,k=0,mom=14,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.25 | 0.23 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=cot,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.29 | 0.29 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=cot,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.25 | 0.23 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=fng,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.29 | 0.29 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=fng,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.5 | 0.47 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=fomc,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.57 | 0.58 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=fomc,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.5 | 0.47 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=geo_news,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.57 | 0.58 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=geo_news,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.5 | 0.47 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=gpr,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.57 | 0.58 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=gpr,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.25 | 0.23 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=nasdaq,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.29 | 0.29 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=nasdaq,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.25 | 0.23 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=news_tone,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.29 | 0.29 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=news_tone,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.25 | 0.23 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=premium,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5) | 1000 | 2 | -0.2 | 0.2 | – | 12 | 12 | paper | continue | oui |
+| blend(carry=7,gate=premium,hold=5,k=0,mom=10,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.29 | 0.29 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=premium,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.25 | 0.23 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=risk_on,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.29 | 0.29 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.25 | 0.23 | – | 18 | 21 | paper | continue | oui |
+| blend(carry=7,gate=stable,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | -0.29 | 0.29 | – | 12 | 24 | paper | continue | oui |
+| blend(carry=7,gate=stable,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | oui |
+| blend(carry=7,hold=1,k=0,mom=14,w=0.5) | 1000 | 3 | 1.23 | 0.36 | – | 30 | 27 | paper | continue | oui |
+| blend(carry=7,hold=1,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | oui |
+| blend(carry=7,hold=1,k=0,mom=14,w=0.7) | 1000 | 3 | 0.87 | 0.47 | – | 28 | 28 | paper | continue | oui |
+| blend(carry=7,hold=1,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | oui |
+| blend(carry=7,hold=1,k=3,mom=14,w=0.5) | 1000 | 3 | 1.84 | 0.38 | – | 16 | 13 | paper | continue | oui |
+| blend(carry=7,hold=1,k=3,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| blend(carry=7,hold=1,k=3,mom=14,w=0.7) | 1000 | 3 | 2.15 | 0.38 | – | 18 | 12 | paper | continue | non |
+| blend(carry=7,hold=1,k=3,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| blend(carry=7,hold=7,k=0,mom=14,w=0.5) | 1000 | 3 | 0.18 | 0.52 | – | 12 | 36 | paper | continue | oui |
+| blend(carry=7,hold=7,k=0,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | oui |
+| blend(carry=7,hold=7,k=0,mom=14,w=0.7) | 1000 | 3 | -1.06 | 1.41 | – | 12 | 36 | paper | continue | oui |
+| blend(carry=7,hold=7,k=0,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | oui |
+| blend(carry=7,hold=7,k=3,mom=14,w=0.5) | 1000 | 3 | -1.17 | 2.12 | – | 6 | 18 | paper | continue | non |
+| blend(carry=7,hold=7,k=3,mom=14,w=0.5) | 50 | 3 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| blend(carry=7,hold=7,k=3,mom=14,w=0.7) | 1000 | 3 | -1.17 | 2.12 | – | 6 | 18 | paper | continue | oui |
+| blend(carry=7,hold=7,k=3,mom=14,w=0.7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| carry(carry=14,hold=7,k=0) | 1000 | 3 | 0.37 | 0.88 | – | 12 | 36 | paper | continue | oui |
+| carry(carry=14,hold=7,k=0) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | oui |
+| carry(carry=14,hold=7,k=3) | 1000 | 3 | 1.51 | 1.03 | – | 6 | 18 | paper | continue | non |
+| carry(carry=14,hold=7,k=3) | 50 | 3 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| carry(carry=3,hold=7,k=0) | 1000 | 3 | 1.71 | 0.29 | – | 12 | 36 | paper | continue | oui |
+| carry(carry=3,hold=7,k=0) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | oui |
+| carry(carry=3,hold=7,k=3) | 1000 | 3 | 1.19 | 0.53 | – | 6 | 18 | paper | continue | non |
+| carry(carry=3,hold=7,k=3) | 50 | 3 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| carry(carry=7,hold=7,k=0) | 1000 | 3 | 0.23 | 0.8 | – | 12 | 36 | paper | continue | oui |
+| carry(carry=7,hold=7,k=0) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | oui |
+| carry(carry=7,hold=7,k=3) | 1000 | 3 | 1.48 | 0.36 | – | 6 | 18 | paper | continue | oui |
+| carry(carry=7,hold=7,k=3) | 50 | 3 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| mix(a=brk,b=carry,hold=7,k=0,la=21,lb=7,sa=1,sb=1,w=0.5) | 1000 | 2 | -1.06 | 1.06 | – | 12 | 12 | paper | continue | oui |
+| mix(a=brk,b=carry,hold=7,k=0,la=21,lb=7,sa=1,sb=1,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| mix(a=maxret,b=carry,hold=7,k=0,la=14,lb=7,sa=-1,sb=1,w=0.5) | 1000 | 2 | -0.52 | 0.52 | – | 12 | 12 | paper | continue | oui |
+| mix(a=maxret,b=carry,hold=7,k=0,la=14,lb=7,sa=-1,sb=1,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | oui |
+| mix(a=spring,b=carry,hold=1,k=0,la=14,lb=7,sa=1,sb=1,w=0.5) | 1000 | 2 | 0.62 | 0.07 | – | 26 | 5 | paper | continue | non |
+| mix(a=spring,b=carry,hold=1,k=0,la=14,lb=7,sa=1,sb=1,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| mix(a=vol,b=mom,hold=7,k=0,la=28,lb=14,sa=-1,sb=1,w=0.5) | 1000 | 2 | -0.34 | 0.34 | – | 12 | 12 | paper | continue | non |
+| mix(a=vol,b=mom,hold=7,k=0,la=28,lb=14,sa=-1,sb=1,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| mix(a=vsurge,b=mom,hold=1,k=0,la=7,lb=14,sa=1,sb=1,w=0.5) | 1000 | 2 | -1.58 | 1.58 | – | 26 | 5 | paper | continue | non |
+| mix(a=vsurge,b=mom,hold=1,k=0,la=7,lb=14,sa=1,sb=1,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| mix(a=z,b=carry,hold=1,k=0,la=10,lb=7,sa=-1,sb=1,w=0.5) | 1000 | 2 | -0.83 | 0.83 | – | 24 | 6 | paper | continue | non |
+| mix(a=z,b=carry,hold=1,k=0,la=10,lb=7,sa=-1,sb=1,w=0.5) | 50 | 2 | 0.0 | 0.0 | – | 0 | 24 | paper | continue | non |
+| ml(hold=7,k=0,model=gbm) | 1000 | 3 | -1.24 | 1.24 | – | 25 | 17 | paper | continue | non |
+| ml(hold=7,k=0,model=gbm) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | non |
+| ml(hold=7,k=0,model=ridge) | 1000 | 3 | 2.13 | 0.07 | – | 22 | 19 | paper | continue | non |
+| ml(hold=7,k=0,model=ridge) | 50 | 3 | 0.0 | 0.0 | – | 0 | 36 | paper | continue | non |
+| premium(hold=1) | 1000 | 3 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
+| premium(hold=1) | 50 | 3 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
+| trend(gate=nasdaq,hold=1,mom=14) | 1000 | 3 | -0.27 | 0.27 | – | 4 | 0 | paper | continue | non |
+| trend(gate=nasdaq,hold=1,mom=14) | 50 | 3 | 0.0 | 0.0 | – | 0 | 2 | paper | continue | non |
+| trend(gate=premium,hold=1,mom=14) | 1000 | 3 | -0.27 | 0.27 | – | 4 | 0 | paper | continue | non |
+| trend(gate=premium,hold=1,mom=14) | 50 | 3 | 0.0 | 0.0 | – | 0 | 2 | paper | continue | non |
+| trend(gate=risk_on,hold=1,mom=14) | 1000 | 3 | -0.27 | 0.27 | – | 4 | 0 | paper | continue | non |
+| trend(gate=risk_on,hold=1,mom=14) | 50 | 3 | 0.0 | 0.0 | – | 0 | 2 | paper | continue | non |
+| trend(hold=1,mom=14) | 1000 | 3 | -0.42 | 0.54 | – | 8 | 1 | paper | continue | non |
+| trend(hold=1,mom=14) | 50 | 3 | 0.0 | 0.0 | – | 0 | 5 | paper | continue | non |
+| trend(hold=1,mom=28) | 1000 | 3 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
+| trend(hold=1,mom=28) | 50 | 3 | 0.0 | 0.0 | – | 0 | 0 | paper | continue | non |
+| trend(hold=1,mom=7) | 1000 | 3 | -1.15 | 1.15 | – | 9 | 1 | paper | continue | non |
+| trend(hold=1,mom=7) | 50 | 3 | 0.0 | 0.0 | – | 0 | 6 | paper | continue | non |
+| ts(hold=1,l=10,s=-1,sig=z) | 1000 | 2 | 3.95 | 0.07 | – | 30 | 30 | paper | continue | non |
+| ts(hold=1,l=10,s=-1,sig=z) | 50 | 2 | 0.0 | 0.0 | – | 0 | 60 | paper | continue | non |
+| ts(hold=1,l=14,s=-1,sig=vwapd) | 1000 | 2 | 3.95 | 0.07 | – | 30 | 30 | paper | continue | non |
+| ts(hold=1,l=14,s=-1,sig=vwapd) | 50 | 2 | 0.0 | 0.0 | – | 0 | 60 | paper | continue | non |
+| ts(hold=1,l=14,s=1,sig=spring) | 1000 | 2 | 2.76 | 0.04 | – | 28 | 14 | paper | continue | non |
+| ts(hold=1,l=14,s=1,sig=spring) | 50 | 2 | 0.0 | 0.0 | – | 0 | 38 | paper | continue | non |
+| ts(hold=1,l=14,s=1,sig=vwapd) | 1000 | 2 | -4.08 | 4.08 | – | 30 | 30 | paper | continue | non |
+| ts(hold=1,l=14,s=1,sig=vwapd) | 50 | 2 | 0.0 | 0.0 | – | 0 | 60 | paper | continue | non |
+| ts(hold=1,l=21,s=1,sig=brk) | 1000 | 2 | -4.08 | 4.08 | – | 30 | 30 | paper | continue | non |
+| ts(hold=1,l=21,s=1,sig=brk) | 50 | 2 | 0.0 | 0.0 | – | 0 | 60 | paper | continue | non |
+| whales(hold=1,k=0) | 1000 | 2 | -0.07 | 0.07 | – | 12 | 0 | paper | continue | non |
+| whales(hold=1,k=0) | 50 | 2 | 0.0 | 0.0 | – | 0 | 12 | paper | continue | non |
+| whales(hold=1,k=3) | 1000 | 2 | -0.07 | 0.07 | – | 6 | 0 | paper | continue | non |
+| whales(hold=1,k=3) | 50 | 2 | 0.0 | 0.0 | – | 0 | 6 | paper | continue | non |
+| xsmom(hold=7,k=0,mom=14) | 1000 | 3 | -1.96 | 2.26 | – | 12 | 36 | paper | continue | non |
+| xsmom(hold=7,k=0,mom=14) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | non |
+| xsmom(hold=7,k=0,mom=28) | 1000 | 3 | 1.64 | 0.97 | – | 12 | 36 | paper | continue | non |
+| xsmom(hold=7,k=0,mom=28) | 50 | 3 | 0.0 | 0.0 | – | 0 | 48 | paper | continue | non |
 
 ## Fiche de score du catalogue (62 règles, historique long)
 
@@ -261,9 +264,6 @@ Règles nées ici, en paper trading :
 
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
-- 2026-11-15 — ÉVOLUTION : 354736 règles explorées en 22171 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (2611744 explorées et 28 présentées depuis le début)
-- 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
-- 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-15 — ÉVOLUTION : 356512 règles explorées en 22282 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (2968256 explorées et 28 présentées depuis le début)
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
@@ -298,4 +298,7 @@ Règles nées ici, en paper trading :
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-15 — ÉVOLUTION : 256176 règles explorées en 16011 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (6693024 explorées et 28 présentées depuis le début)
+- 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
+- 2026-11-15 — modèles ML ré-entraînés sur 62102 exemples
+- 2026-11-15 — ÉVOLUTION : 484064 règles explorées en 30254 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (7177088 explorées et 28 présentées depuis le début)
 - 2026-11-15 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
