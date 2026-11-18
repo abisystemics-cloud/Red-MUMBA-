@@ -1,59 +1,52 @@
 {
- "answered_at": "2026-11-16T23:42:27Z",
+ "answered_at": "2026-11-18T23:41:40Z",
  "answers": {
   "smart_money": {
    "bias": {
-    "BTC": -20.3,
-    "ETH": -13.0,
-    "SOL": -37.9,
-    "BNB": -14.8,
-    "XRP": -9.1,
-    "DOGE": -24.7,
-    "ADA": 13.7,
-    "AVAX": -6.4,
-    "LINK": 4.5,
-    "LTC": -2.8,
-    "DOT": 15.3,
-    "ATOM": -27.2,
-    "NEAR": -20.2,
-    "APT": -5.4,
-    "ARB": -11.7,
-    "OP": -54.3,
-    "SUI": -35.5,
-    "INJ": -15.9,
-    "TIA": -33.9,
-    "SEI": -58.7,
-    "AAVE": 12.7,
-    "UNI": 9.7,
-    "FIL": 15.9,
-    "BCH": 3.6,
-    "ETC": 17.5,
-    "XLM": -34.5,
-    "TRX": 9.1,
-    "HBAR": -23.8,
-    "ICP": -8.0,
-    "RUNE": -37.6
+    "BTC": -20.0,
+    "ETH": -23.1,
+    "SOL": -45.9,
+    "BNB": -4.2,
+    "XRP": -7.2,
+    "DOGE": -31.1,
+    "ADA": 21.4,
+    "AVAX": -11.3,
+    "LINK": -0.1,
+    "LTC": -27.1,
+    "DOT": 19.9,
+    "ATOM": -24.3,
+    "NEAR": -21.9,
+    "APT": -13.9,
+    "ARB": -11.4,
+    "OP": -42.6,
+    "SUI": -39.0,
+    "INJ": -2.0,
+    "TIA": -66.2,
+    "SEI": -57.6,
+    "AAVE": 6.0,
+    "UNI": 7.5,
+    "FIL": 15.5,
+    "BCH": 8.1,
+    "ETC": 41.7,
+    "XLM": -35.2,
+    "TRX": 4.3,
+    "HBAR": -25.6,
+    "ICP": -14.8,
+    "RUNE": -28.9
    },
-   "as_of": "2026-11-16T23:41:40Z",
+   "as_of": "2026-11-18",
    "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money"
   },
   "risk_check": {
-   "level": "elevated",
-   "summary": "Les tensions Iran–États-Unis dans le Golfe restent vives : après les tirs de drones iraniens des 15–16 novembre contre un radar américain à Bahreïn (interceptés), le Conseil de coopération du Golfe dénonce une « provocation flagrante », des frappes américaines sur la côte sud de l'Iran sont rapportées et un troisième porte-avions américain est arrivé dans la région. Côté crypto, la plateforme de perps Lighter a suspendu les retraits le 16 novembre après un vol d'environ 10,4 millions de dollars via une clé API divulguée (protocole non touché) ; aucune panne ou exploit d'Hyperliquid, aucun décrochage de stablecoin signalé, et le bitcoin se stabilise vers 64 000 $ après la chute des jours précédents.",
-   "sources": [
-    "https://www.thenationalnews.com/news/gulf/2026/11/16/iran-attacks-bahrain-in-blatant-challenge-to-peace-push/",
-    "https://www.military.com/iran-targets-us-military-base-in-2nd-bahrain-drone-attack-in-3-days",
-    "https://insights.niacouncil.org/p/iran-and-us-exchange-new-strikes",
-    "https://www.thenationalnews.com/news/us/2026/11/16/uss-theodore-roosevelt-middle-east-centcom/",
-    "https://www.coindesk.com/tech/2026/11/16/lighter-suspends-all-withdrawals-after-usd10-4-million-crypto-exploit",
-    "https://www.fool.com/coverage/stock-market-today/2026/11/16/crypto-market-today-nov-16-bitcoin-searches-for-stability-after-usd230-billion-crypto-sell-off/"
-   ]
+   "level": "none",
+   "summary": "Aucune source fiable et datée des dernières 24 heures n'a été trouvée pour un piratage ou faillite d'exchange, une panne ou un exploit d'Hyperliquid, un décrochage de stablecoin, un choc réglementaire ou une escalade militaire majeure. Les résultats de recherche ne portaient que sur des incidents anciens ou non datés.",
+   "sources": []
   },
   "keel_status": {
-   "return_pct": 0.6,
-   "max_dd_pct": 0.7,
-   "days": 4,
-   "note": "Paper Keel en marche, 4 évaluations (dernière le 16/11 12:00 UTC), 51 ordres exécutés, valeur du compte 1 006,56 $ ; 45 des 96 derniers ordres ignorés car sous le minimum de 10 $, dont 14 sorties (position WLD bloquée sous le minimum)."
+   "return_pct": 0.51,
+   "max_dd_pct": 1.14,
+   "days": 6,
+   "note": "Paper run Keel simulé (capital 1 000 $), âge 5 jours ; 74 ordres sur 141 refusés car inférieurs à 10 $ (dont 21 sorties). Sharpe 2,55 sur échantillon très court, non significatif."
   }
  }
 }
