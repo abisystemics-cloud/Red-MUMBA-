@@ -1,1 +1,52 @@
-{"answered_at": "2026-11-20T23:45:00Z", "answers": {"smart_money": {"bias": {"BTC": -29.6, "ETH": -34.2, "SOL": -40.5, "BNB": 4.4, "XRP": -19.8, "DOGE": -30.0, "ADA": 16.0, "AVAX": -8.2, "LINK": 0.8, "LTC": -38.1, "DOT": 18.4, "ATOM": -13.8, "NEAR": -11.3, "APT": -4.5, "ARB": -7.9, "OP": -51.3, "SUI": -31.3, "INJ": -14.7, "TIA": -64.4, "SEI": -60.6, "AAVE": 4.7, "UNI": 1.7, "FIL": 19.2, "BCH": 6.5, "ETC": 28.3, "XLM": -19.8, "TRX": -4.3, "HBAR": -47.9, "ICP": -19.6, "RUNE": -25.4}, "as_of": "2026-11-20", "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money"}, "risk_check": {"level": "none", "summary": "Aucun événement grave daté des dernières 24 heures n'a été trouvé (pas de piratage ou faillite d'exchange, de panne d'Hyperliquid, de décrochage de stablecoin ni de choc réglementaire ou militaire majeur). Les résultats trouvés concernent des événements plus anciens (ex. piratage Binance fin octobre 2026).", "sources": ["https://www.theblock.co/newsletters/the-daily/2026-10-30-binance-hack-polymarket-more-crypto-news-432181"]}, "keel_status": {"return_pct": 0.41, "max_dd_pct": 1.14, "days": 8, "note": "Paper run actif, 8 évaluations sur 7 jours, Sharpe 1,82 (court historique) ; 58 % des ordres des 7 derniers jours refusés car < 10 $ (capital simulé 1 000 $)."}}}
+{
+ "answered_at": "2026-11-21T23:41:20Z",
+ "answers": {
+  "smart_money": {
+   "bias": {
+    "BTC": -26.7,
+    "ETH": -31.3,
+    "SOL": -37.7,
+    "BNB": -5.5,
+    "XRP": -12.7,
+    "DOGE": -38.8,
+    "ADA": -11.3,
+    "AVAX": -8.6,
+    "LINK": 0.6,
+    "LTC": -58.2,
+    "DOT": 21.3,
+    "ATOM": -13.7,
+    "NEAR": -1.2,
+    "APT": -12.7,
+    "ARB": 2.4,
+    "OP": -45.0,
+    "SUI": -20.1,
+    "INJ": -8.1,
+    "TIA": -65.1,
+    "SEI": -55.1,
+    "AAVE": 2.5,
+    "UNI": 2.5,
+    "FIL": 22.6,
+    "BCH": 12.3,
+    "ETC": 19.9,
+    "XLM": -26.6,
+    "TRX": -4.8,
+    "HBAR": -41.5,
+    "ICP": -8.3,
+    "RUNE": -53.4
+   },
+   "as_of": "2026-11-21T23:41:09Z",
+   "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money"
+  },
+  "risk_check": {
+   "level": "none",
+   "summary": "Aucun événement grave daté des dernières 24 heures n'a pu être confirmé par une source fiable (recherche web : résultats anciens ou non datés). Niveau neutre par défaut.",
+   "sources": []
+  },
+  "keel_status": {
+   "return_pct": 1.24,
+   "max_dd_pct": 1.14,
+   "days": 9,
+   "note": "Paper run simulé 1 000 $, 9 évaluations depuis le 13/11 ; P&L net après frais -19,1 $ selon realized, sharpe 4,66 sur échantillon minuscule ; 59 % des ordres des 7 derniers jours refusés (< 10 $ minimum HL)."
+  }
+ }
+}
