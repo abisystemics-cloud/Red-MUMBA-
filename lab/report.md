@@ -1,6 +1,6 @@
 # Laboratoire hl-swarm — rapport
 
-Généré le 2026-11-21 13:51 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-20
+Généré le 2026-11-21 14:58 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-20
 
 Simulation uniquement : aucun ordre réel.
 
@@ -46,9 +46,9 @@ Ce que la régression a appris (poids les plus forts) : carry7 +0.051, brk21 +0.
 
 ## Évolution (règles inventées par le laboratoire)
 
-43266752 règles explorées depuis le début en 132 passages (jugées sur l'apprentissage seul), 64 présentées à la validation, 2 en service.
+43520848 règles explorées depuis le début en 133 passages (jugées sur l'apprentissage seul), 64 présentées à la validation, 2 en service.
 
-Balayage exhaustif : 41724804 combinaisons sur 92490684 essayées (45.1 %).
+Balayage exhaustif : 41978900 combinaisons sur 92490684 essayées (45.4 %).
 
 Présentées à la validation au dernier passage (2026-11-21) :
 
@@ -264,9 +264,6 @@ Règles nées ici, en paper trading :
 
 - 2026-11-20 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-20 — modèles ML ré-entraînés sur 62102 exemples
-- 2026-11-20 — ÉVOLUTION : 342688 règles explorées en 21418 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (39272304 explorées et 58 présentées depuis le début)
-- 2026-11-20 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
-- 2026-11-20 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-20 — ÉVOLUTION : 257488 règles explorées en 16093 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (39529792 explorées et 58 présentées depuis le début)
 - 2026-11-20 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-21 — modèles ML ré-entraînés sur 62102 exemples
@@ -301,4 +298,7 @@ Règles nées ici, en paper trading :
 - 2026-11-21 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-21 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-21 — ÉVOLUTION : 311136 règles explorées en 19446 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (43266752 explorées et 64 présentées depuis le début)
+- 2026-11-21 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
+- 2026-11-21 — modèles ML ré-entraînés sur 62102 exemples
+- 2026-11-21 — ÉVOLUTION : 254096 règles explorées en 15881 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (43520848 explorées et 64 présentées depuis le début)
 - 2026-11-21 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
