@@ -1,52 +1,54 @@
 {
- "answered_at": "2026-11-23T23:42:12Z",
+ "answered_at": "2026-11-24T23:46:00Z",
  "answers": {
   "smart_money": {
    "bias": {
-    "BTC": -33.1,
-    "ETH": -34.1,
-    "SOL": -38.7,
-    "BNB": -2.6,
-    "XRP": -9.4,
-    "DOGE": -48.8,
-    "ADA": 10.2,
-    "AVAX": -28.1,
-    "LINK": -7.7,
-    "LTC": -73.9,
-    "DOT": 9.1,
-    "ATOM": -7.3,
-    "NEAR": -28.6,
-    "APT": -8.2,
-    "ARB": 10.0,
-    "OP": -14.4,
-    "SUI": -33.2,
-    "INJ": -11.8,
-    "TIA": -64.3,
-    "SEI": -59.6,
-    "AAVE": 1.1,
-    "UNI": -5.0,
-    "FIL": 13.9,
-    "BCH": 3.0,
-    "ETC": -9.9,
-    "XLM": -33.2,
-    "TRX": 2.2,
-    "HBAR": -63.3,
-    "ICP": -5.8,
-    "RUNE": -40.0
+    "BTC": -27.8,
+    "ETH": -31.6,
+    "SOL": -39.1,
+    "BNB": -6.2,
+    "XRP": -15.7,
+    "DOGE": -39.3,
+    "ADA": 11.3,
+    "AVAX": -22.5,
+    "LINK": -8.0,
+    "LTC": -73.5,
+    "DOT": 15.0,
+    "ATOM": -11.3,
+    "NEAR": -32.0,
+    "APT": -5.8,
+    "ARB": 0.8,
+    "OP": -15.1,
+    "SUI": -29.7,
+    "INJ": -9.1,
+    "TIA": -60.7,
+    "SEI": -57.2,
+    "AAVE": 0.1,
+    "UNI": -3.0,
+    "FIL": 2.7,
+    "BCH": 1.1,
+    "ETC": -2.1,
+    "XLM": -32.7,
+    "TRX": -8.5,
+    "HBAR": -67.3,
+    "ICP": -8.2,
+    "RUNE": -42.9
    },
-   "as_of": "2026-11-23T23:41:32Z",
+   "as_of": "2026-11-24",
    "source": "Coinversa Pulse live_cohort_bias, tiers money_printer + smart_money"
   },
   "risk_check": {
    "level": "none",
-   "summary": "Aucun événement grave daté des dernières 24 heures n'a été trouvé (piratage ou faillite d'exchange, panne d'Hyperliquid, décrochage de stablecoin, choc réglementaire, escalade militaire). Les recherches ne renvoient que des articles plus anciens (l'exploit de Lighter date du 18/11) ou sans date fiable.",
-   "sources": []
+   "summary": "Aucun événement grave daté des dernières 24 heures n'a été trouvé (piratage d'exchange, panne d'Hyperliquid, décrochage de stablecoin, choc réglementaire, escalade militaire majeure). Les résultats de recherche trouvés étaient anciens ou non datés ; la faille de Lighter du 18/11 date de plus de 24 h.",
+   "sources": [
+    "https://cryptoslate.com/lighters-exploit-raises-uncomfortable-questions-for-hyperliquids-5-7-billion-market/"
+   ]
   },
   "keel_status": {
-   "return_pct": 0.73,
+   "return_pct": 0.35,
    "max_dd_pct": 1.14,
-   "days": 11,
-   "note": "Paper Keel (1 000 $ simulés) depuis le 13/11 ; 11 évaluations ; P&L net -24,3 $ (frais 2,5 $), profit factor 0,55 ; 57 % des ordres des 7 derniers jours refusés car < 10 $ (17 sorties non exécutées) ; critères de passage non atteints (âge 10 j/21, 11/20 évaluations)."
+   "days": 12,
+   "note": "Paper run 1 000 $, Sharpe 1,11, PnL net -28 $ après frais ; 55 % des ordres des 7 derniers jours refusés (< 10 $ minimum), ADA bloquée sous le minimum. Critères de passage : âge 11/21 j, évaluations 12/20."
   }
  }
 }
