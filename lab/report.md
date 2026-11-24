@@ -1,6 +1,6 @@
 # Laboratoire hl-swarm — rapport
 
-Généré le 2026-11-24 00:30 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-23
+Généré le 2026-11-24 01:38 UTC · 30 marchés Hyperliquid, dernier jour clôturé 2026-11-23
 
 Simulation uniquement : aucun ordre réel.
 
@@ -16,22 +16,22 @@ Simulation uniquement : aucun ordre réel.
 | indicateur | feu | source |
 |---|---|---|
 | Nasdaq au-dessus de sa moyenne 100 j | rouge | yahoo, 2132 jours |
-| Stablecoins en hausse sur 30 j | rouge | DefiLlama, 3282 jours |
+| Stablecoins en hausse sur 30 j | rouge | DefiLlama, 3283 jours |
 | Prime Coinbase positive (7 j) | rouge | Coinbase vs Binance spot, 509 jours |
 | Gérants d'actifs CME en hausse (4 sem.) | rouge | CFTC, 450 semaines |
 | Risque géopolitique calme | vert | indice GPR, 15302 jours |
 | Hors fenêtre de décision de la Fed | vert | calendrier de la Fed (liste jusqu'à fin 2026) |
-| Ton de la presse mondiale sur les cryptos en amélioration | rouge | GDELT, 468 jours |
-| Presse mondiale : tensions géopolitiques calmes | vert | GDELT, 468 jours |
+| Ton de la presse mondiale sur les cryptos en amélioration | rouge | GDELT, 469 jours |
+| Presse mondiale : tensions géopolitiques calmes | vert | GDELT, 469 jours |
 | Indice Fear & Greed au-dessus de sa moyenne 30 j | rouge | alternative.me, 3215 jours |
 
 ## Échanges avec Claude (connecteurs)
 
-Dernière lecture : 2026-11-23 — réponses de Claude du 2026-11-22T23:41Z déjà lues.
+Dernière lecture : 2026-11-24 — réponses de Claude du 2026-11-23T23:42Z lues : gros traders (30 marchés), risque none, Keel.
 
-- Risque signalé pour le 2026-11-22 : **none** — Aucun événement grave daté des dernières 24 heures n'a été trouvé (piratage ou faillite d'exchange, panne d'Hyperliquid, décrochage de stablecoin, choc réglementaire, escalade militaire). Les résultats de recherche ne contenaient que des articles anciens ou sans date fiable. 
-- Paper trading Keel au 2026-11-22 : +1.08 % en 10 jours, pire baisse 1.14 %. Paper Keel (1 000 $ simulés) en cours depuis le 13/11 ; 10 évaluations ; P&L net -23,2 $ après frais mais rendement total +1,08 % selon Keel ; 57 % des ordres des 7 derniers jours refusés car < 10 $ ;
-- Gros traders au 2026-11-22 : les plus acheteurs DOT +24, FIL +22, BCH +19 ; les plus vendeurs SEI -55, LTC -61, TIA -65
+- Risque signalé pour le 2026-11-23 : **none** — Aucun événement grave daté des dernières 24 heures n'a été trouvé (piratage ou faillite d'exchange, panne d'Hyperliquid, décrochage de stablecoin, choc réglementaire, escalade militaire). Les recherches ne renvoient que des articles plus anciens (l'exploit de Lighter date du 18/11) ou sans date fiable. 
+- Paper trading Keel au 2026-11-23 : +0.73 % en 11 jours, pire baisse 1.14 %. Paper Keel (1 000 $ simulés) depuis le 13/11 ; 11 évaluations ; P&L net -24,3 $ (frais 2,5 $), profit factor 0,55 ; 57 % des ordres des 7 derniers jours refusés car < 10 $ (17 sorties non exécutées) ;
+- Gros traders au 2026-11-23 : les plus acheteurs FIL +14, ADA +10, ARB +10 ; les plus vendeurs HBAR -63, TIA -64, LTC -74
 - 2026-11-13 · TIA : Aucune cause précise identifiée par la recherche web pour la baisse de TIA du 13/11 : pas d'annonce ni d'incident trouvé. Le jeton est en tendance baissière depuis début novembre, dans un secteur des blockchains de couche 1 en recul. [source](https://www.coinbase.com/en-fr/price/celestia)
 - 2026-11-14 · TIA : Aucune nouvelle propre à Celestia : la baisse du 13/11 accompagne le repli général du marché crypto (bitcoin en forte baisse, sentiment de peur extrême). Le jeton restait en tendance baissière sous toutes ses moyennes mobiles. [source](https://coinmarketcap.com/top-stories/6af75f3f0ada0c77afaf1484/) [source](https://tradersunion.com/news/cryptocurrency-news/show/4240045-celestia-drops-11-63percent-today/)
 - 2026-11-15 · APT : Aucun catalyseur propre à Aptos n'a été trouvé (ni annonce, ni incident réseau, ni décision réglementaire). La baisse s'inscrit dans le repli général du marché du 14 novembre, le bitcoin touchant un plus bas de trois mois vers 62 000 $ sur fond de liquidations. [source](https://www.diariobitcoin.com/analisis/aptos-apt-cae-1546-el-14-de-noviembre-de-2026-y-queda-bajo-presion-tecnica/) [source](https://www.coindesk.com/markets/2026/11/14/bitcoin-drifts-back-to-usd65-000-deep-value-zone-says-analyst)
@@ -40,24 +40,24 @@ Dernière lecture : 2026-11-23 — réponses de Claude du 2026-11-22T23:41Z déj
 
 ## Machine learning
 
-Dernier entraînement le 2026-11-23 sur l'historique 2020-01 → 2026-10 (62102 exemples). Modèles en service aujourd'hui : gbm, ridge.
+Dernier entraînement le 2026-11-24 sur l'historique 2020-01 → 2026-10 (62102 exemples). Modèles en service aujourd'hui : gbm, ridge.
 
 Ce que la régression a appris (poids les plus forts) : carry7 +0.051, brk21 +0.046, vol30 -0.046, mom7 -0.040, spring14 +0.031.
 
 ## Évolution (règles inventées par le laboratoire)
 
-60917936 règles explorées depuis le début en 184 passages (jugées sur l'apprentissage seul), 76 présentées à la validation, 2 en service.
+61339776 règles explorées depuis le début en 185 passages (jugées sur l'apprentissage seul), 82 présentées à la validation, 2 en service.
 
-Balayage exhaustif : 59375995 combinaisons sur 92490684 essayées (64.2 %).
+Balayage exhaustif : 59797835 combinaisons sur 92490684 essayées (64.7 %).
 
-Présentées à la validation au dernier passage (2026-11-23) :
+Présentées à la validation au dernier passage (2026-11-24) :
 
-- mix(a=brk,b=illiq,gate=geo_news,hold=7,k=5,la=42,lb=14,sa=1,sb=1,w=0.4) → porte non, déflaté 0.0
-- mix(a=z,b=illiq,gate=geo_news,hold=3,k=5,la=28,lb=3,sa=1,sb=1,w=0.4) → porte non, déflaté 0.004
-- mix(a=illiq,b=mom,gate=cot,hold=5,k=5,la=2,lb=28,sa=1,sb=1,w=0.7) → porte non, déflaté 0.001
-- mix(a=illiq,b=brk,gate=news_tone,hold=14,k=5,la=42,lb=28,sa=1,sb=1,w=0.6) → porte non, déflaté 0.0
-- mix(a=illiq,b=riskmom,gate=geo_news,hold=2,k=5,la=7,lb=42,sa=1,sb=1,w=0.6) → porte non, déflaté 0.001
-- mix(a=mom,b=illiq,hold=2,k=5,la=28,lb=10,sa=1,sb=1,w=0.4) → porte non, déflaté 0.002
+- mix(a=riskmom,b=illiq,gate=geo_news,hold=3,k=5,la=42,lb=7,sa=1,sb=1,w=0.4) → porte non, déflaté 0.001
+- mix(a=illiq,b=z,gate=gpr,hold=3,k=5,la=3,lb=28,sa=1,sb=1,w=0.6) → porte non, déflaté 0.004
+- mix(a=illiq,b=vwapd,gate=news_tone,hold=14,k=5,la=5,lb=5,sa=1,sb=1,w=0.6) → porte non, déflaté 0.0
+- mix(a=brk,b=illiq,gate=geo_news,hold=1,k=4,la=42,lb=42,sa=1,sb=1,w=0.3) → porte non, déflaté 0.001
+- mix(a=illiq,b=brk,gate=gpr,hold=14,k=5,la=42,lb=28,sa=1,sb=1,w=0.6) → porte non, déflaté 0.0
+- mix(a=illiq,b=mom,gate=geo_news,hold=5,k=5,la=3,lb=28,sa=1,sb=1,w=0.7) → porte non, déflaté 0.001
 
 Règles nées ici, en paper trading :
 
@@ -264,9 +264,6 @@ Règles nées ici, en paper trading :
 
 - 2026-11-23 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-23 — modèles ML ré-entraînés sur 62102 exemples
-- 2026-11-23 — ÉVOLUTION : 490160 règles explorées en 30635 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (56671008 explorées et 76 présentées depuis le début)
-- 2026-11-23 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
-- 2026-11-23 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-23 — ÉVOLUTION : 469200 règles explorées en 29325 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (57140208 explorées et 76 présentées depuis le début)
 - 2026-11-23 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
 - 2026-11-23 — modèles ML ré-entraînés sur 62102 exemples
@@ -302,3 +299,6 @@ Règles nées ici, en paper trading :
 - 2026-11-23 — modèles ML ré-entraînés sur 62102 exemples
 - 2026-11-23 — ÉVOLUTION : 258624 règles explorées en 16164 générations, 0 présentées à la validation (40 en attente du prochain examen), 2 règles nées en service (60917936 explorées et 76 présentées depuis le début)
 - 2026-11-23 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
+- 2026-11-24 — modèles ML ré-entraînés sur 62102 exemples
+- 2026-11-24 — ÉVOLUTION : 421840 règles explorées en 26365 générations, 6 présentées à la validation (0 en attente du prochain examen), 2 règles nées en service (61339776 explorées et 82 présentées depuis le début)
+- 2026-11-24 — fiche de score recalculée sur 2020-01 → 2026-10 : 36 règles sur 62 passent la porte
