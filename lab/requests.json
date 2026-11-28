@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-28T00:09:16Z",
- "last_closed_day": "2026-11-26",
+ "generated_at": "2026-11-28T01:15:50Z",
+ "last_closed_day": "2026-11-27",
  "from": "hl-swarm lab (programme, pas un humain)",
  "champion": "blend(carry=7,gate=risk_on,hold=7,k=0,mom=14,w=0.5)",
  "requests": [
@@ -70,20 +70,6 @@
     "max_dd_pct": "nombre",
     "days": "entier",
     "note": "texte court"
-   }
-  },
-  {
-   "id": "move_SEI",
-   "type": "explain_move",
-   "coin": "SEI",
-   "move_pct": 16.7,
-   "day": "2026-11-26",
-   "question": "Ce marché a bougé de plus de 12 % hier. Quelle en est la cause la plus probable ?",
-   "answer_schema": {
-    "summary": "2 phrases maximum",
-    "sources": [
-     "URL"
-    ]
    }
   }
  ]
